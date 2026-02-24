@@ -7,7 +7,7 @@ const WindowsXPWin95 = () => (
     stateKey="Win95Expand"
     setterKey="setWin95Expand"
     windowName="Windows 95"
-    icon="/icons/win95.svg"
+    icon="/icons/reference/v86.png"
     iframeSrc="/emulators/win95.html"
     defaultWidth={800}
     defaultHeight={600}

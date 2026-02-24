@@ -210,7 +210,7 @@ export default function Footer() {
         },
         {
             className: "windows95",
-            imgSrc: '/icons/win95.svg',
+            imgSrc: '/icons/reference/v86.png',
             imgAlt: "Windows 95",
             spanText: "Windows 95",
             onClick: () => {
@@ -224,7 +224,7 @@ export default function Footer() {
         },
         {
             className: "n64",
-            imgSrc: '/icons/n64.svg',
+            imgSrc: '/icons/reference/emulator.png',
             imgAlt: "Nintendo 64",
             spanText: "Nintendo 64",
             onClick: () => {
@@ -238,7 +238,7 @@ export default function Footer() {
         },
         {
             className: "ps1",
-            imgSrc: '/icons/ps1.svg',
+            imgSrc: '/icons/reference/emulator.png',
             imgAlt: "PlayStation 1",
             spanText: "PlayStation 1",
             onClick: () => {
@@ -252,7 +252,7 @@ export default function Footer() {
         },
         {
             className: "gba",
-            imgSrc: '/icons/gba.svg',
+            imgSrc: '/icons/reference/emulator.png',
             imgAlt: "Game Boy Advance",
             spanText: "Game Boy Advance",
             onClick: () => {
@@ -266,7 +266,7 @@ export default function Footer() {
         },
         {
             className: "nes",
-            imgSrc: '/icons/nes.svg',
+            imgSrc: '/icons/reference/emulator.png',
             imgAlt: "NES Emulator",
             spanText: "NES Emulator",
             onClick: () => {
@@ -280,7 +280,7 @@ export default function Footer() {
         },
         {
             className: "keen4",
-            imgSrc: '/icons/commanderkeen.svg',
+            imgSrc: '/icons/reference/jsdos.png',
             imgAlt: "Commander Keen 4",
             spanText: "Commander Keen 4",
             onClick: () => {
@@ -294,7 +294,7 @@ export default function Footer() {
         },
         {
             className: "spacecadet",
-            imgSrc: '/icons/spacecadet.svg',
+            imgSrc: '/icons/reference/pinball.png',
             imgAlt: "Space Cadet Pinball",
             spanText: "Space Cadet Pinball",
             onClick: () => {
@@ -308,7 +308,7 @@ export default function Footer() {
         },
         {
             className: "quake3",
-            imgSrc: '/icons/quake3.svg',
+            imgSrc: '/icons/reference/quake3.png',
             imgAlt: "Quake III Arena",
             spanText: "Quake III Arena",
             onClick: () => {
@@ -336,7 +336,7 @@ export default function Footer() {
         },
         {
             className: "dino",
-            imgSrc: '/icons/chromedino.svg',
+            imgSrc: '/icons/reference/dino.png',
             imgAlt: "Chrome Dino",
             spanText: "Chrome Dino",
             onClick: () => {
@@ -350,7 +350,7 @@ export default function Footer() {
         },
         {
             className: "dxball",
-            imgSrc: '/icons/dxball.svg',
+            imgSrc: '/icons/reference/dxball.png',
             imgAlt: "DX-Ball",
             spanText: "DX-Ball",
             onClick: () => {

@@ -130,37 +130,37 @@ export function imageMapping (name, type) {
       return ie
 
     case 'Nintendo 64':
-      return '/icons/n64.svg';
+      return '/icons/reference/emulator.png';
 
     case 'PlayStation 1':
-      return '/icons/ps1.svg';
+      return '/icons/reference/emulator.png';
 
     case 'Game Boy Advance':
-      return '/icons/gba.svg';
+      return '/icons/reference/emulator.png';
 
     case 'NES Emulator':
-      return '/icons/nes.svg';
+      return '/icons/reference/emulator.png';
 
     case 'Windows 95':
-      return '/icons/win95.svg';
+      return '/icons/reference/v86.png';
 
     case 'Commander Keen 4':
-      return '/icons/commanderkeen.svg';
+      return '/icons/reference/jsdos.png';
 
     case 'Space Cadet Pinball':
-      return '/icons/spacecadet.svg';
+      return '/icons/reference/pinball.png';
 
     case 'Quake III Arena':
-      return '/icons/quake3.svg';
+      return '/icons/reference/quake3.png';
 
     case 'Quake':
       return '/icons/quake1.svg';
 
     case 'Chrome Dino':
-      return '/icons/chromedino.svg';
+      return '/icons/reference/dino.png';
 
     case 'DX-Ball':
-      return '/icons/dxball.svg';
+      return '/icons/reference/dxball.png';
 
     case 'SkiFree':
       return '/icons/skifree.svg';

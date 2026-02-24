@@ -7,7 +7,7 @@ const DXBall = () => (
     stateKey="DXBallExpand"
     setterKey="setDXBallExpand"
     windowName="DX-Ball"
-    icon="/icons/dxball.svg"
+    icon="/icons/reference/dxball.png"
     iframeSrc="/games/dxball/index.html"
     externalUrl="https://dustinbrett.com/"
     defaultWidth={640}

@@ -7,7 +7,7 @@ const SpaceCadet = () => (
     stateKey="SpaceCadetExpand"
     setterKey="setSpaceCadetExpand"
     windowName="Space Cadet Pinball"
-    icon="/icons/spacecadet.svg"
+    icon="/icons/reference/pinball.png"
     iframeSrc="https://pinball.alula.me/"
     externalUrl="https://pinball.alula.me/"
     defaultWidth={800}
