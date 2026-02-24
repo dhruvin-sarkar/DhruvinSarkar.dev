@@ -19,6 +19,18 @@ import MineSweeper from "./components/MineSweeper";
 import MsnFolder from "./components/MsnFolder";
 import DoomGame from "./components/DoomGame";
 import InternetExplorer from "./components/apps/InternetExplorer/InternetExplorer";
+import NintendoN64 from "./components/apps/emulators/NintendoN64";
+import PlayStation1 from "./components/apps/emulators/PlayStation1";
+import GameBoyAdvance from "./components/apps/emulators/GameBoyAdvance";
+import NESEmulator from "./components/apps/emulators/NESEmulator";
+import WindowsXPWin95 from "./components/apps/emulators/WindowsXPWin95";
+import CommanderKeen4 from "./components/apps/emulators/CommanderKeen4";
+import SpaceCadet from "./components/apps/emulators/SpaceCadet";
+import Quake3Arena from "./components/apps/emulators/Quake3Arena";
+import QuakeOriginal from "./components/apps/emulators/QuakeOriginal";
+import ChromeDino from "./components/apps/emulators/ChromeDino";
+import DXBall from "./components/apps/emulators/DXBall";
+import SkiFree from "./components/apps/emulators/SkiFree";
 import iconInfo from "./icon.json";
 import Login from "./components/Login";
 import OpenProject from "./components/OpenProject";
@@ -348,6 +360,126 @@ function App() {
   });
 
   const [IEExpand, setIEExpand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [N64Expand, setN64Expand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [PS1Expand, setPS1Expand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [GBAExpand, setGBAExpand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [NESExpand, setNESExpand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [Win95Expand, setWin95Expand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [Keen4Expand, setKeen4Expand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [SpaceCadetExpand, setSpaceCadetExpand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [Quake3Expand, setQuake3Expand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [Quake1Expand, setQuake1Expand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [DinoExpand, setDinoExpand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [DXBallExpand, setDXBallExpand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [SkiFreeExpand, setSkiFreeExpand] = useState({
     expand: false,
     show: false,
     hide: false,
@@ -1457,6 +1589,30 @@ function App() {
     setMineSweeperExpand,
     IEExpand,
     setIEExpand,
+    N64Expand,
+    setN64Expand,
+    PS1Expand,
+    setPS1Expand,
+    GBAExpand,
+    setGBAExpand,
+    NESExpand,
+    setNESExpand,
+    Win95Expand,
+    setWin95Expand,
+    Keen4Expand,
+    setKeen4Expand,
+    SpaceCadetExpand,
+    setSpaceCadetExpand,
+    Quake3Expand,
+    setQuake3Expand,
+    Quake1Expand,
+    setQuake1Expand,
+    DinoExpand,
+    setDinoExpand,
+    DXBallExpand,
+    setDXBallExpand,
+    SkiFreeExpand,
+    setSkiFreeExpand,
     DoomExpand,
     setDoomExpand,
     MSNExpand,
@@ -1642,6 +1798,18 @@ function App() {
         <WebampPlayer />
         <MineSweeper />
         <InternetExplorer />
+        <WindowsXPWin95 />
+        <NintendoN64 />
+        <PlayStation1 />
+        <GameBoyAdvance />
+        <NESEmulator />
+        <CommanderKeen4 />
+        <SpaceCadet />
+        <Quake3Arena />
+        <QuakeOriginal />
+        <ChromeDino />
+        <DXBall />
+        <SkiFree />
         <DoomGame />
         <MsnFolder />
         <OpenProject />
@@ -1999,6 +2167,90 @@ function App() {
         setter: setIEExpand,
         usestate: IEExpand,
         color: "rgba(0, 100, 200, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Windows 95",
+        setter: setWin95Expand,
+        usestate: Win95Expand,
+        color: "rgba(73, 116, 204, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Nintendo 64",
+        setter: setN64Expand,
+        usestate: N64Expand,
+        color: "rgba(48, 155, 104, 0.85)",
+        size: "small",
+      },
+      {
+        name: "PlayStation 1",
+        setter: setPS1Expand,
+        usestate: PS1Expand,
+        color: "rgba(173, 65, 74, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Game Boy Advance",
+        setter: setGBAExpand,
+        usestate: GBAExpand,
+        color: "rgba(93, 82, 182, 0.85)",
+        size: "small",
+      },
+      {
+        name: "NES Emulator",
+        setter: setNESExpand,
+        usestate: NESExpand,
+        color: "rgba(132, 132, 132, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Commander Keen 4",
+        setter: setKeen4Expand,
+        usestate: Keen4Expand,
+        color: "rgba(205, 116, 59, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Space Cadet Pinball",
+        setter: setSpaceCadetExpand,
+        usestate: SpaceCadetExpand,
+        color: "rgba(36, 98, 162, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Quake III Arena",
+        setter: setQuake3Expand,
+        usestate: Quake3Expand,
+        color: "rgba(145, 39, 24, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Quake",
+        setter: setQuake1Expand,
+        usestate: Quake1Expand,
+        color: "rgba(112, 73, 35, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Chrome Dino",
+        setter: setDinoExpand,
+        usestate: DinoExpand,
+        color: "rgba(108, 108, 108, 0.85)",
+        size: "small",
+      },
+      {
+        name: "DX-Ball",
+        setter: setDXBallExpand,
+        usestate: DXBallExpand,
+        color: "rgba(98, 64, 166, 0.85)",
+        size: "small",
+      },
+      {
+        name: "SkiFree",
+        setter: setSkiFreeExpand,
+        usestate: SkiFreeExpand,
+        color: "rgba(47, 88, 131, 0.85)",
         size: "small",
       },
       {

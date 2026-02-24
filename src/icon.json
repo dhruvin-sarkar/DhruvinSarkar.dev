@@ -340,5 +340,113 @@
         "type": ".exe",
         "x": 220,
         "y": 420
+    },
+    {
+        "name": "Windows 95",
+        "pic": "Windows 95",
+        "folderId": "Desktop",
+        "size": 220000,
+        "type": ".exe",
+        "x": 320,
+        "y": 420
+    },
+    {
+        "name": "Nintendo 64",
+        "pic": "Nintendo 64",
+        "folderId": "Desktop",
+        "size": 128000,
+        "type": ".exe",
+        "x": 420,
+        "y": 420
+    },
+    {
+        "name": "PlayStation 1",
+        "pic": "PlayStation 1",
+        "folderId": "Desktop",
+        "size": 128000,
+        "type": ".exe",
+        "x": 520,
+        "y": 420
+    },
+    {
+        "name": "Game Boy Advance",
+        "pic": "Game Boy Advance",
+        "folderId": "Desktop",
+        "size": 64000,
+        "type": ".exe",
+        "x": 620,
+        "y": 420
+    },
+    {
+        "name": "NES Emulator",
+        "pic": "NES Emulator",
+        "folderId": "Desktop",
+        "size": 48000,
+        "type": ".exe",
+        "x": 720,
+        "y": 420
+    },
+    {
+        "name": "Commander Keen 4",
+        "pic": "Commander Keen 4",
+        "folderId": "Desktop",
+        "size": 16000,
+        "type": ".exe",
+        "x": 820,
+        "y": 420
+    },
+    {
+        "name": "Space Cadet Pinball",
+        "pic": "Space Cadet Pinball",
+        "folderId": "Desktop",
+        "size": 22000,
+        "type": ".exe",
+        "x": 920,
+        "y": 420
+    },
+    {
+        "name": "Quake III Arena",
+        "pic": "Quake III Arena",
+        "folderId": "Desktop",
+        "size": 180000,
+        "type": ".exe",
+        "x": 1020,
+        "y": 420
+    },
+    {
+        "name": "Quake",
+        "pic": "Quake",
+        "folderId": "Desktop",
+        "size": 96000,
+        "type": ".exe",
+        "x": 1120,
+        "y": 420
+    },
+    {
+        "name": "Chrome Dino",
+        "pic": "Chrome Dino",
+        "folderId": "Desktop",
+        "size": 12000,
+        "type": ".exe",
+        "x": 1220,
+        "y": 420
+    },
+    {
+        "name": "DX-Ball",
+        "pic": "DX-Ball",
+        "folderId": "Desktop",
+        "size": 20000,
+        "type": ".exe",
+        "x": 1320,
+        "y": 420
+    },
+    {
+        "name": "SkiFree",
+        "pic": "SkiFree",
+        "folderId": "Desktop",
+        "size": 28000,
+        "type": ".exe",
+        "x": 1420,
+        "y": 420
     }
 ]

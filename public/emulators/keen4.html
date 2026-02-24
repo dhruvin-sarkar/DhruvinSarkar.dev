@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Commander Keen 4 - js-dos</title>
+    <style>
+      html, body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        color: #ebf2ff;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        overflow: hidden;
+      }
+
+      #keen {
+        width: 100%;
+        height: 100%;
+      }
+
+      .overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        background: rgba(8, 12, 22, 0.9);
+      }
+
+      .card {
+        width: min(560px, 96vw);
+        background: #1b2540;
+        border: 1px solid rgba(136, 169, 250, 0.55);
+        border-radius: 12px;
+        padding: 16px;
+      }
+
+      .row {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border: 1px solid #6f96f2;
+        border-radius: 8px;
+        background: #2f4475;
+        color: #fff;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      #keen-input {
+        display: none;
+      }
+
+      .note {
+        font-size: 12px;
+        opacity: 0.9;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="keen"></div>
+    <input id="keen-input" type="file" accept=".jsdos,.zip,.exe" />
+    <div class="overlay" id="overlay">
+      <div class="card">
+        <h2 style="margin-top:0">Commander Keen 4 (js-dos)</h2>
+        <p class="note">Load a <code>.jsdos</code>, <code>.zip</code>, or <code>.exe</code> game package. If <code>/games/commanderkeen/keen4.jsdos</code> exists, you can auto-start it.</p>
+        <div class="row">
+          <button class="btn" id="auto-start">Auto Start Bundled</button>
+          <button class="btn" id="upload-start">Choose File</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const overlay = document.getElementById("overlay");
+      const input = document.getElementById("keen-input");
+      const container = document.getElementById("keen");
+
+      function hideOverlay() {
+        if (overlay) overlay.style.display = "none";
+      }
+
+      function bootWithUrl(url) {
+        hideOverlay();
+        const script = document.createElement("script");
+        script.src = "https://v8.js-dos.com/latest/js-dos.js";
+        script.onload = () => {
+          window.Dos(container, {
+            url,
+            autoStart: true,
+            kiosk: true,
+            onEvent: (event) => {
+              if (event === "ci-ready") console.log("js-dos ready");
+            },
+          });
+        };
+        script.onerror = () => {
+          alert("Failed to load js-dos runtime.");
+        };
+        document.head.appendChild(script);
+      }
+
+      document.getElementById("auto-start").addEventListener("click", () => {
+        bootWithUrl("/games/commanderkeen/keen4.jsdos");
+      });
+
+      document.getElementById("upload-start").addEventListener("click", () => {
+        input.click();
+      });
+
+      input.addEventListener("change", (event) => {
+        const file = event.target.files && event.target.files[0];
+        if (!file) return;
+        const objectUrl = URL.createObjectURL(file);
+        bootWithUrl(objectUrl);
+      });
+    </script>
+  </body>
+</html>

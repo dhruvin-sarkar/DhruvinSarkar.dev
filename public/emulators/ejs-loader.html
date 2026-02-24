@@ -138,6 +138,7 @@
       const config = CORE_MAP[requestedCore] || CORE_MAP.nes;
       const romUrl = params.get("rom");
       let floatingButton;
+      let gamepadButton;
 
       function getPathToDataForCore() {
         // Local EmulatorJS data files are used by default.
@@ -158,6 +159,20 @@
           document.getElementById("rom-input").click();
         });
         document.body.appendChild(floatingButton);
+      }
+
+      function createGamepadButton() {
+        if (gamepadButton) return;
+        gamepadButton = document.createElement("button");
+        gamepadButton.className = "btn floating-picker-btn";
+        gamepadButton.style.right = "96px";
+        gamepadButton.textContent = "Controller";
+        gamepadButton.addEventListener("click", () => {
+          alert(
+            "Connect a gamepad and press any button to configure controls. EmulatorJS can auto-detect gamepads."
+          );
+        });
+        document.body.appendChild(gamepadButton);
       }
 
       function launchWithRom(targetRomUrl, { fromObjectUrl = false } = {}) {
@@ -183,6 +198,7 @@
         document.body.appendChild(script);
 
         createFloatingPickerButton();
+        createGamepadButton();
       }
 
       function showLoaderError(message) {
@@ -293,11 +309,31 @@
         });
       }
 
-      if (romUrl) {
-        launchWithRom(romUrl);
-      } else {
+      async function start() {
+        if (romUrl) {
+          const isObjectUrl = romUrl.startsWith("blob:");
+          if (!isObjectUrl) {
+            try {
+              const response = await fetch(romUrl, { method: "HEAD" });
+              if (!response.ok) {
+                showLoaderError("ROM not found. Drop a ROM file to play.");
+                renderRomPicker();
+                return;
+              }
+            } catch {
+              showLoaderError("ROM not found. Drop a ROM file to play.");
+              renderRomPicker();
+              return;
+            }
+          }
+          launchWithRom(romUrl);
+          return;
+        }
+
         renderRomPicker();
       }
+
+      start();
     </script>
   </body>
 </html>

@@ -209,6 +209,174 @@ export default function Footer() {
             },
         },
         {
+            className: "windows95",
+            imgSrc: '/icons/win95.svg',
+            imgAlt: "Windows 95",
+            spanText: "Windows 95",
+            onClick: () => {
+                handleShow('Windows 95');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "n64",
+            imgSrc: '/icons/n64.svg',
+            imgAlt: "Nintendo 64",
+            spanText: "Nintendo 64",
+            onClick: () => {
+                handleShow('Nintendo 64');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "ps1",
+            imgSrc: '/icons/ps1.svg',
+            imgAlt: "PlayStation 1",
+            spanText: "PlayStation 1",
+            onClick: () => {
+                handleShow('PlayStation 1');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "gba",
+            imgSrc: '/icons/gba.svg',
+            imgAlt: "Game Boy Advance",
+            spanText: "Game Boy Advance",
+            onClick: () => {
+                handleShow('Game Boy Advance');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "nes",
+            imgSrc: '/icons/nes.svg',
+            imgAlt: "NES Emulator",
+            spanText: "NES Emulator",
+            onClick: () => {
+                handleShow('NES Emulator');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "keen4",
+            imgSrc: '/icons/commanderkeen.svg',
+            imgAlt: "Commander Keen 4",
+            spanText: "Commander Keen 4",
+            onClick: () => {
+                handleShow('Commander Keen 4');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "spacecadet",
+            imgSrc: '/icons/spacecadet.svg',
+            imgAlt: "Space Cadet Pinball",
+            spanText: "Space Cadet Pinball",
+            onClick: () => {
+                handleShow('Space Cadet Pinball');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "quake3",
+            imgSrc: '/icons/quake3.svg',
+            imgAlt: "Quake III Arena",
+            spanText: "Quake III Arena",
+            onClick: () => {
+                handleShow('Quake III Arena');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "quake1",
+            imgSrc: '/icons/quake1.svg',
+            imgAlt: "Quake",
+            spanText: "Quake",
+            onClick: () => {
+                handleShow('Quake');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "dino",
+            imgSrc: '/icons/chromedino.svg',
+            imgAlt: "Chrome Dino",
+            spanText: "Chrome Dino",
+            onClick: () => {
+                handleShow('Chrome Dino');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "dxball",
+            imgSrc: '/icons/dxball.svg',
+            imgAlt: "DX-Ball",
+            spanText: "DX-Ball",
+            onClick: () => {
+                handleShow('DX-Ball');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "skifree",
+            imgSrc: '/icons/skifree.svg',
+            imgAlt: "SkiFree",
+            spanText: "SkiFree",
+            onClick: () => {
+                handleShow('SkiFree');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
             className: "groove"
         },
         {
