@@ -334,9 +334,9 @@ select {
 
 .footer .start_popup {
     display: grid;
-    grid-template-columns: .3fr 1.9fr;
+    grid-template-columns: 26px minmax(0, 1fr);
     position: absolute;
-    width: 180px;
+    width: 240px;
     bottom: 30.5px;
     left: 2px;
     background: #c5c2c2;
@@ -345,42 +345,29 @@ select {
     border-left: 3px solid #f5f2f2;
     border-bottom-color: #1e1d1d;
     border-right-color: #1e1d1d;
-    grid-template-areas:
-        'sidebar winamp'
-        'sidebar tile'
-        'sidebar ghithub'
-        'sidebar facebook'
-        'sidebar ig'
-        'sidebar project'
-        'sidebar resume'
-        'sidebar msdos'
-        'sidebar vscode'
-        'sidebar groove'
-        'sidebar shutdown';
-}
-
-.start_popup .msdos {
-    grid-area: msdos;
-}
-
-.start_popup .vscode {
-    grid-area: vscode;
-}
-
-.start_popup .shutdownicon:last-child {
-    grid-area: shutdown;
+    max-height: min(72vh, 620px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+    align-items: stretch;
+    z-index: 1000000000;
 }
 
 
 .start_popup div {
     display: flex;
     width: 100%;
-    height: 40px;
+    min-height: 34px;
+    height: auto;
     align-items: center;
-    gap: .7rem;
-    padding-left: .6rem;
+    gap: .55rem;
+    padding: 6px 8px;
     cursor: default;
-    z-index: 99999999999999;
+    z-index: 2;
+}
+
+.start_popup div:not(.sidebar_popup) {
+    grid-column: 2;
 }
 
 .start_popup div:not(.sidebar_popup):not(.sub_start_container):hover {
@@ -393,34 +380,40 @@ select {
 }
 
 .start_popup img {
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .start_popup span {
     font-size: 12px;
+    line-height: 1.1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .start_popup span::before {
-    content: 'a';
-    position: absolute;
-    color: transparent;
-    border-bottom: 1px solid black;
-    margin-top: -4.5px;
+    content: none;
 }
 
 @supports (-webkit-touch-callout: none) {
     .start_popup span::before {
-        margin-top: -4px;
+        content: none;
     }
 }
 
 .start_popup .sidebar_popup {
-    grid-area: sidebar;
+    grid-column: 1;
+    grid-row: 1 / -1;
     background: #7b7d7b;
-    height: 100%;
+    position: sticky;
+    top: 0;
+    align-self: stretch;
     width: 25px;
     cursor: default;
+    z-index: 3;
 }
 
 .sidebar_popup img {
@@ -505,9 +498,12 @@ select {
 } */
 
 .start_popup .groove {
-    margin: 0 auto;
-    height: 1px;
-    border-top: 2.5px groove #efefef;
+    grid-column: 2;
+    width: calc(100% - 12px);
+    min-height: 2px;
+    margin: 2px 6px;
+    padding: 0;
+    border-top: 2px groove #efefef;
 }
 
 .shortcut_container {

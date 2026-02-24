@@ -210,7 +210,7 @@ export default function Footer() {
         },
         {
             className: "windows95",
-            imgSrc: '/icons/reference/v86.png',
+            imgSrc: imageMapping('Windows 95'),
             imgAlt: "Windows 95",
             spanText: "Windows 95",
             onClick: () => {
@@ -224,7 +224,7 @@ export default function Footer() {
         },
         {
             className: "n64",
-            imgSrc: '/icons/n64.png',
+            imgSrc: imageMapping('Nintendo 64'),
             imgAlt: "Nintendo 64",
             spanText: "Nintendo 64",
             onClick: () => {
@@ -238,7 +238,7 @@ export default function Footer() {
         },
         {
             className: "ps1",
-            imgSrc: '/icons/ps1.png',
+            imgSrc: imageMapping('PlayStation 1'),
             imgAlt: "PlayStation 1",
             spanText: "PlayStation 1",
             onClick: () => {
@@ -252,7 +252,7 @@ export default function Footer() {
         },
         {
             className: "gba",
-            imgSrc: '/icons/gba.png',
+            imgSrc: imageMapping('Game Boy Advance'),
             imgAlt: "Game Boy Advance",
             spanText: "Game Boy Advance",
             onClick: () => {
@@ -266,7 +266,7 @@ export default function Footer() {
         },
         {
             className: "nes",
-            imgSrc: '/icons/nes.png',
+            imgSrc: imageMapping('NES Emulator'),
             imgAlt: "NES Emulator",
             spanText: "NES Emulator",
             onClick: () => {
@@ -280,7 +280,7 @@ export default function Footer() {
         },
         {
             className: "keen4",
-            imgSrc: '/icons/reference/jsdos.png',
+            imgSrc: imageMapping('Commander Keen 4'),
             imgAlt: "Commander Keen 4",
             spanText: "Commander Keen 4",
             onClick: () => {
@@ -294,7 +294,7 @@ export default function Footer() {
         },
         {
             className: "spacecadet",
-            imgSrc: '/icons/reference/pinball.png',
+            imgSrc: imageMapping('Space Cadet Pinball'),
             imgAlt: "Space Cadet Pinball",
             spanText: "Space Cadet Pinball",
             onClick: () => {
@@ -308,7 +308,7 @@ export default function Footer() {
         },
         {
             className: "quake3",
-            imgSrc: '/icons/reference/quake3.png',
+            imgSrc: imageMapping('Quake III Arena'),
             imgAlt: "Quake III Arena",
             spanText: "Quake III Arena",
             onClick: () => {
@@ -322,7 +322,7 @@ export default function Footer() {
         },
         {
             className: "quake1",
-            imgSrc: '/icons/quake1.png',
+            imgSrc: imageMapping('Quake'),
             imgAlt: "Quake",
             spanText: "Quake",
             onClick: () => {
@@ -336,7 +336,7 @@ export default function Footer() {
         },
         {
             className: "dino",
-            imgSrc: '/icons/reference/dino.png',
+            imgSrc: imageMapping('Chrome Dino'),
             imgAlt: "Chrome Dino",
             spanText: "Chrome Dino",
             onClick: () => {
@@ -350,7 +350,7 @@ export default function Footer() {
         },
         {
             className: "dxball",
-            imgSrc: '/icons/reference/dxball.png',
+            imgSrc: imageMapping('DX-Ball'),
             imgAlt: "DX-Ball",
             spanText: "DX-Ball",
             onClick: () => {
@@ -364,7 +364,7 @@ export default function Footer() {
         },
         {
             className: "skifree",
-            imgSrc: '/icons/skifree.png',
+            imgSrc: imageMapping('SkiFree'),
             imgAlt: "SkiFree",
             spanText: "SkiFree",
             onClick: () => {
@@ -394,6 +394,11 @@ export default function Footer() {
             },
         }
     ];
+
+    const handleMenuImageError = (event) => {
+        event.currentTarget.onerror = null;
+        event.currentTarget.src = imageMapping('MyComputer');
+    };
 
     // need to put these in useeffect Array
     const isBitcoinInstalled = desktopIcon.find(item => item.name === 'Bitcoin')
@@ -791,7 +796,9 @@ export default function Footer() {
                             className={item.className}
                             onClick={(e) => {
                                 e.stopPropagation()
-                                item.onClick()
+                                if (typeof item.onClick === 'function') {
+                                    item.onClick();
+                                }
                             }}
                             onMouseEnter={!isTouchDevice && item.onmouseenter}
                         >
@@ -800,6 +807,7 @@ export default function Footer() {
                                     src={item.imgSrc}
                                     alt={item.imgAlt}
                                     style={item.style || {}}
+                                    onError={handleMenuImageError}
                                 />
                             )}
                             {item.spanText && <span>{item.spanText}</span>}

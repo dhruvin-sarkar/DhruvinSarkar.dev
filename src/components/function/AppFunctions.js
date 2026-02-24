@@ -45,6 +45,9 @@ import About from '../../assets/ipng.png'
 import MyComputer from '../../assets/pc.png'
 import VSCode from '../../assets/vscode.png'
 
+const withBase = (relativePath) =>
+  `${import.meta.env.BASE_URL}${String(relativePath).replace(/^\/+/, '')}`;
+
 
 
 // style function for bg tap
@@ -130,40 +133,41 @@ export function imageMapping (name, type) {
       return ie
 
     case 'Nintendo 64':
-      return '/icons/n64.png';
+      return withBase('icons/n64.svg');
 
     case 'PlayStation 1':
-      return '/icons/ps1.png';
+      return withBase('icons/ps1.svg');
 
     case 'Game Boy Advance':
-      return '/icons/gba.png';
+      return withBase('icons/gba.svg');
 
     case 'NES Emulator':
-      return '/icons/nes.png';
+      return withBase('icons/nes.svg');
 
     case 'Windows 95':
-      return '/icons/reference/v86.png';
+      return withBase('icons/win95.svg');
 
     case 'Commander Keen 4':
-      return '/icons/reference/jsdos.png';
+      return withBase('icons/commanderkeen.svg');
 
     case 'Space Cadet Pinball':
-      return '/icons/reference/pinball.png';
+      return withBase('icons/spacecadet.svg');
 
     case 'Quake III Arena':
-      return '/icons/reference/quake3.png';
+      return withBase('icons/quake3.svg');
 
+    case 'Quake I':
     case 'Quake':
-      return '/icons/quake1.png';
+      return withBase('icons/quake1.svg');
 
     case 'Chrome Dino':
-      return '/icons/reference/dino.png';
+      return withBase('icons/chromedino.svg');
 
     case 'DX-Ball':
-      return '/icons/reference/dxball.png';
+      return withBase('icons/dxball.svg');
 
     case 'SkiFree':
-      return '/icons/skifree.png';
+      return withBase('icons/skifree.svg');
 
     case 'Settings':
       return settings;
