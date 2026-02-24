@@ -37,11 +37,18 @@ const FRIENDLY_HOST_ALLOWLIST = [
   "piped.video",
 ];
 
-const SUGGESTED_SITES = [
-  { label: "Google", url: GOOGLE_HOME },
-  { label: "YouTube Alt", url: "https://yewtu.be" },
-  { label: "Wikipedia", url: "https://www.wikipedia.org" },
-  { label: "GitHub Pages", url: "https://pages.github.com" },
+const DEFAULT_PROFILE_BOOKMARKS = [
+  { title: "GitHub", url: "https://github.com/dhruvin-sarkar" },
+  { title: "LinkedIn", url: "https://www.linkedin.com/in/dhruvin-sarkar/" },
+  {
+    title: "Portfolio",
+    url: "https://dhruvin-sarkar.github.io/Win95P-DevPortfolio",
+  },
+  { title: "YouTube", url: "https://youtube.com/@dhruvinsarkar" },
+  { title: "Discord", url: "https://discord.com/users/replace-with-your-id" },
+  { title: "E-Commerce (Soon)", url: "https://comingsoon.com" },
+  { title: "Project 2 (Soon)", url: "https://comingsoon.com" },
+  { title: "Project 3 (Soon)", url: "https://comingsoon.com" },
 ];
 
 let tabCounter = 0;
@@ -55,7 +62,7 @@ const safeParseJson = (value, fallback) => {
   }
 };
 
-const isNavigableUrl = (url) => Boolean(url && url !== "newtab");
+const isNavigableUrl = (url) => Boolean(url);
 
 const truncateText = (value, limit = MAX_TAB_TITLE) => {
   if (!value) return "New Tab";
@@ -162,7 +169,8 @@ const normalizeOmniboxInput = (rawInput) => {
 };
 
 const makeTab = (partial = {}) => {
-  const nextUrl = partial.url ?? "newtab";
+  const rawUrl = partial.url ?? GOOGLE_HOME;
+  const nextUrl = !rawUrl || rawUrl === "newtab" ? GOOGLE_HOME : rawUrl;
   const displayUrl = partial.displayUrl ?? getDisplayUrlFromUrl(nextUrl);
   const history =
     Array.isArray(partial.history) && partial.history.length > 0
@@ -197,6 +205,13 @@ const makeTab = (partial = {}) => {
 
 const sanitizeStoredTab = (tab) => {
   if (!tab || typeof tab !== "object") return null;
+  if (tab.url === "newtab" || !tab.url) {
+    return makeTab({
+      ...tab,
+      url: GOOGLE_HOME,
+      displayUrl: GOOGLE_DISPLAY,
+    });
+  }
   return makeTab(tab);
 };
 
@@ -335,7 +350,7 @@ const UrlBarRow = ({
 };
 
 const BookmarksBar = ({ bookmarks, onNavigate }) => {
-  const items = bookmarks.length > 0 ? bookmarks : SUGGESTED_SITES;
+  const items = bookmarks.length > 0 ? bookmarks : DEFAULT_PROFILE_BOOKMARKS;
 
   return (
     <div className="iex-bookmarks-bar">
@@ -355,87 +370,6 @@ const BookmarksBar = ({ bookmarks, onNavigate }) => {
           </button>
         );
       })}
-    </div>
-  );
-};
-
-const NewTabPage = ({
-  onSearch,
-  mostVisited,
-  bookmarks,
-  onNavigate,
-}) => {
-  const [query, setQuery] = useState("");
-  const [now, setNow] = useState(() => new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => setNow(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  return (
-    <div className="iex-newtab-page">
-      <div className="iex-newtab-clock">
-        {now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
-      </div>
-      <div className="iex-newtab-search-card">
-        <h2>Search the web</h2>
-        <form
-          onSubmit={(event) => {
-            event.preventDefault();
-            onSearch(query);
-          }}
-        >
-          <input
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Type your search"
-          />
-        </form>
-      </div>
-      <div className="iex-newtab-grid">
-        <section className="iex-glass-card">
-          <h3>Most Visited</h3>
-          <div className="iex-tile-grid">
-            {mostVisited.length > 0 ? (
-              mostVisited.map((site) => (
-                <button
-                  key={site.url}
-                  className="iex-tile"
-                  onClick={() => onNavigate(site.url)}
-                  type="button"
-                >
-                  <img src={getFaviconUrl(site.url)} alt="" draggable={false} />
-                  <span>{truncateText(site.title || site.host, 18)}</span>
-                  <small>{site.count} visits</small>
-                </button>
-              ))
-            ) : (
-              <p className="iex-empty">No browsing history yet.</p>
-            )}
-          </div>
-        </section>
-        <section className="iex-glass-card">
-          <h3>Bookmarks</h3>
-          <div className="iex-bookmark-list">
-            {(bookmarks.length > 0 ? bookmarks : SUGGESTED_SITES).map((bookmark) => (
-              <button
-                key={`${bookmark.url}-${bookmark.title || bookmark.label || "bookmark"}`}
-                className="iex-bookmark-row"
-                onClick={() => onNavigate(bookmark.url)}
-                type="button"
-              >
-                <img
-                  src={bookmark.favicon || getFaviconUrl(bookmark.url)}
-                  alt=""
-                  draggable={false}
-                />
-                <span>{bookmark.title || bookmark.label || bookmark.url}</span>
-              </button>
-            ))}
-          </div>
-        </section>
-      </div>
     </div>
   );
 };
@@ -480,6 +414,18 @@ const InternetExplorer = () => {
   const urlInputRef = useRef(null);
   const tabsRef = useRef([]);
   const activeTabIdRef = useRef("");
+  const positionedRef = useRef(false);
+
+  const launchPosition = useMemo(
+    () => ({
+      x:
+        window.innerWidth <= 700
+          ? 16
+          : Math.max(36, Math.floor((window.innerWidth - 1080) / 2)),
+      y: window.innerWidth <= 700 ? 48 : 68,
+    }),
+    [],
+  );
 
   const [tabs, setTabs] = useState(() => {
     const storedTabs = safeParseJson(localStorage.getItem(STORAGE_KEYS.tabs), []);
@@ -509,7 +455,11 @@ const InternetExplorer = () => {
 
   const [bookmarks, setBookmarks] = useState(() => {
     const stored = safeParseJson(localStorage.getItem(STORAGE_KEYS.bookmarks), []);
-    return Array.isArray(stored) ? stored : [];
+    if (Array.isArray(stored) && stored.length > 0) return stored;
+    return DEFAULT_PROFILE_BOOKMARKS.map((bookmark) => ({
+      ...bookmark,
+      favicon: getFaviconUrl(bookmark.url),
+    }));
   });
 
   const [bookmarksBarVisible, setBookmarksBarVisible] = useState(() => {
@@ -598,31 +548,6 @@ const InternetExplorer = () => {
     return bookmarks.some((bookmark) => bookmark.url === activeTab.url);
   }, [bookmarks, activeTab]);
 
-  const mostVisitedSites = useMemo(() => {
-    const stats = new Map();
-    globalHistory.forEach((entry) => {
-      if (!entry || !entry.url) return;
-      const current = stats.get(entry.url) || {
-        url: entry.url,
-        title: entry.title || deriveTitleFromUrl(entry.url, entry.url),
-        host: getHostFromUrl(entry.url),
-        count: 0,
-        latestTimestamp: 0,
-      };
-      current.count += 1;
-      const timestampValue = entry.timestamp ? new Date(entry.timestamp).getTime() : 0;
-      current.latestTimestamp = Math.max(current.latestTimestamp, timestampValue);
-      stats.set(entry.url, current);
-    });
-
-    return [...stats.values()]
-      .sort((a, b) => {
-        if (b.count !== a.count) return b.count - a.count;
-        return b.latestTimestamp - a.latestTimestamp;
-      })
-      .slice(0, 8);
-  }, [globalHistory]);
-
   const navigateActiveTab = useCallback(
     (rawInput, options = {}) => {
       const targetTabId = options.tabId || activeTabIdRef.current;
@@ -682,7 +607,13 @@ const InternetExplorer = () => {
   }, [navigateActiveTab]);
 
   const openNewTab = useCallback(() => {
-    const tab = makeTab({ url: "newtab", displayUrl: "", inputValue: "", title: "New Tab" });
+    const tab = makeTab({
+      url: GOOGLE_HOME,
+      displayUrl: GOOGLE_DISPLAY,
+      inputValue: GOOGLE_DISPLAY,
+      title: deriveTitleFromUrl(GOOGLE_HOME, GOOGLE_DISPLAY),
+      isLoading: true,
+    });
     setTabs((previous) => [...previous, tab]);
     setActiveTabId(tab.id);
   }, []);
@@ -693,13 +624,13 @@ const InternetExplorer = () => {
         const existing = previousTabs[0];
         const reset = makeTab({
           ...existing,
-          url: "newtab",
-          displayUrl: "",
-          inputValue: "",
-          title: "New Tab",
+          url: GOOGLE_HOME,
+          displayUrl: GOOGLE_DISPLAY,
+          inputValue: GOOGLE_DISPLAY,
+          title: deriveTitleFromUrl(GOOGLE_HOME, GOOGLE_DISPLAY),
           isLoading: false,
-          history: [],
-          historyIndex: -1,
+          history: [GOOGLE_HOME],
+          historyIndex: 0,
           blocked: null,
           favicon: "/assets/ie.png",
         });
@@ -936,6 +867,18 @@ const InternetExplorer = () => {
     }
   }, [IEExpand.show, IEExpand.focusItem]);
 
+  useEffect(() => {
+    if (!IEExpand.show || positionedRef.current) return;
+    if ((IEExpand.x ?? 0) === 0 && (IEExpand.y ?? 0) === 0) {
+      setIEExpand((previous) => ({
+        ...previous,
+        x: launchPosition.x,
+        y: launchPosition.y,
+      }));
+    }
+    positionedRef.current = true;
+  }, [IEExpand.show, IEExpand.x, IEExpand.y, launchPosition.x, launchPosition.y, setIEExpand]);
+
   const handleClose = () => {
     deleteTap("InternetExplorer");
   };
@@ -959,8 +902,7 @@ const InternetExplorer = () => {
 
   if (!IEExpand.show) return null;
 
-  const activeUrl = activeTab?.url || "newtab";
-  const showNewTab = !isNavigableUrl(activeUrl);
+  const activeUrl = activeTab?.url || GOOGLE_HOME;
   const reloadToken = activeTab ? reloadTokens[activeTab.id] || 0 : 0;
 
   return (
@@ -972,12 +914,18 @@ const InternetExplorer = () => {
       disabled={IEExpand.expand}
       bounds={{ top: 0 }}
       defaultPosition={{
-        x: window.innerWidth <= 500 ? 20 : 100,
-        y: window.innerWidth <= 500 ? 40 : 100,
+        x: launchPosition.x,
+        y: launchPosition.y,
       }}
       position={{
-        x: IEExpand.x ?? (window.innerWidth <= 500 ? 20 : 100),
-        y: IEExpand.y ?? (window.innerWidth <= 500 ? 40 : 100),
+        x:
+          Number.isFinite(IEExpand.x) && IEExpand.x !== 0
+            ? IEExpand.x
+            : launchPosition.x,
+        y:
+          Number.isFinite(IEExpand.y) && IEExpand.y !== 0
+            ? IEExpand.y
+            : launchPosition.y,
       }}
       onStop={handleDragStop}
       onStart={() => handleSetFocusItemTrue("InternetExplorer")}
@@ -1004,8 +952,8 @@ const InternetExplorer = () => {
           style={{ background: IEExpand.focusItem ? themeDragBar : "#757579" }}
         >
           <div className="folder_barname-InternetExplorer">
-            <img src="/assets/ie.png" alt="Chrome style browser" />
-            <span>Chrome</span>
+            <img src="/assets/ie.png" alt="Internet Explorer" />
+            <span>Internet Explorer</span>
           </div>
           <div className="folder_barbtn-InternetExplorer">
             <div
@@ -1085,52 +1033,36 @@ const InternetExplorer = () => {
           ) : null}
           <div className="iex-content-area">
             {activeTab?.isLoading ? <div className="iex-loading-bar" /> : null}
-            {showNewTab ? (
-              <NewTabPage
-                onSearch={(query) => navigateActiveTab(query)}
-                mostVisited={mostVisitedSites}
-                bookmarks={bookmarks}
-                onNavigate={navigateToBookmarkOrSuggestion}
+            <div className="iex-frame-container">
+              <iframe
+                key={`${activeTab?.id}-${reloadToken}-${activeUrl}`}
+                ref={iframeRef}
+                src={activeUrl}
+                title={activeTab?.title || "Browser Frame"}
+                className="iex-frame"
+                onLoad={handleIframeLoad}
+                onError={handleIframeError}
+                allow="fullscreen"
+                allowFullScreen
               />
-            ) : (
-              <div className="iex-frame-container">
-                <iframe
-                  key={`${activeTab?.id}-${reloadToken}-${activeUrl}`}
-                  ref={iframeRef}
-                  src={activeUrl}
-                  title={activeTab?.title || "Browser Frame"}
-                  className="iex-frame"
-                  onLoad={handleIframeLoad}
-                  onError={handleIframeError}
-                  allow="fullscreen"
-                  allowFullScreen
+              {activeTab?.blocked ? (
+                <BlockedPageOverlay
+                  blocked={activeTab.blocked}
+                  onOpenExternal={() => {
+                    if (activeTab.blocked?.url) {
+                      window.open(activeTab.blocked.url, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                  onGoBack={() => {
+                    if (canGoBack) {
+                      goBack();
+                    } else {
+                      goHome();
+                    }
+                  }}
                 />
-                {activeTab?.blocked ? (
-                  <BlockedPageOverlay
-                    blocked={activeTab.blocked}
-                    onOpenExternal={() => {
-                      if (activeTab.blocked?.url) {
-                        window.open(activeTab.blocked.url, "_blank", "noopener,noreferrer");
-                      }
-                    }}
-                    onGoBack={() => {
-                      if (canGoBack) {
-                        goBack();
-                      } else {
-                        updateTab(activeTab.id, {
-                          url: "newtab",
-                          displayUrl: "",
-                          inputValue: "",
-                          title: "New Tab",
-                          isLoading: false,
-                          blocked: null,
-                        });
-                      }
-                    }}
-                  />
-                ) : null}
-              </div>
-            )}
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
@@ -1140,10 +1072,12 @@ const InternetExplorer = () => {
 
 const componentStyles = `
 .iex-window {
-  width: 100%;
-  height: 100%;
-  min-width: 740px;
-  min-height: 460px;
+  width: min(1080px, calc(100vw - 72px));
+  height: min(700px, calc(100vh - 110px));
+  min-width: 760px;
+  min-height: 500px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100vh - 48px);
   display: flex;
   flex-direction: column;
 }
@@ -1166,6 +1100,8 @@ const componentStyles = `
   background: #1a1a2e;
   border-bottom: 1px solid #282c45;
   overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
 }
 
 .iex-tab {
@@ -1241,6 +1177,7 @@ const componentStyles = `
   padding: 6px 10px;
   background: #20263a;
   border-bottom: 1px solid #2f354f;
+  overflow: hidden;
 }
 
 .iex-nav-controls,
@@ -1312,6 +1249,14 @@ const componentStyles = `
   background: #272f45;
   border-bottom: 1px solid #353f5b;
   overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+
+.iex-tabbar::-webkit-scrollbar,
+.iex-bookmarks-bar::-webkit-scrollbar {
+  height: 0;
+  width: 0;
 }
 
 .iex-bookmark-chip {
@@ -1424,134 +1369,6 @@ const componentStyles = `
   cursor: pointer;
 }
 
-.iex-newtab-page {
-  width: 100%;
-  height: 100%;
-  color: #e5e7eb;
-  background:
-    radial-gradient(circle at top right, rgba(34, 211, 238, 0.15), transparent 45%),
-    radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.18), transparent 50%),
-    #090f1d;
-  padding: 20px;
-  overflow-y: auto;
-}
-
-.iex-newtab-clock {
-  text-align: right;
-  color: #cbd5e1;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.iex-newtab-search-card {
-  margin: 0 auto 18px auto;
-  max-width: 620px;
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  background: rgba(20, 28, 48, 0.6);
-  backdrop-filter: blur(6px);
-  border-radius: 16px;
-  padding: 16px;
-}
-
-.iex-newtab-search-card h2 {
-  text-align: center;
-  margin-bottom: 10px;
-}
-
-.iex-newtab-search-card input {
-  width: 100%;
-  height: 42px;
-  border: 1px solid #3f4a68;
-  border-radius: 12px;
-  background: rgba(8, 12, 24, 0.75);
-  color: #f9fafb;
-  padding: 0 12px;
-  font-size: 13px;
-  outline: none;
-}
-
-.iex-newtab-grid {
-  display: grid;
-  gap: 14px;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-}
-
-.iex-glass-card {
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  background: rgba(20, 28, 48, 0.58);
-  backdrop-filter: blur(6px);
-  border-radius: 14px;
-  padding: 14px;
-}
-
-.iex-glass-card h3 {
-  margin-bottom: 10px;
-}
-
-.iex-tile-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
-  gap: 8px;
-}
-
-.iex-tile {
-  border: 1px solid #404b69;
-  border-radius: 10px;
-  background: rgba(15, 21, 38, 0.86);
-  color: #d1d5db;
-  padding: 8px;
-  min-height: 88px;
-  display: grid;
-  place-items: center;
-  gap: 4px;
-  cursor: pointer;
-  text-align: center;
-}
-
-.iex-tile img {
-  width: 18px;
-  height: 18px;
-}
-
-.iex-tile span {
-  font-size: 11px;
-}
-
-.iex-tile small {
-  font-size: 10px;
-  color: #94a3b8;
-}
-
-.iex-bookmark-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.iex-bookmark-row {
-  border: 1px solid #404b69;
-  border-radius: 8px;
-  background: rgba(15, 21, 38, 0.86);
-  color: #d1d5db;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 0 10px;
-  cursor: pointer;
-  text-align: left;
-}
-
-.iex-bookmark-row img {
-  width: 16px;
-  height: 16px;
-}
-
-.iex-empty {
-  color: #94a3b8;
-  font-size: 12px;
-}
-
 @keyframes iex-loading {
   0% { transform: translateX(0); opacity: 0.3; }
   50% { transform: translateX(140%); opacity: 1; }
@@ -1566,6 +1383,8 @@ const componentStyles = `
   .iex-window {
     min-width: 320px;
     min-height: 380px;
+    width: calc(100vw - 20px);
+    height: calc(100vh - 88px);
   }
 
   .iex-urlbar-row {
