@@ -44,6 +44,12 @@ import game from '../../assets/doom.png'
 import About from '../../assets/ipng.png'
 import MyComputer from '../../assets/pc.png'
 import VSCode from '../../assets/vscode.png'
+import N64Icon from '../../assets/N64.png'
+import PS1Icon from '../../assets/PS1.png'
+import GBAIcon from '../../assets/GBA.png'
+import NESIcon from '../../assets/NES.png'
+import Quake1Icon from '../../assets/Quake 1.png'
+import SkiFreeIcon from '../../assets/Skifree.png'
 
 const withBase = (relativePath) =>
   `${import.meta.env.BASE_URL}${String(relativePath).replace(/^\/+/, '')}`;
@@ -133,16 +139,16 @@ export function imageMapping (name, type) {
       return ie
 
     case 'Nintendo 64':
-      return withBase('icons/n64.svg');
+      return N64Icon;
 
     case 'PlayStation 1':
-      return withBase('icons/ps1.svg');
+      return PS1Icon;
 
     case 'Game Boy Advance':
-      return withBase('icons/gba.svg');
+      return GBAIcon;
 
     case 'NES Emulator':
-      return withBase('icons/nes.svg');
+      return NESIcon;
 
     case 'Windows 95':
       return withBase('icons/win95.svg');
@@ -158,7 +164,7 @@ export function imageMapping (name, type) {
 
     case 'Quake I':
     case 'Quake':
-      return withBase('icons/quake1.svg');
+      return Quake1Icon;
 
     case 'Chrome Dino':
       return withBase('icons/chromedino.svg');
@@ -167,7 +173,7 @@ export function imageMapping (name, type) {
       return withBase('icons/dxball.svg');
 
     case 'SkiFree':
-      return withBase('icons/skifree.svg');
+      return SkiFreeIcon;
 
     case 'Settings':
       return settings;
