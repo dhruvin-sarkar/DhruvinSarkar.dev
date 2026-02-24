@@ -1,7 +1,6 @@
 import UseContext from '../Context';
 import { useContext, useRef } from "react";
-import Draggable from 'react-draggable';
-
+import Draggable from './system/WindowDraggable';
 import Project from '../assets/regFolder.png';
 import '../css/ProjectFolder.css';
 import { useSounds } from '../hooks/useSounds';

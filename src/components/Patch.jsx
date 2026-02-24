@@ -1,7 +1,6 @@
 import UseContext from '../Context'
 import { useContext } from "react";
-import Draggable from 'react-draggable'
-
+import Draggable from './system/WindowDraggable';
 import bulb from '../assets/bulb.png'
 import '../css/Patch.css'
 import patchNotes from '../../patchNotes';

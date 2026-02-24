@@ -1,7 +1,7 @@
 import UseContext from '../Context'
 import emailjs from '@emailjs/browser';
 import { useContext, useRef } from "react";
-import Draggable from 'react-draggable'
+import Draggable from './system/WindowDraggable';
 import Mail from '../assets/mail.png'
 import '../css/MailFolder.css'
 import { useSounds } from '../hooks/useSounds';

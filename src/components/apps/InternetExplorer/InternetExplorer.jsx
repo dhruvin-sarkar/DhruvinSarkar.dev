@@ -6,7 +6,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import Draggable from "react-draggable";
+import Draggable from '../../system/WindowDraggable';
 import UseContext from "../../../Context";
 
 const STORAGE_KEYS = {

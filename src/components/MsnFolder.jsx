@@ -1,7 +1,6 @@
 import UseContext from '../Context';
 import { useContext, useState, useRef, useEffect } from "react";
-import Draggable from 'react-draggable';
-
+import Draggable from './system/WindowDraggable';
 import msnPic from '../assets/msn.png';
 import chat from '../assets/chat.png';
 import nudge from '../assets/nudge.png';

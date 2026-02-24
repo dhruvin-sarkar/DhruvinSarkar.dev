@@ -1,6 +1,6 @@
 import UseContext from '../Context'
 import { useContext, useState } from "react";
-import Draggable from 'react-draggable'
+import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';
 import resumefile from '../assets/resume.png'
 import '../css/ResumeFile.css'

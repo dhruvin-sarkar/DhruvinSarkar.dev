@@ -1,6 +1,6 @@
 import { useEffect, useContext, useRef, useState } from 'react';
 import UseContext from '../Context';
-import Draggable from 'react-draggable';
+import Draggable from './system/WindowDraggable';
 import binEmp from '../assets/bin2.png'
 import bin from '../assets/bin.png'
 import { IoIosSearch } from "react-icons/io";

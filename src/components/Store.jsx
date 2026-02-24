@@ -1,6 +1,6 @@
 import UseContext from '../Context'
 import { useContext, useEffect, useState } from "react";
-import Draggable from 'react-draggable'
+import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';
 import '../css/Store.css'
 import { useSounds } from '../hooks/useSounds';

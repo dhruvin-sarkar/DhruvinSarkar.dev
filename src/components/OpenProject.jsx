@@ -1,6 +1,6 @@
 import UseContext from '../Context'
 import { useContext } from "react";
-import Draggable from 'react-draggable'
+import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';
 import ie from '../assets/ie.png'
 import '../css/OpenProject.css'

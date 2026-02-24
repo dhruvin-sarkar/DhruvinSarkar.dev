@@ -1,6 +1,6 @@
 import UseContext from '../Context'
 import { useContext, useState, useRef, useEffect } from "react";
-import Draggable from 'react-draggable'
+import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';
 import About from '../assets/ipng.png'
 import bioPC from '../assets/pfp.jpg'

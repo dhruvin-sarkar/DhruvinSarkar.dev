@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Draggable from "react-draggable";
-
 const DEFAULT_MIN_WIDTH = 300;
 const DEFAULT_MIN_HEIGHT = 200;
 const EDGE_SIZE = 6;

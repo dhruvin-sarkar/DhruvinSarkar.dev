@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useContext } from 'react';
-import Draggable from 'react-draggable';
+import Draggable from './system/WindowDraggable';
 import UseContext from '../Context';
 import '../css/Terminal.css';
 import { useSounds } from '../hooks/useSounds';
