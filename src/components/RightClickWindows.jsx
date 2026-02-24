@@ -224,8 +224,6 @@ function CreateFolder() {
   setPopUpCreateFolderName(false)
   setNewFolderNameVal('')
 }
-  console.log(iconBeingRightClicked.name, regErrorPopUpVal)
-
   function askBeforeDelete() {
     setRegErrorPopUpVal(iconBeingRightClicked.name)
     setRegErrorPopUp(true)

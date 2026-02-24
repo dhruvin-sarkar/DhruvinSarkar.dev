@@ -8,6 +8,7 @@ import React, {
 } from "react";
 import Draggable from '../../system/WindowDraggable';
 import UseContext from "../../../Context";
+import ieIcon from "../../../assets/ie.png";
 
 const STORAGE_KEYS = {
   tabs: "ie-tabs",
@@ -98,7 +99,7 @@ const getDisplayUrlFromUrl = (url) => {
 
 const getFaviconUrl = (url) => {
   const host = getHostFromUrl(url);
-  if (!host) return "/assets/ie.png";
+  if (!host) return ieIcon;
   // Google s2 is a stable way to fetch small favicons from hostnames.
   return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=16`;
 };
@@ -292,6 +293,11 @@ const TabBar = ({
               alt=""
               className="iex-tab-favicon"
               draggable={false}
+              onError={(event) => {
+                if (event.currentTarget.src !== ieIcon) {
+                  event.currentTarget.src = ieIcon;
+                }
+              }}
             />
             <span className="iex-tab-title">{truncateText(tab.title)}</span>
             <span
@@ -396,7 +402,16 @@ const BookmarksBar = ({ bookmarks, onNavigate }) => {
             title={item.url}
             type="button"
           >
-            <img src={favicon} alt="" draggable={false} />
+            <img
+              src={favicon}
+              alt=""
+              draggable={false}
+              onError={(event) => {
+                if (event.currentTarget.src !== ieIcon) {
+                  event.currentTarget.src = ieIcon;
+                }
+              }}
+            />
             <span>{truncateText(title, 16)}</span>
           </button>
         );
@@ -446,6 +461,7 @@ const InternetExplorer = () => {
   const tabsRef = useRef([]);
   const activeTabIdRef = useRef("");
   const positionedRef = useRef(false);
+  const preMaxPositionRef = useRef(null);
 
   const launchPosition = useMemo(
     () => ({
@@ -496,6 +512,13 @@ const InternetExplorer = () => {
   });
 
   const [reloadTokens, setReloadTokens] = useState({});
+  const resolvedWindowPosition = useMemo(
+    () => ({
+      x: Number.isFinite(IEExpand.x) ? IEExpand.x : launchPosition.x,
+      y: Number.isFinite(IEExpand.y) ? IEExpand.y : launchPosition.y,
+    }),
+    [IEExpand.x, IEExpand.y, launchPosition.x, launchPosition.y],
+  );
 
   useEffect(() => {
     tabsRef.current = tabs;
@@ -659,7 +682,7 @@ const InternetExplorer = () => {
           history: [GOOGLE_HOME],
           historyIndex: 0,
           blocked: null,
-          favicon: "/assets/ie.png",
+          favicon: ieIcon,
         });
         setActiveTabId(reset.id);
         return [reset];
@@ -921,14 +944,29 @@ const InternetExplorer = () => {
   };
 
   const handleMaximize = () => {
-    setIEExpand((previous) => ({ ...previous, expand: !previous.expand }));
+    setIEExpand((previous) => {
+      if (!previous.expand) {
+        preMaxPositionRef.current = {
+          x: Number.isFinite(previous.x) ? previous.x : launchPosition.x,
+          y: Number.isFinite(previous.y) ? previous.y : launchPosition.y,
+        };
+        return { ...previous, expand: true };
+      }
+
+      const restore = preMaxPositionRef.current;
+      preMaxPositionRef.current = null;
+      if (restore && Number.isFinite(restore.x) && Number.isFinite(restore.y)) {
+        return { ...previous, expand: false, x: restore.x, y: restore.y };
+      }
+      return { ...previous, expand: false };
+    });
   };
 
   const handleDragStop = (_, data) => {
     setIEExpand((previous) => ({
       ...previous,
-      x: data.x,
-      y: data.y,
+      x: Number.isFinite(data?.x) ? data.x : previous.x,
+      y: Number.isFinite(data?.y) ? data.y : previous.y,
     }));
   };
 
@@ -949,16 +987,7 @@ const InternetExplorer = () => {
         x: launchPosition.x,
         y: launchPosition.y,
       }}
-      position={{
-        x:
-          Number.isFinite(IEExpand.x) && IEExpand.x !== 0
-            ? IEExpand.x
-            : launchPosition.x,
-        y:
-          Number.isFinite(IEExpand.y) && IEExpand.y !== 0
-            ? IEExpand.y
-            : launchPosition.y,
-      }}
+      position={resolvedWindowPosition}
       onStop={handleDragStop}
       onStart={() => handleSetFocusItemTrue("InternetExplorer")}
     >
@@ -984,7 +1013,7 @@ const InternetExplorer = () => {
           style={{ background: IEExpand.focusItem ? themeDragBar : "#757579" }}
         >
           <div className="folder_barname-InternetExplorer">
-            <img src="/assets/ie.png" alt="Internet Explorer" />
+            <img src={ieIcon} alt="Internet Explorer" />
             <span>Internet Explorer</span>
           </div>
           <div className="folder_barbtn-InternetExplorer">
@@ -1075,7 +1104,6 @@ const InternetExplorer = () => {
                 onLoad={handleIframeLoad}
                 onError={handleIframeError}
                 allow="fullscreen"
-                allowFullScreen
               />
               {activeTab?.blocked ? (
                 <BlockedPageOverlay

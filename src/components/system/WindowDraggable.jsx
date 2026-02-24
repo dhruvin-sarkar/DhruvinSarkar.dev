@@ -5,6 +5,27 @@ const DEFAULT_MIN_HEIGHT = 200;
 const EDGE_SIZE = 6;
 const CORNER_SIZE = 12;
 const OVERLAY_Z_INDEX = 9999;
+// Reserve titlebar control area so resize handles do not block minimize/maximize/close buttons.
+const TITLEBAR_SAFE_ZONE = 20;
+const TOP_RIGHT_CONTROL_GUTTER = 140;
+const DEFAULT_DRAG_CANCEL_SELECTOR = [
+  "button",
+  "input",
+  "textarea",
+  "select",
+  "option",
+  "a",
+  "[role='button']",
+  "[contenteditable='true']",
+  "[class*='barbtn']",
+  "[class*='barbtn'] *",
+  "[class*='title-buttons']",
+  "[class*='title-buttons'] *",
+  "[class*='controls']",
+  "[class*='controls'] *",
+  "[data-no-drag]",
+  "[data-no-drag] *",
+].join(", ");
 
 const RESIZE_CURSORS = {
   n: "ns-resize",
@@ -65,17 +86,17 @@ function getHandleStyle(direction) {
 
   switch (direction) {
     case "n":
-      return { ...base, left: 0, right: 0, top: 0, height: EDGE_SIZE };
+      return { ...base, left: 0, right: TOP_RIGHT_CONTROL_GUTTER, top: 0, height: EDGE_SIZE };
     case "s":
       return { ...base, left: 0, right: 0, bottom: 0, height: EDGE_SIZE };
     case "e":
-      return { ...base, top: 0, bottom: 0, right: 0, width: EDGE_SIZE };
+      return { ...base, top: TITLEBAR_SAFE_ZONE, bottom: 0, right: 0, width: EDGE_SIZE };
     case "w":
-      return { ...base, top: 0, bottom: 0, left: 0, width: EDGE_SIZE };
+      return { ...base, top: TITLEBAR_SAFE_ZONE, bottom: 0, left: 0, width: EDGE_SIZE };
     case "ne":
-      return { ...base, top: 0, right: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
+      return { ...base, top: TITLEBAR_SAFE_ZONE, right: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
     case "nw":
-      return { ...base, top: 0, left: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
+      return { ...base, top: TITLEBAR_SAFE_ZONE, left: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
     case "se":
       return { ...base, bottom: 0, right: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
     case "sw":
@@ -109,6 +130,7 @@ const WindowDraggable = React.forwardRef(function WindowDraggable(props, ref) {
     children,
     handle,
     disabled,
+    cancel,
     onStart,
     onDrag,
     onStop,
@@ -142,6 +164,13 @@ const WindowDraggable = React.forwardRef(function WindowDraggable(props, ref) {
   const resizeSessionRef = useRef(null);
   const positionRef = useRef(windowPosition);
   const sizeRef = useRef(windowSize);
+  const hasSyncedInitialPositionRef = useRef(false);
+  const previousDisabledRef = useRef(Boolean(disabled));
+  const preDisabledRectRef = useRef(null);
+  const mergedCancelSelector = useMemo(() => {
+    if (!cancel) return DEFAULT_DRAG_CANCEL_SELECTOR;
+    return `${cancel}, ${DEFAULT_DRAG_CANCEL_SELECTOR}`;
+  }, [cancel]);
 
   useEffect(() => {
     positionRef.current = windowPosition;
@@ -158,6 +187,96 @@ const WindowDraggable = React.forwardRef(function WindowDraggable(props, ref) {
   }, [position?.x, position?.y, isDragging, isResizing]);
 
   useLayoutEffect(() => {
+    const wasDisabled = previousDisabledRef.current;
+    const isDisabled = Boolean(disabled);
+
+    if (!wasDisabled && isDisabled) {
+      // Maximize entering: snapshot position + size so restore can return to the same rectangle.
+      const node = childNodeRef.current;
+      const rect = node ? node.getBoundingClientRect() : null;
+      preDisabledRectRef.current = {
+        x: positionRef.current.x,
+        y: positionRef.current.y,
+        width: Number.isFinite(sizeRef.current.width) ? sizeRef.current.width : rect ? Math.round(rect.width) : null,
+        height: Number.isFinite(sizeRef.current.height) ? sizeRef.current.height : rect ? Math.round(rect.height) : null,
+      };
+    }
+
+    if (wasDisabled && !isDisabled && preDisabledRectRef.current) {
+      // Maximize leaving: restore the pre-max rectangle to avoid corner snapping after fullscreen.
+      const restoredRect = preDisabledRectRef.current;
+      const nextWidth = Number.isFinite(restoredRect.width) ? restoredRect.width : sizeRef.current.width;
+      const nextHeight = Number.isFinite(restoredRect.height) ? restoredRect.height : sizeRef.current.height;
+
+      if (Number.isFinite(nextWidth) && Number.isFinite(nextHeight)) {
+        setWindowSize((previous) => ({
+          ...previous,
+          width: Math.round(nextWidth),
+          height: Math.round(nextHeight),
+        }));
+      }
+
+      const restoredPosition = clampWindowPosition(
+        restoredRect.x,
+        restoredRect.y,
+        nextWidth || 0,
+        nextHeight || 0,
+      );
+      setWindowPosition(restoredPosition);
+      if (typeof onStop === "function") {
+        onStop(
+          { type: "restore-position-sync" },
+          {
+            node: childNodeRef.current,
+            x: restoredPosition.x,
+            y: restoredPosition.y,
+            deltaX: 0,
+            deltaY: 0,
+            lastX: restoredPosition.x,
+            lastY: restoredPosition.y,
+          },
+        );
+      }
+      preDisabledRectRef.current = null;
+    }
+
+    previousDisabledRef.current = isDisabled;
+  }, [disabled, onStop]);
+
+  useEffect(() => {
+    if (hasSyncedInitialPositionRef.current) return;
+    // Controlled draggables already provide authoritative coordinates.
+    if (Number.isFinite(position?.x) && Number.isFinite(position?.y)) {
+      hasSyncedInitialPositionRef.current = true;
+      return;
+    }
+    if (typeof onStop !== "function") {
+      hasSyncedInitialPositionRef.current = true;
+      return;
+    }
+
+    // Many app windows use defaultPosition + onStop to persist x/y.
+    // Sync initial coordinates once so maximize/restore math does not assume x/y = 0.
+    const { x, y } = positionRef.current;
+    onStop(
+      { type: "init-position-sync" },
+      {
+        node: childNodeRef.current,
+        x,
+        y,
+        deltaX: 0,
+        deltaY: 0,
+        lastX: x,
+        lastY: y,
+      },
+    );
+    hasSyncedInitialPositionRef.current = true;
+  }, [onStop, position?.x, position?.y]);
+
+  useLayoutEffect(() => {
+    // Do not capture "maximized/fullscreen" dimensions as the normal restorable size.
+    // If we measured while disabled=true, unmaximize would keep a giant width/height and clamp to a corner.
+    if (disabled) return;
     const node = childNodeRef.current;
     if (!node) return;
     const rect = node.getBoundingClientRect();
@@ -349,6 +468,17 @@ const WindowDraggable = React.forwardRef(function WindowDraggable(props, ref) {
 
   const handleDragStart = useCallback((event, data) => {
     if (isResizing) return false;
+    const point = getPoint(event);
+    const node = childNodeRef.current;
+    if (point && node) {
+      const rect = node.getBoundingClientRect();
+      const isInTopRightControlZone =
+        point.clientY >= rect.top &&
+        point.clientY <= rect.top + TITLEBAR_SAFE_ZONE &&
+        point.clientX >= rect.right - TOP_RIGHT_CONTROL_GUTTER &&
+        point.clientX <= rect.right;
+      if (isInTopRightControlZone) return false;
+    }
     setIsDragging(true);
     applyBodySelectionLock(true);
     if (typeof onStart === "function") {
@@ -442,6 +572,7 @@ const WindowDraggable = React.forwardRef(function WindowDraggable(props, ref) {
         ref={ref}
         {...rest}
         handle={handle}
+        cancel={mergedCancelSelector}
         disabled={disabled || isResizing}
         position={windowPosition}
         onStart={handleDragStart}

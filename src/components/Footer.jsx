@@ -94,7 +94,6 @@ export default function Footer() {
             onmouseenter: () => {
                 setResumejectStartBar(false);
                 setProjectStartBar(false);
-                setGamesStartBar(false);
             },
         },
         {
@@ -248,7 +247,6 @@ export default function Footer() {
           const startPopupContainer = startPopUpRef.current;
           const projectContainer = projectRef.current;
           const resumeContainer = resumeRef.current;
-          const gamesContainer = gamesRef.current;
 
           if (startPopupContainer) {
             const startRect = startPopupContainer.getBoundingClientRect();
