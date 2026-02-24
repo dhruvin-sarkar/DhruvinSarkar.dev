@@ -7,7 +7,7 @@ const QuakeOriginal = () => (
     stateKey="Quake1Expand"
     setterKey="setQuake1Expand"
     windowName="Quake"
-    icon="/icons/quake1.svg"
+    icon="/icons/quake1.png"
     iframeSrc="https://www.quakejs.com/"
     externalUrl="https://www.quakejs.com/"
     defaultWidth={960}

@@ -224,7 +224,7 @@ export default function Footer() {
         },
         {
             className: "n64",
-            imgSrc: '/icons/reference/emulator.png',
+            imgSrc: '/icons/n64.png',
             imgAlt: "Nintendo 64",
             spanText: "Nintendo 64",
             onClick: () => {
@@ -238,7 +238,7 @@ export default function Footer() {
         },
         {
             className: "ps1",
-            imgSrc: '/icons/reference/emulator.png',
+            imgSrc: '/icons/ps1.png',
             imgAlt: "PlayStation 1",
             spanText: "PlayStation 1",
             onClick: () => {
@@ -252,7 +252,7 @@ export default function Footer() {
         },
         {
             className: "gba",
-            imgSrc: '/icons/reference/emulator.png',
+            imgSrc: '/icons/gba.png',
             imgAlt: "Game Boy Advance",
             spanText: "Game Boy Advance",
             onClick: () => {
@@ -266,7 +266,7 @@ export default function Footer() {
         },
         {
             className: "nes",
-            imgSrc: '/icons/reference/emulator.png',
+            imgSrc: '/icons/nes.png',
             imgAlt: "NES Emulator",
             spanText: "NES Emulator",
             onClick: () => {
@@ -322,7 +322,7 @@ export default function Footer() {
         },
         {
             className: "quake1",
-            imgSrc: '/icons/quake1.svg',
+            imgSrc: '/icons/quake1.png',
             imgAlt: "Quake",
             spanText: "Quake",
             onClick: () => {
@@ -364,7 +364,7 @@ export default function Footer() {
         },
         {
             className: "skifree",
-            imgSrc: '/icons/skifree.svg',
+            imgSrc: '/icons/skifree.png',
             imgAlt: "SkiFree",
             spanText: "SkiFree",
             onClick: () => {

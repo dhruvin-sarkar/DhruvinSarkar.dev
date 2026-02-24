@@ -7,7 +7,7 @@ const PlayStation1 = () => (
     stateKey="PS1Expand"
     setterKey="setPS1Expand"
     windowName="PlayStation 1"
-    icon="/icons/reference/emulator.png"
+    icon="/icons/ps1.png"
     iframeSrc="/emulators/ejs-loader.html?core=ps1"
     defaultWidth={800}
     defaultHeight={600}

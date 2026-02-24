@@ -130,16 +130,16 @@ export function imageMapping (name, type) {
       return ie
 
     case 'Nintendo 64':
-      return '/icons/reference/emulator.png';
+      return '/icons/n64.png';
 
     case 'PlayStation 1':
-      return '/icons/reference/emulator.png';
+      return '/icons/ps1.png';
 
     case 'Game Boy Advance':
-      return '/icons/reference/emulator.png';
+      return '/icons/gba.png';
 
     case 'NES Emulator':
-      return '/icons/reference/emulator.png';
+      return '/icons/nes.png';
 
     case 'Windows 95':
       return '/icons/reference/v86.png';
@@ -154,7 +154,7 @@ export function imageMapping (name, type) {
       return '/icons/reference/quake3.png';
 
     case 'Quake':
-      return '/icons/quake1.svg';
+      return '/icons/quake1.png';
 
     case 'Chrome Dino':
       return '/icons/reference/dino.png';
@@ -163,7 +163,7 @@ export function imageMapping (name, type) {
       return '/icons/reference/dxball.png';
 
     case 'SkiFree':
-      return '/icons/skifree.svg';
+      return '/icons/skifree.png';
 
     case 'Settings':
       return settings;
