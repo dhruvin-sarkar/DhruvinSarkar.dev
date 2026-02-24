@@ -41,17 +41,15 @@ function MyBioFolder() {
     <div className="technology-content">
       <div className="tech_section">
         <h3 className="tech_header">Languages</h3>
-        <p className="tech_prose">I gravitate toward languages that give me direct control over behavior and performance. C and C++ are my foundation - they taught me how systems work at the lowest levels and instilled in me a respect for memory management and optimization. JavaScript and TypeScript are where I spend most of my time now, building interactive web experiences with the type safety and tooling that modern development demands. I appreciate CSS for its ability to bring designs to life, and I turn to Bash when I need to automate or script system-level tasks. Lua, Dart, and Kotlin each serve specific purposes in my toolkit - Lua for game scripting, Dart for Flutter development, and Kotlin when I'm working in the Android ecosystem.</p>
+        <p className="tech_prose">I gravitate toward languages that give me direct control over behavior and performance. C and C++ are my foundation - they taught me how systems work at the lowest levels and instilled in me a respect for memory management and optimization. JavaScript and TypeScript are where I spend most of my time now, building interactive web experiences with the type safety and tooling that modern development demands. I appreciate CSS for its ability to bring designs to life, and I turn to Bash when I need to automate or script system-level tasks. Lua, Dart, and Kotlin each serve specific purposes in my toolkit -  Dart for Flutter development.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C" />
           <img src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++" />
           <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" alt="JavaScript" />
           <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
           <img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white" alt="CSS" />
-          <img src="https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white" alt="Lua" />
           <img src="https://img.shields.io/badge/Bash-4EAA25?style=for-the-badge&logo=gnu-bash&logoColor=white" alt="Bash" />
           <img src="https://img.shields.io/badge/Dart-%230175C2.svg?style=for-the-badge&logo=dart&logoColor=white" alt="Dart" />
-          <img src="https://img.shields.io/badge/kotlin-%237F52FF.svg?style=for-the-badge&logo=kotlin&logoColor=white" alt="Kotlin" />
         </div>
       </div>
 
@@ -99,12 +97,11 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Backend & Databases</h3>
-        <p className="tech_prose">While I naturally lean frontend-first, I'm comfortable building complete full-stack applications when the project demands it. Python has become my go-to for backend scripting and data processing, though I'm equally proficient with Java and C# for enterprise-level applications. PHP still has its place in my toolkit for certain web applications. When it comes to data persistence, I choose based on the use case - MongoDB for flexible document storage, MySQL for traditional relational needs, and PostgreSQL when I need advanced features and robustness. I don't just connect these technologies; I think deeply about data architecture, scalability, and the trade-offs between different approaches.</p>
+        <p className="tech_prose">While I naturally lean frontend-first, I'm comfortable building complete full-stack applications when the project demands it. Python has become my go-to for backend scripting and data processing, though I'm equally proficient with Java and C# for enterprise-level applications. When it comes to data persistence, I choose based on the use case - MongoDB for flexible document storage, MySQL for traditional relational needs, and PostgreSQL when I need advanced features and robustness. I don't just connect these technologies; I think deeply about data architecture, scalability, and the trade-offs between different approaches.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python" />
           <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" />
           <img src="https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=c-sharp&logoColor=white" alt="C#" />
-          <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="PHP" />
           <img src="https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white" alt="MongoDB" />
           <img src="https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL" />
           <img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
@@ -113,12 +110,11 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Game Development</h3>
-        <p className="tech_prose">Game development is where my technical curiosity and creative passion collide. I spend countless hours in Unity and Unreal Engine, building both 2D and 3D experiences that challenge my understanding of performance, physics, and player psychology. Blender has become an essential part of my workflow for creating and iterating on assets. Godot Engine, with its GDScript, offers a refreshing alternative when I need something more lightweight. I even dabble in Roblox development - it's surprisingly sophisticated and teaches valuable lessons about multiplayer architecture and user-generated content. What I love most about game dev is how every technical decision directly impacts the player experience.</p>
+        <p className="tech_prose">Game development is where my technical curiosity and creative passion collide. I spend countless hours in Unity and Unreal Engine, building both 2D and 3D experiences that challenge my understanding of performance, physics, and player psychology. Blender has become an essential part of my workflow for creating and iterating on assets. Godot Engine, with its GDScript and C++ integration, offers a refreshing alternative when I need something more lightweight. I even dabble in Roblox development - it's surprisingly sophisticated and teaches valuable lessons about multiplayer architecture and user-generated content. What I love most about game dev is how every technical decision directly impacts the player experience.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/Unity-100000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity" />
           <img src="https://img.shields.io/badge/Unreal_Engine-313131?style=for-the-badge&logo=unreal-engine&logoColor=white" alt="Unreal Engine" />
           <img src="https://img.shields.io/badge/Blender-%23F5792A.svg?style=for-the-badge&logo=blender&logoColor=white" alt="Blender" />
-          <img src="https://img.shields.io/badge/GDScript-%2374267B.svg?style=for-the-badge&logo=godotengine&logoColor=white" alt="GDScript" />
           <img src="https://img.shields.io/badge/GODOT-%23FFFFFF.svg?style=for-the-badge&logo=godot-engine" alt="Godot Engine" />
           <img src="https://img.shields.io/badge/Roblox-%230a0b0b.svg?style=for-the-badge&logo=Roblox&logoColor=white" alt="Roblox" />
         </div>
@@ -135,12 +131,11 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Tools & DevOps</h3>
-        <p className="tech_prose">My development workflow is built around a core set of tools that keep me productive and organized. Git and GitHub are non-negotiable - version control isn't just a safety net, it's how I think about code evolution and collaboration. Docker has revolutionized how I approach development environments, ensuring consistency across different machines and deployment targets. Firebase handles my backend-as-a-service needs when I need to move quickly without managing infrastructure. These tools aren't just utilities; they're extensions of my development philosophy - automated, reproducible, and scalable. I'm constantly refining my workflow to eliminate friction and focus on what matters: building great software.</p>
+        <p className="tech_prose">My development workflow is built around a core set of tools that keep me productive and organized. Git and GitHub are non-negotiable - version control isn't just a safety net, it's how I think about code evolution and collaboration. Docker has revolutionized how I approach development environments, ensuring consistency across different machines and deployment targets. These tools aren't just utilities; they're extensions of my development philosophy - automated, reproducible, and scalable. I'm constantly refining my workflow to eliminate friction and focus on what matters: building great software.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
           <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
           <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white" alt="Docker" />
-          <img src="https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black" alt="Firebase" />
         </div>
       </div>
     </div>
@@ -329,6 +324,11 @@ function MyBioFolder() {
       <div className="tech_section">
         <h3 className="tech_header">Competitions & Team Experience</h3>
         <p className="tech_prose">I've also participated in various competitions, hackathons, and game-focused events, collaborating under tight deadlines and learning how to work effectively in fast-paced team environments. On the competitive side, I've taken part in scrims for titles like CS2, CS:GO, and Rainbow Six Siege, experiences that reinforced communication, discipline, and strategic thinking under pressure.</p>
+      </div>
+
+      <div className="tech_section">
+        <h3 className="tech_header">Academic Tutoring — Mathematics & Physics</h3>
+        <p className="tech_prose">I have experience tutoring students in 8th and 9th grade mathematics and physics, helping them strengthen conceptual understanding and problem-solving skills. Through one-on-one guidance, I focus on breaking down complex topics into clear, manageable steps, reinforcing both theory and practical application. My approach emphasizes logical reasoning, stepwise problem-solving, and building confidence, ensuring students not only learn how to solve problems but also understand the underlying principles. Tutoring has refined my communication skills and reinforced my own mastery of foundational STEM concepts, making it a mutually enriching experience.</p>
       </div>
 
       <div className="tech_section">
