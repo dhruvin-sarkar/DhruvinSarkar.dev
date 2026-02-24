@@ -29,7 +29,11 @@ function getPoint(event) {
 }
 
 function isWindowHandleSelector(handle) {
-  return typeof handle === "string" && handle.toLowerCase().includes("dragbar");
+  if (typeof handle !== "string") return false;
+  const normalized = handle.toLowerCase();
+  // Desktop icon draggables also use this wrapper, but they should not gain window resize handles.
+  if (normalized.includes("icon")) return false;
+  return true;
 }
 
 function readInitialPosition(position, defaultPosition) {
@@ -61,21 +65,21 @@ function getHandleStyle(direction) {
 
   switch (direction) {
     case "n":
-      return { ...base, left: 0, right: 0, top: -EDGE_SIZE / 2, height: EDGE_SIZE };
+      return { ...base, left: 0, right: 0, top: 0, height: EDGE_SIZE };
     case "s":
-      return { ...base, left: 0, right: 0, bottom: -EDGE_SIZE / 2, height: EDGE_SIZE };
+      return { ...base, left: 0, right: 0, bottom: 0, height: EDGE_SIZE };
     case "e":
-      return { ...base, top: 0, bottom: 0, right: -EDGE_SIZE / 2, width: EDGE_SIZE };
+      return { ...base, top: 0, bottom: 0, right: 0, width: EDGE_SIZE };
     case "w":
-      return { ...base, top: 0, bottom: 0, left: -EDGE_SIZE / 2, width: EDGE_SIZE };
+      return { ...base, top: 0, bottom: 0, left: 0, width: EDGE_SIZE };
     case "ne":
-      return { ...base, top: -CORNER_SIZE / 2, right: -CORNER_SIZE / 2, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
+      return { ...base, top: 0, right: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
     case "nw":
-      return { ...base, top: -CORNER_SIZE / 2, left: -CORNER_SIZE / 2, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
+      return { ...base, top: 0, left: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
     case "se":
-      return { ...base, bottom: -CORNER_SIZE / 2, right: -CORNER_SIZE / 2, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
+      return { ...base, bottom: 0, right: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
     case "sw":
-      return { ...base, bottom: -CORNER_SIZE / 2, left: -CORNER_SIZE / 2, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
+      return { ...base, bottom: 0, left: 0, width: CORNER_SIZE, height: CORNER_SIZE, zIndex: 6 };
     default:
       return base;
   }
@@ -336,6 +340,12 @@ const WindowDraggable = React.forwardRef(function WindowDraggable(props, ref) {
       window.removeEventListener("touchend", clearDragState);
     };
   }, [applyBodySelectionLock, isDragging]);
+
+  useEffect(() => {
+    return () => {
+      applyBodySelectionLock(false);
+    };
+  }, [applyBodySelectionLock]);
 
   const handleDragStart = useCallback((event, data) => {
     if (isResizing) return false;
