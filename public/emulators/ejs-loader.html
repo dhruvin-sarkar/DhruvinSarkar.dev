@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EmulatorJS Loader</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: radial-gradient(circle at 20% 20%, #1f2942 0%, #11182b 55%, #070b16 100%);
+        color: #e6ecff;
+      }
+
+      #game {
+        width: 100%;
+        height: 100%;
+      }
+
+      .picker-wrap {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(8, 12, 21, 0.9);
+        z-index: 20;
+      }
+
+      .picker-card {
+        width: min(560px, 95vw);
+        background: rgba(25, 33, 56, 0.92);
+        border: 1px solid rgba(126, 153, 233, 0.55);
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 18px 42px rgba(0, 0, 0, 0.45);
+      }
+
+      .picker-card h1 {
+        margin: 0 0 8px;
+        font-size: 20px;
+      }
+
+      .picker-card p {
+        margin: 0 0 14px;
+        opacity: 0.9;
+        font-size: 13px;
+        line-height: 1.45;
+      }
+
+      .drop-zone {
+        border: 2px dashed rgba(152, 182, 255, 0.7);
+        border-radius: 10px;
+        min-height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 16px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.18s ease;
+      }
+
+      .drop-zone.dragover {
+        border-color: #67a5ff;
+        background: rgba(103, 165, 255, 0.12);
+      }
+
+      .picker-row {
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border: 1px solid #5f81d9;
+        border-radius: 8px;
+        background: #2b3c68;
+        color: #f3f7ff;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .muted {
+        opacity: 0.78;
+        font-size: 12px;
+      }
+
+      #rom-input {
+        display: none;
+      }
+
+      .floating-picker-btn {
+        position: fixed;
+        right: 14px;
+        bottom: 14px;
+        z-index: 30;
+      }
+
+      .error {
+        margin-top: 10px;
+        color: #ff9f9f;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="game"></div>
+    <input id="rom-input" type="file" />
+
+    <script>
+      const CORE_MAP = {
+        n64: { core: "n64", extensions: [".z64", ".n64", ".v64"] },
+        ps1: { core: "mednafen_psx_hw", extensions: [".bin", ".cue", ".img"] },
+        gba: { core: "mgba", extensions: [".gba", ".gbc", ".gb"] },
+        nes: { core: "fceumm", extensions: [".nes", ".fds"] },
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const requestedCore = (params.get("core") || "nes").toLowerCase();
+      const config = CORE_MAP[requestedCore] || CORE_MAP.nes;
+      const romUrl = params.get("rom");
+      let floatingButton;
+
+      function getPathToDataForCore() {
+        // Local EmulatorJS data files are used by default.
+        // PS1 core files are larger and may not be present in all builds,
+        // so we fallback to EmulatorJS CDN path for that core.
+        if (config.core === "mednafen_psx_hw") {
+          return "https://cdn.emulatorjs.org/stable/data/";
+        }
+        return "/emulators/emulatorjs/data/";
+      }
+
+      function createFloatingPickerButton() {
+        if (floatingButton) return;
+        floatingButton = document.createElement("button");
+        floatingButton.className = "btn floating-picker-btn";
+        floatingButton.textContent = "Load ROM";
+        floatingButton.addEventListener("click", () => {
+          document.getElementById("rom-input").click();
+        });
+        document.body.appendChild(floatingButton);
+      }
+
+      function launchWithRom(targetRomUrl, { fromObjectUrl = false } = {}) {
+        window.EJS_player = "#game";
+        window.EJS_core = config.core;
+        window.EJS_gameUrl = targetRomUrl;
+        window.EJS_pathtodata = getPathToDataForCore();
+        window.EJS_color = "#7ea2ff";
+        window.EJS_backgroundColor = "#11182b";
+        window.EJS_startOnLoaded = true;
+
+        if (fromObjectUrl) {
+          window.EJS_gameName = "Uploaded ROM";
+        }
+
+        const script = document.createElement("script");
+        script.src = `${window.EJS_pathtodata}loader.js`;
+        script.onerror = () => {
+          showLoaderError(
+            "Unable to load EmulatorJS loader. Check emulator data files in /public/emulators/emulatorjs/data/."
+          );
+        };
+        document.body.appendChild(script);
+
+        createFloatingPickerButton();
+      }
+
+      function showLoaderError(message) {
+        const existing = document.querySelector(".picker-wrap");
+        if (existing) {
+          const err = existing.querySelector(".error");
+          if (err) {
+            err.textContent = message;
+          }
+          return;
+        }
+
+        const wrap = document.createElement("div");
+        wrap.className = "picker-wrap";
+        wrap.innerHTML = `
+          <div class="picker-card">
+            <h1>EmulatorJS Error</h1>
+            <p>${message}</p>
+            <div class="picker-row"><button class="btn" id="retry-btn">Retry</button></div>
+          </div>
+        `;
+        document.body.appendChild(wrap);
+
+        document.getElementById("retry-btn").addEventListener("click", () => {
+          window.location.reload();
+        });
+      }
+
+      function handlePickedFile(file) {
+        if (!file) return;
+        const fileName = file.name.toLowerCase();
+        const valid = config.extensions.some((ext) => fileName.endsWith(ext));
+
+        if (!valid) {
+          const errorEl = document.getElementById("picker-error");
+          if (errorEl) {
+            errorEl.textContent = `Unsupported ROM extension. Allowed: ${config.extensions.join(", ")}`;
+          }
+          return;
+        }
+
+        const objectUrl = URL.createObjectURL(file);
+        removePickerUI();
+        launchWithRom(objectUrl, { fromObjectUrl: true });
+      }
+
+      function removePickerUI() {
+        const picker = document.querySelector(".picker-wrap");
+        if (picker) picker.remove();
+      }
+
+      function renderRomPicker() {
+        const wrap = document.createElement("div");
+        wrap.className = "picker-wrap";
+        wrap.innerHTML = `
+          <div class="picker-card">
+            <h1>Load Your ROM</h1>
+            <p>
+              Core: <strong>${config.core}</strong><br />
+              Drop a ROM file here or click to browse.
+            </p>
+            <div class="drop-zone" id="drop-zone">
+              <div>
+                Drag and drop ROM file<br />
+                <span class="muted">Accepted: ${config.extensions.join(", ")}</span>
+              </div>
+            </div>
+            <div class="picker-row">
+              <button class="btn" id="browse-btn">Browse Files</button>
+              <span class="muted">ROM files are user-supplied and loaded locally.</span>
+            </div>
+            <div id="picker-error" class="error"></div>
+          </div>
+        `;
+
+        document.body.appendChild(wrap);
+
+        const input = document.getElementById("rom-input");
+        const dropZone = document.getElementById("drop-zone");
+        const browseBtn = document.getElementById("browse-btn");
+
+        browseBtn.addEventListener("click", () => input.click());
+        dropZone.addEventListener("click", () => input.click());
+
+        input.addEventListener("change", (event) => {
+          handlePickedFile(event.target.files && event.target.files[0]);
+        });
+
+        ["dragenter", "dragover"].forEach((eventName) => {
+          dropZone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            dropZone.classList.add("dragover");
+          });
+        });
+
+        ["dragleave", "drop"].forEach((eventName) => {
+          dropZone.addEventListener(eventName, (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+            dropZone.classList.remove("dragover");
+          });
+        });
+
+        dropZone.addEventListener("drop", (event) => {
+          const files = event.dataTransfer && event.dataTransfer.files;
+          handlePickedFile(files && files[0]);
+        });
+      }
+
+      if (romUrl) {
+        launchWithRom(romUrl);
+      } else {
+        renderRomPicker();
+      }
+    </script>
+  </body>
+</html>

@@ -9,6 +9,7 @@ const RetroIframeApp = ({
   title,
   stateKey,
   setterKey,
+  windowName,
   icon,
   iframeSrc,
   externalUrl,
@@ -79,7 +80,7 @@ const RetroIframeApp = ({
       icon={icon}
       state={state}
       setState={setState}
-      stateName={stateKey}
+      stateName={windowName || stateKey}
       defaultWidth={defaultWidth}
       defaultHeight={defaultHeight}
       defaultPosition={defaultPosition}
