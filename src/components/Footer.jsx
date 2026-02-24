@@ -34,6 +34,7 @@ export default function Footer() {
     const startPopUpRef = useRef(null)
     const projectRef = useRef(null)
     const resumeRef = useRef(null)
+    const closeMenuTimeoutRef = useRef(null)
     const [calValue, calOnChange] = useState(new Date());
     const [width, setWidth] = useState(0);
     const [reRenderFooter, setRerenderFooter] = useState(0)
@@ -87,42 +88,13 @@ export default function Footer() {
      
      const footerItems = [
         {
-            className: "project",
-            imgSrc: project,
-            imgAlt: "project",
-            spanText: "Project",
-            arrow: true,
-            onClick: () => {
-                setProjectStartBar(!projectStartBar)
-                setResumejectStartBar(false)
-            },
-            onmouseenter: () => {
-                setProjectStartBar(true)
-                setResumejectStartBar(false)
-            },
-        },
-        {
-            className: "resume",
-            imgSrc: resume,
-            imgAlt: "resume",
-            spanText: "Resume",
-            arrow: true,
-            onClick: () => {
-                setResumejectStartBar(!resumeStartBar)
-                setProjectStartBar(false)
-            },
-            onmouseenter: () => {
-                setResumejectStartBar(true);
-                setProjectStartBar(false);
-            },
-        },
-        {
             className: "sidebar_popup",
             imgSrc: sidebar,
             imgAlt: "sidebar",
             onmouseenter: () => {
                 setResumejectStartBar(false);
                 setProjectStartBar(false);
+                setGamesStartBar(false);
             },
         },
         {
@@ -196,23 +168,6 @@ export default function Footer() {
             },
         },
         {
-            className: "groove"
-        },
-        {
-            className: "shutdownicon",
-            imgSrc: shutdownicon,
-            imgAlt: "shutdownicon",
-            spanText: "Shut down...",
-            onClick: () => {
-                setShutdownWindow(true)
-                setStartActive(false)
-            },
-            onmouseenter: () => {
-                setResumejectStartBar(false);
-                setProjectStartBar(false);
-            },
-        },
-        {
             className: "msdos",
             imgSrc: imageMapping('MS-DOS Prompt'),
             imgAlt: "msdos",
@@ -234,6 +189,37 @@ export default function Footer() {
             onClick: () => {
                 handleShow('VS Code');
                 setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "minesweeper",
+            imgSrc: imageMapping('MineSweeper'),
+            imgAlt: "minesweeper",
+            spanText: "MineSweeper",
+            onClick: () => {
+                handleShow('MineSweeper');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "groove"
+        },
+        {
+            className: "shutdownicon",
+            imgSrc: shutdownicon,
+            imgAlt: "shutdownicon",
+            spanText: "Shut down...",
+            onClick: () => {
+                setShutdownWindow(true)
+                setStartActive(false)
             },
             onmouseenter: () => {
                 setResumejectStartBar(false);
@@ -262,6 +248,7 @@ export default function Footer() {
           const startPopupContainer = startPopUpRef.current;
           const projectContainer = projectRef.current;
           const resumeContainer = resumeRef.current;
+          const gamesContainer = gamesRef.current;
 
           if (startPopupContainer) {
             const startRect = startPopupContainer.getBoundingClientRect();
@@ -297,8 +284,20 @@ export default function Footer() {
               : true;
 
             if (isMouseOutsideStart && isMouseOutsideProject && isMouseOutsideResume) {
-              setProjectStartBar(false);
-              setResumejectStartBar(false);
+              // Clear any existing timeout
+              if (closeMenuTimeoutRef.current) {
+                clearTimeout(closeMenuTimeoutRef.current);
+              }
+              // Set a new timeout to close the menu after a short delay
+              closeMenuTimeoutRef.current = setTimeout(() => {
+                setProjectStartBar(false);
+                setResumejectStartBar(false);
+              }, 200);
+            } else {
+              // Mouse is over menu, clear any pending timeout
+              if (closeMenuTimeoutRef.current) {
+                clearTimeout(closeMenuTimeoutRef.current);
+              }
             }
           }
         };
@@ -307,6 +306,9 @@ export default function Footer() {
 
         return () => {
           document.removeEventListener('mousemove', handleMouseMove);
+          if (closeMenuTimeoutRef.current) {
+            clearTimeout(closeMenuTimeoutRef.current);
+          }
         };
       }, []);
 
@@ -625,7 +627,7 @@ export default function Footer() {
                                 e.stopPropagation()
                                 item.onClick()
                             }}
-                            onHoverStart={!isTouchDevice && item.onmouseenter}
+                            onMouseEnter={!isTouchDevice && item.onmouseenter}
                         >
                             {item.imgSrc && (
                                 <img
@@ -638,39 +640,6 @@ export default function Footer() {
                             {item.arrow && (<span><BsFillCaretRightFill/></span>)}
                         </motion.div>
                         ))}
-                        {projectStartBar && (
-                            <motion.div className="sub_start_container"
-                                ref={projectRef}
-                                style={{display: projectFolderItem === 0 ? 'none' : ''}}
-                            >
-                            {desktopIcon.filter(icon => icon.folderId === 'Project').map(icon => (
-                                <div className="icon_sub_start" key={icon.name}
-                                    onClick={() => handleShow(icon.name)}
-                                >
-                                    <img src={imageMapping(icon.pic)} alt={''}/>
-                                    <p>{icon.name}</p>
-                                </div>
-                            ))}
-                        </motion.div>
-                        )}
-                        {resumeStartBar && (
-                            <motion.div className="sub_start_container"
-                                ref={resumeRef}
-                                style={{
-                                    display: resumeFolderItem === 0 ? 'none' : '',
-                                    top: '2.55rem'
-                                }}
-                            >
-                            {desktopIcon.filter(icon => icon.folderId === 'Resume').map(icon => (
-                                <div className="icon_sub_start" key={icon.name}
-                                    onClick={() => handleShow(icon.name)}
-                                >
-                                    <img src={imageMapping(icon.pic)} alt={icon.name}/>
-                                    <p>{icon.name}</p>
-                                </div>
-                            ))}
-                        </motion.div>
-                        )}
 
                     </div>
                     )}

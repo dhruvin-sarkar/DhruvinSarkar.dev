@@ -48,11 +48,11 @@ function BgSetting() {
   
   const [ localBg, setLocalBg ] = useState(() => {
     const prevBg = localStorage.getItem('background')
-    // Force 90s.jpg as default if nothing is saved
+    // Force Live Wavy Grey as default if nothing is saved
     if (!prevBg) {
-      localStorage.setItem('background', bg13);
-      localStorage.setItem('barcolor', '#098684');
-      return bg13;
+      localStorage.setItem('background', bg10);
+      localStorage.setItem('barcolor', '#3C3C3C');
+      return bg10;
     }
     return prevBg;
   })
@@ -64,10 +64,10 @@ function BgSetting() {
   const [ themeColor, setThemeColor ] = useState(null)
   const [ localtheme, setLocalTheme ] = useState(() => {
     const prevTheme = localStorage.getItem('theme')
-    // Force teal as default if nothing is saved
+    // Force wavy grey as default if nothing is saved
     if (!prevTheme) {
-      localStorage.setItem('theme', '#098684');
-      return '#098684';
+      localStorage.setItem('theme', '#3C3C3C');
+      return '#3C3C3C';
     }
     return prevTheme;
   })

@@ -1,5 +1,5 @@
 import UseContext from '../Context'
-import { useContext, useState } from "react";
+import { useContext, useState, useRef, useEffect } from "react";
 import Draggable from 'react-draggable'
 import { motion } from 'framer-motion';
 import About from '../assets/ipng.png'
@@ -18,6 +18,13 @@ function MyBioFolder() {
   const [linuxTap, setLinuxTap] = useState(false)
   const [hobbTap, setHobbTap] = useState(false)
   const [employmentTap, setEmploymentTap] = useState(false)
+
+  // Refs for each tab's scroll container
+  const generalScroll = useRef(null)
+  const technologyScroll = useRef(null)
+  const linuxScroll = useRef(null)
+  const hobbyScroll = useRef(null)
+  const employmentScroll = useRef(null)
 
   const { 
     themeDragBar,
@@ -351,6 +358,37 @@ function MyBioFolder() {
     setEmploymentTap(name === 'employment');
   }
 
+  // Scroll to top when tab changes
+  useEffect(() => {
+    if (generalTap && generalScroll.current) {
+      generalScroll.current.scrollTop = 0;
+    }
+  }, [generalTap]);
+
+  useEffect(() => {
+    if (technologyTap && technologyScroll.current) {
+      technologyScroll.current.scrollTop = 0;
+    }
+  }, [technologyTap]);
+
+  useEffect(() => {
+    if (linuxTap && linuxScroll.current) {
+      linuxScroll.current.scrollTop = 0;
+    }
+  }, [linuxTap]);
+
+  useEffect(() => {
+    if (hobbTap && hobbyScroll.current) {
+      hobbyScroll.current.scrollTop = 0;
+    }
+  }, [hobbTap]);
+
+  useEffect(() => {
+    if (employmentTap && employmentScroll.current) {
+      employmentScroll.current.scrollTop = 0;
+    }
+  }, [employmentTap]);
+
   const activeBtnStyle = {
     bottom: '2px',
     outline: '1px dotted black',
@@ -453,7 +491,7 @@ function MyBioFolder() {
                 className="bio_img"
                 src={bioPC}
               />
-              <div className="bio_text_1 bio-scroll-container">
+              <div className="bio_text_1 bio-scroll-container" ref={generalScroll}>
                 {bioText}
               </div>   
             </div>
@@ -467,7 +505,7 @@ function MyBioFolder() {
                 className="tech_img"
                 src={tech}
               />
-              <div className="tech_text_container bio-scroll-container">
+              <div className="tech_text_container bio-scroll-container" ref={technologyScroll}>
                 {technologyText}
               </div>   
             </div>
@@ -481,7 +519,7 @@ function MyBioFolder() {
                 className="tech_img"
                 src={linux}
               />
-              <div className="tech_text_container bio-scroll-container">
+              <div className="tech_text_container bio-scroll-container" ref={linuxScroll}>
                 {linuxText}
               </div>   
             </div>
@@ -495,7 +533,7 @@ function MyBioFolder() {
                 className="hobby_img"
                 src={hobby}
               />
-              <div className="hobby_text_container bio-scroll-container">
+              <div className="hobby_text_container bio-scroll-container" ref={hobbyScroll}>
                 {hobbyText}
               </div>   
             </div>
@@ -509,7 +547,7 @@ function MyBioFolder() {
                 className="tech_img"
                 src={job}
               />
-              <div className="tech_text_container bio-scroll-container">
+              <div className="tech_text_container bio-scroll-container" ref={employmentScroll}>
                 {employmentText}
               </div>   
             </div>

@@ -47,11 +47,11 @@
     {
         "name": "MineSweeper",
         "pic": "MineSweeper",
-        "folderId": "Project",
+        "folderId": "Desktop",
         "size": 250,
         "type": ".exe",
-        "x": 120,
-        "y": 120
+        "x": 420,
+        "y": 20
     },
     {
         "name": "MSN",
