@@ -1,0 +1,245 @@
+.retro-app-window {
+  position: fixed;
+  display: none;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+  overflow: hidden;
+  resize: none;
+  min-width: 420px;
+  min-height: 280px;
+}
+
+.retro-dragbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: move;
+  height: 24px;
+  user-select: none;
+}
+
+.retro-dragbar-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.retro-dragbar-title img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+}
+
+.retro-dragbar-title span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.retro-dragbar-buttons {
+  display: flex;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.retro-title-button {
+  width: 16px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #c0c0c0;
+  border: 1px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  color: #000;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+
+.retro-title-button:active {
+  border-color: #000000 #ffffff #ffffff #000000;
+}
+
+.retro-close-button span {
+  font-size: 12px;
+}
+
+.retro-window-content {
+  width: 100%;
+  height: calc(100% - 24px);
+  background: #111;
+  position: relative;
+}
+
+.emulator-loading-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 20% 20%, #1f2942 0%, #101522 55%, #080a12 100%);
+}
+
+.emulator-loading-card {
+  width: min(520px, 90%);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(15, 19, 31, 0.78);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
+}
+
+.emulator-loading-card h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #f2f4ff;
+}
+
+.emulator-loading-card p {
+  margin: 8px 0 16px;
+  font-size: 12px;
+  color: #d4d9ef;
+  opacity: 0.92;
+}
+
+.emulator-loading-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.emulator-loading-bar-fill {
+  width: 30%;
+  height: 100%;
+  border-radius: 999px;
+  animation: emulator-loading-progress 1.25s ease-in-out infinite;
+}
+
+@keyframes emulator-loading-progress {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(420%);
+  }
+}
+
+.iframe-error-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: rgba(8, 11, 18, 0.96);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.iframe-error-panel {
+  width: min(560px, 95%);
+  background: #1a2234;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 16px;
+  color: #eef2ff;
+}
+
+.iframe-error-panel h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.iframe-error-panel p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+
+.iframe-error-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.iframe-error-actions button {
+  border: 1px solid #8096d4;
+  background: #2d3a63;
+  color: #f4f7ff;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.retro-performance-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  background: rgba(6, 9, 16, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.retro-performance-card {
+  width: min(560px, 96%);
+  background: #202b46;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  padding: 18px;
+  color: #eef2ff;
+}
+
+.retro-performance-card h3 {
+  margin: 0 0 10px;
+  font-size: 16px;
+}
+
+.retro-performance-card p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.45;
+  opacity: 0.92;
+}
+
+.retro-performance-row {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.retro-performance-row label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.retro-performance-row button {
+  border: 1px solid #7ea0ec;
+  background: #30467b;
+  color: #f0f5ff;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.retro-emulator-iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #000;
+}
