@@ -38,14 +38,20 @@ const FRIENDLY_HOST_ALLOWLIST = [
 ];
 
 const DEFAULT_PROFILE_BOOKMARKS = [
-  { title: "GitHub", url: "https://github.com/dhruvin-sarkar" },
+  { title: "YouTube", url: "https://www.youtube.com/@dhruvinsarkar5501" },
+  { title: "Instagram", url: "https://www.instagram.com/dhrv.5kr_/" },
+  { title: "ORCID", url: "https://orcid.org/0009-0009-0676-1891" },
   { title: "LinkedIn", url: "https://www.linkedin.com/in/dhruvin-sarkar/" },
+  { title: "ComicK", url: "https://comick.dev/user/04c26b83-8bed-40db-a2e3-fcaff5a66d18" },
+  { title: "Discord", url: "https://discord.com/users/860006729688154113" },
+  { title: "Itch.io", url: "https://lifelessloser.itch.io/" },
+  { title: "Email", url: "mailto:dhruvinsarkar@outlook.com" },
+  { title: "Steam", url: "https://steamcommunity.com/profiles/76561199346425587/" },
+  { title: "GitHub", url: "https://github.com/dhruvin-sarkar" },
   {
     title: "Portfolio",
     url: "https://dhruvin-sarkar.github.io/Win95P-DevPortfolio",
   },
-  { title: "YouTube", url: "https://youtube.com/@dhruvinsarkar" },
-  { title: "Discord", url: "https://discord.com/users/replace-with-your-id" },
   { title: "E-Commerce (Soon)", url: "https://comingsoon.com" },
   { title: "Project 2 (Soon)", url: "https://comingsoon.com" },
   { title: "Project 3 (Soon)", url: "https://comingsoon.com" },
@@ -95,6 +101,31 @@ const getFaviconUrl = (url) => {
   if (!host) return "/assets/ie.png";
   // Google s2 is a stable way to fetch small favicons from hostnames.
   return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=16`;
+};
+
+const mergeBookmarksWithDefaults = (storedBookmarks) => {
+  const defaults = DEFAULT_PROFILE_BOOKMARKS.map((bookmark) => ({
+    ...bookmark,
+    favicon: bookmark.favicon || getFaviconUrl(bookmark.url),
+  }));
+
+  if (!Array.isArray(storedBookmarks) || storedBookmarks.length === 0) {
+    return defaults;
+  }
+
+  const merged = [...defaults];
+  const seen = new Set(defaults.map((bookmark) => bookmark.url));
+
+  storedBookmarks.forEach((bookmark) => {
+    if (!bookmark?.url || seen.has(bookmark.url)) return;
+    seen.add(bookmark.url);
+    merged.push({
+      ...bookmark,
+      favicon: bookmark.favicon || getFaviconUrl(bookmark.url),
+    });
+  });
+
+  return merged;
 };
 
 const deriveTitleFromUrl = (url, displayUrl) => {
@@ -455,11 +486,7 @@ const InternetExplorer = () => {
 
   const [bookmarks, setBookmarks] = useState(() => {
     const stored = safeParseJson(localStorage.getItem(STORAGE_KEYS.bookmarks), []);
-    if (Array.isArray(stored) && stored.length > 0) return stored;
-    return DEFAULT_PROFILE_BOOKMARKS.map((bookmark) => ({
-      ...bookmark,
-      favicon: getFaviconUrl(bookmark.url),
-    }));
+    return mergeBookmarksWithDefaults(stored);
   });
 
   const [bookmarksBarVisible, setBookmarksBarVisible] = useState(() => {
@@ -736,6 +763,11 @@ const InternetExplorer = () => {
 
   const navigateToBookmarkOrSuggestion = useCallback(
     (url) => {
+      if (!url) return;
+      if (/^mailto:/i.test(url)) {
+        window.location.href = url;
+        return;
+      }
       navigateActiveTab(url);
     },
     [navigateActiveTab],
