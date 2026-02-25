@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { isKnownBlockedSite } from '../utils/siteDatabase';
 
@@ -10,16 +10,17 @@ const BrowserFrame = ({
   onLoadError 
 }) => {
   const iframeRef = useRef(null);
-  const [mounted, setMounted] = useState(true);
+  const mountedRef = useRef(true);
   
   useEffect(() => {
+    mountedRef.current = true;
     const iframe = iframeRef.current;
     if (!iframe) return;
     
     // Check if this is a known blocked site
     if (isKnownBlockedSite(url) && !url.startsWith('about:')) {
       const timeoutId = setTimeout(() => {
-        if (mounted) {
+        if (mountedRef.current) {
           onLoadError({
             type: 'BLOCKED_SITE',
             url: url,
@@ -36,7 +37,7 @@ const BrowserFrame = ({
     onLoadStart();
     
     const handleLoad = () => {
-      if (mounted) {
+      if (mountedRef.current) {
         onLoadEnd();
         
         // Try to detect if iframe loaded successfully
@@ -52,7 +53,7 @@ const BrowserFrame = ({
     };
     
     const handleError = () => {
-      if (mounted) {
+      if (mountedRef.current) {
         onLoadEnd();
         onLoadError({
           type: 'LOAD_ERROR',
@@ -69,7 +70,7 @@ const BrowserFrame = ({
     
     // Detect X-Frame-Options blocking with timeout
     const timeoutId = setTimeout(() => {
-      if (mounted && url !== 'about:start' && url !== 'about:blank') {
+      if (mountedRef.current && url !== 'about:start' && url !== 'about:blank') {
         try {
           // If we can't access contentWindow.location, it might be blocked
           const iframeContent = iframe.contentWindow;
@@ -82,29 +83,18 @@ const BrowserFrame = ({
           if (e.name === 'SecurityError') {
             // This is expected for cross-origin sites, but if it's been a while, might be blocked
             console.log('Cross-origin iframe detected (normal for most sites)');
-            
-            // For non-about URLs, if we get a security error, it might be blocked
-            if (!url.startsWith('about:') && mounted) {
-              onLoadError({
-                type: 'SECURITY_ERROR',
-                url: url,
-                message: 'This site cannot be displayed in an iframe due to security restrictions.',
-                reason: 'The site sent security headers that prevent embedding. This is a common security feature to protect against clickjacking attacks.',
-              });
-              onLoadEnd();
-            }
           }
         }
       }
     }, 3000);
     
     return () => {
-      setMounted(false);
+      mountedRef.current = false;
       iframe.removeEventListener('load', handleLoad);
       iframe.removeEventListener('error', handleError);
       clearTimeout(timeoutId);
     };
-  }, [url, onLoadStart, onLoadEnd, onLoadError, mounted]);
+  }, [url, onLoadStart, onLoadEnd, onLoadError]);
 
   return (
     <div className="ie-browser-frame">
@@ -118,9 +108,8 @@ const BrowserFrame = ({
         ref={iframeRef}
         src={url === 'about:start' ? 'about:blank' : url}
         className="ie-iframe"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
         title="Browser content"
-        allowFullScreen
+        allow="fullscreen"
       />
     </div>
   );
