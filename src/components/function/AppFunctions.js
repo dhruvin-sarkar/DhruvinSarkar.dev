@@ -54,9 +54,8 @@ import Quake3Icon from '../../assets/quake3.png'
 import ChromeDinoIcon from '../../assets/dino.png'
 import DXBallIcon from '../../assets/dxball.png'
 import Windows95Icon from '../../assets/image-removebg-preview.png'
-
-const withBase = (relativePath) =>
-  `${import.meta.env.BASE_URL}${String(relativePath).replace(/^\/+/, '')}`;
+import CommanderKeenIcon from '../../assets/image-removebg-preview (1).png'
+import SpaceCadetPinballIcon from '../../assets/pinball.png'
 
 
 
@@ -158,10 +157,10 @@ export function imageMapping (name, type) {
       return Windows95Icon;
 
     case 'Commander Keen 4':
-      return withBase('icons/commanderkeen.svg');
+      return CommanderKeenIcon;
 
     case 'Space Cadet Pinball':
-      return withBase('icons/spacecadet.svg');
+      return SpaceCadetPinballIcon;
 
     case 'Quake III Arena':
       return Quake3Icon;
