@@ -36,12 +36,12 @@
         justify-content: center;
         padding: 20px;
         background: rgba(8, 12, 21, 0.9);
-        z-index: 20;
+        z-index: 30;
       }
 
       .picker-card {
-        width: min(560px, 95vw);
-        background: rgba(25, 33, 56, 0.92);
+        width: min(620px, 95vw);
+        background: rgba(25, 33, 56, 0.94);
         border: 1px solid rgba(126, 153, 233, 0.55);
         border-radius: 12px;
         padding: 20px;
@@ -60,10 +60,16 @@
         line-height: 1.45;
       }
 
+      .picker-card code {
+        background: rgba(0, 0, 0, 0.25);
+        border-radius: 4px;
+        padding: 2px 5px;
+      }
+
       .drop-zone {
         border: 2px dashed rgba(152, 182, 255, 0.7);
         border-radius: 10px;
-        min-height: 150px;
+        min-height: 140px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -98,12 +104,18 @@
         cursor: pointer;
       }
 
+      .btn:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
       .muted {
         opacity: 0.78;
         font-size: 12px;
       }
 
-      #rom-input {
+      #rom-input,
+      #bios-input {
         display: none;
       }
 
@@ -111,7 +123,7 @@
         position: fixed;
         right: 14px;
         bottom: 14px;
-        z-index: 30;
+        z-index: 20;
       }
 
       .error {
@@ -119,120 +131,247 @@
         color: #ff9f9f;
         font-size: 12px;
       }
+
+      .success {
+        margin-top: 8px;
+        color: #b3f2bd;
+        font-size: 12px;
+      }
     </style>
   </head>
   <body>
     <div id="game"></div>
     <input id="rom-input" type="file" />
+    <input id="bios-input" type="file" accept=".bin,.rom" />
 
     <script>
       const CORE_MAP = {
         n64: { core: "n64", extensions: [".z64", ".n64", ".v64"] },
-        ps1: { core: "mednafen_psx_hw", extensions: [".bin", ".cue", ".img"] },
+        ps1: { core: "mednafen_psx_hw", extensions: [".bin", ".cue", ".img", ".chd", ".pbp"] },
         gba: { core: "mgba", extensions: [".gba", ".gbc", ".gb"] },
         nes: { core: "fceumm", extensions: [".nes", ".fds"] },
       };
 
+      const CORE_PROBE_FILES = {
+        n64: "cores/n64-wasm.data",
+        mednafen_psx_hw: "cores/mednafen_psx_hw-wasm.data",
+        mgba: "cores/gba-wasm.data",
+        fceumm: "cores/nes-wasm.data",
+      };
+
+      const CDN_DATA_PATH = "https://cdn.emulatorjs.org/stable/data/";
       const params = new URLSearchParams(window.location.search);
       const requestedCore = (params.get("core") || "nes").toLowerCase();
       const config = CORE_MAP[requestedCore] || CORE_MAP.nes;
-      const romUrl = params.get("rom");
-      let floatingButton;
+      const preferLocal = params.get("preferLocal") !== "0";
+
+      const state = {
+        romUrl: params.get("rom") || "",
+        biosUrl: params.get("bios") || "",
+      };
+
+      let floatingRomButton;
+      let floatingBiosButton;
       let gamepadButton;
 
-      function getPathToDataForCore() {
-        // Local EmulatorJS data files are used by default.
-        // PS1 core files are larger and may not be present in all builds,
-        // so we fallback to EmulatorJS CDN path for that core.
+      function getBasePrefix() {
+        const marker = "/emulators/";
+        const index = window.location.pathname.toLowerCase().lastIndexOf(marker);
+
+        if (index === -1) return "/";
+
+        const prefix = window.location.pathname.slice(0, index + 1);
+
+        return prefix || "/";
+      }
+
+      const BASE_PREFIX = getBasePrefix();
+      const LOCAL_DATA_PATH = `${BASE_PREFIX}emulators/emulatorjs/data/`;
+
+      function toAbsoluteUrl(value) {
+        try {
+          return new URL(value, window.location.href).toString();
+        } catch {
+          return value;
+        }
+      }
+
+      async function urlExists(url) {
+        try {
+          const response = await fetch(url, { method: "HEAD", cache: "no-store" });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+
+      async function getResourceInfo(url) {
+        try {
+          const response = await fetch(url, { method: "HEAD", cache: "no-store" });
+          return {
+            ok: response.ok,
+            status: response.status,
+            contentType: (response.headers.get("content-type") || "").toLowerCase(),
+          };
+        } catch {
+          return {
+            ok: false,
+            status: 0,
+            contentType: "",
+          };
+        }
+      }
+
+      function isHtmlFallbackContentType(contentType = "") {
+        return contentType.includes("text/html");
+      }
+
+      async function resolveDataPathForCore(core) {
+        if (!preferLocal) return CDN_DATA_PATH;
+
+        const probe = CORE_PROBE_FILES[core];
+
+        if (!probe) return LOCAL_DATA_PATH;
+
+        const probePath = `${LOCAL_DATA_PATH}${probe}`;
+        const exists = await urlExists(probePath);
+
+        return exists ? LOCAL_DATA_PATH : CDN_DATA_PATH;
+      }
+
+      function resetPicker() {
+        const oldPicker = document.querySelector(".picker-wrap");
+        if (oldPicker) oldPicker.remove();
+      }
+
+      function createFloatingButton({ id, right, label, onClick }) {
+        const existing = document.getElementById(id);
+        if (existing) return existing;
+
+        const button = document.createElement("button");
+        button.id = id;
+        button.className = "btn floating-picker-btn";
+        button.style.right = right;
+        button.textContent = label;
+        button.addEventListener("click", onClick);
+        document.body.appendChild(button);
+
+        return button;
+      }
+
+      function createFloatingButtons() {
+        floatingRomButton = createFloatingButton({
+          id: "floating-rom-btn",
+          right: "14px",
+          label: "Load ROM",
+          onClick: () => {
+            document.getElementById("rom-input").click();
+          },
+        });
+
+        gamepadButton = createFloatingButton({
+          id: "floating-controller-btn",
+          right: "102px",
+          label: "Controller",
+          onClick: () => {
+            alert(
+              "Connect a gamepad and press any button to configure controls. EmulatorJS can auto-detect gamepads."
+            );
+          },
+        });
+
         if (config.core === "mednafen_psx_hw") {
-          return "https://cdn.emulatorjs.org/stable/data/";
+          floatingBiosButton = createFloatingButton({
+            id: "floating-bios-btn",
+            right: "214px",
+            label: "Load BIOS",
+            onClick: () => {
+              document.getElementById("bios-input").click();
+            },
+          });
         }
-        return "/emulators/emulatorjs/data/";
       }
 
-      function createFloatingPickerButton() {
-        if (floatingButton) return;
-        floatingButton = document.createElement("button");
-        floatingButton.className = "btn floating-picker-btn";
-        floatingButton.textContent = "Load ROM";
-        floatingButton.addEventListener("click", () => {
-          document.getElementById("rom-input").click();
-        });
-        document.body.appendChild(floatingButton);
-      }
-
-      function createGamepadButton() {
-        if (gamepadButton) return;
-        gamepadButton = document.createElement("button");
-        gamepadButton.className = "btn floating-picker-btn";
-        gamepadButton.style.right = "96px";
-        gamepadButton.textContent = "Controller";
-        gamepadButton.addEventListener("click", () => {
-          alert(
-            "Connect a gamepad and press any button to configure controls. EmulatorJS can auto-detect gamepads."
-          );
-        });
-        document.body.appendChild(gamepadButton);
-      }
-
-      function launchWithRom(targetRomUrl, { fromObjectUrl = false } = {}) {
-        window.EJS_player = "#game";
-        window.EJS_core = config.core;
-        window.EJS_gameUrl = targetRomUrl;
-        window.EJS_pathtodata = getPathToDataForCore();
-        window.EJS_color = "#7ea2ff";
-        window.EJS_backgroundColor = "#11182b";
-        window.EJS_startOnLoaded = true;
-
-        if (fromObjectUrl) {
-          window.EJS_gameName = "Uploaded ROM";
-        }
-
-        const script = document.createElement("script");
-        script.src = `${window.EJS_pathtodata}loader.js`;
-        script.onerror = () => {
-          showLoaderError(
-            "Unable to load EmulatorJS loader. Check emulator data files in /public/emulators/emulatorjs/data/."
-          );
-        };
-        document.body.appendChild(script);
-
-        createFloatingPickerButton();
-        createGamepadButton();
-      }
-
-      function showLoaderError(message) {
-        const existing = document.querySelector(".picker-wrap");
-        if (existing) {
-          const err = existing.querySelector(".error");
-          if (err) {
-            err.textContent = message;
-          }
-          return;
-        }
+      function showErrorCard(title, message, includeRetry = true) {
+        resetPicker();
 
         const wrap = document.createElement("div");
         wrap.className = "picker-wrap";
         wrap.innerHTML = `
           <div class="picker-card">
-            <h1>EmulatorJS Error</h1>
+            <h1>${title}</h1>
             <p>${message}</p>
-            <div class="picker-row"><button class="btn" id="retry-btn">Retry</button></div>
+            <div class="picker-row">
+              ${includeRetry ? '<button class="btn" id="retry-btn">Retry</button>' : ""}
+              <button class="btn" id="open-picker-btn">Open ROM Picker</button>
+            </div>
           </div>
         `;
         document.body.appendChild(wrap);
 
-        document.getElementById("retry-btn").addEventListener("click", () => {
-          window.location.reload();
+        const retryButton = document.getElementById("retry-btn");
+        if (retryButton) {
+          retryButton.addEventListener("click", () => {
+            window.location.reload();
+          });
+        }
+
+        document.getElementById("open-picker-btn").addEventListener("click", () => {
+          renderRomPicker(message);
         });
       }
 
-      function handlePickedFile(file) {
-        if (!file) return;
-        const fileName = file.name.toLowerCase();
-        const valid = config.extensions.some((ext) => fileName.endsWith(ext));
+      async function launchWithRom(targetRomUrl, options = {}) {
+        const { biosUrl = "", fromObjectUrl = false } = options;
+        const resolvedRomUrl = toAbsoluteUrl(targetRomUrl);
+        const resolvedBiosUrl = biosUrl ? toAbsoluteUrl(biosUrl) : "";
+        const dataPath = await resolveDataPathForCore(config.core);
 
-        if (!valid) {
+        window.EJS_player = "#game";
+        window.EJS_core = config.core;
+        window.EJS_gameUrl = resolvedRomUrl;
+        window.EJS_pathtodata = dataPath;
+        window.EJS_color = "#7ea2ff";
+        window.EJS_backgroundColor = "#11182b";
+        window.EJS_startOnLoaded = true;
+        window.EJS_gameName = fromObjectUrl ? "Uploaded ROM" : undefined;
+
+        if (resolvedBiosUrl) {
+          window.EJS_biosUrl = resolvedBiosUrl;
+        }
+
+        if (config.core === "mednafen_psx_hw" && !resolvedBiosUrl) {
+          renderPs1BiosGate({
+            reason: "PlayStation requires a BIOS file (for example scph5501.bin).",
+            existingRomUrl: resolvedRomUrl,
+          });
+          return;
+        }
+
+        resetPicker();
+
+        const script = document.createElement("script");
+        script.src = `${dataPath}loader.js`;
+        script.onerror = () => {
+          showErrorCard(
+            "EmulatorJS Error",
+            "Unable to load EmulatorJS runtime. Check emulator files or network connection."
+          );
+        };
+        document.body.appendChild(script);
+
+        createFloatingButtons();
+      }
+
+      function isSupportedFile(fileName) {
+        const lowerName = fileName.toLowerCase();
+        return config.extensions.some((ext) => lowerName.endsWith(ext));
+      }
+
+      function handleRomFile(file) {
+        if (!file) return;
+
+        if (!isSupportedFile(file.name)) {
           const errorEl = document.getElementById("picker-error");
           if (errorEl) {
             errorEl.textContent = `Unsupported ROM extension. Allowed: ${config.extensions.join(", ")}`;
@@ -241,16 +380,98 @@
         }
 
         const objectUrl = URL.createObjectURL(file);
-        removePickerUI();
-        launchWithRom(objectUrl, { fromObjectUrl: true });
+        state.romUrl = objectUrl;
+
+        if (config.core === "mednafen_psx_hw" && !state.biosUrl) {
+          renderPs1BiosGate({
+            reason: "Now select your PS1 BIOS to continue.",
+            existingRomUrl: objectUrl,
+          });
+          return;
+        }
+
+        launchWithRom(objectUrl, { biosUrl: state.biosUrl, fromObjectUrl: true });
       }
 
-      function removePickerUI() {
-        const picker = document.querySelector(".picker-wrap");
-        if (picker) picker.remove();
+      function handleBiosFile(file) {
+        if (!file) return;
+
+        const lowerName = file.name.toLowerCase();
+        if (!lowerName.endsWith(".bin") && !lowerName.endsWith(".rom")) {
+          const errorEl = document.getElementById("bios-error");
+          if (errorEl) {
+            errorEl.textContent = "Unsupported BIOS format. Use a .bin/.rom BIOS file.";
+          }
+          return;
+        }
+
+        state.biosUrl = URL.createObjectURL(file);
+
+        const readyEl = document.getElementById("bios-success");
+        if (readyEl) {
+          readyEl.textContent = `BIOS loaded: ${file.name}`;
+        }
+
+        const startBtn = document.getElementById("start-ps1-btn");
+        if (startBtn) {
+          startBtn.disabled = !state.romUrl;
+        }
       }
 
-      function renderRomPicker() {
+      function renderPs1BiosGate({ reason, existingRomUrl }) {
+        state.romUrl = existingRomUrl || state.romUrl;
+
+        resetPicker();
+
+        const wrap = document.createElement("div");
+        wrap.className = "picker-wrap";
+        wrap.innerHTML = `
+          <div class="picker-card">
+            <h1>PlayStation BIOS Required</h1>
+            <p>${reason}</p>
+            <p class="muted">
+              PS1 core: <code>${config.core}</code><br />
+              Required BIOS example: <code>scph5501.bin</code>
+            </p>
+            <div class="picker-row">
+              <button class="btn" id="choose-bios-btn">Choose BIOS</button>
+              <button class="btn" id="choose-rom-btn">Choose ROM</button>
+              <button class="btn" id="start-ps1-btn" ${state.romUrl && state.biosUrl ? "" : "disabled"}>Start PS1</button>
+            </div>
+            <div class="success" id="bios-success">${state.biosUrl ? "BIOS loaded." : ""}</div>
+            <div class="error" id="bios-error"></div>
+          </div>
+        `;
+        document.body.appendChild(wrap);
+
+        document.getElementById("choose-bios-btn").addEventListener("click", () => {
+          document.getElementById("bios-input").click();
+        });
+
+        document.getElementById("choose-rom-btn").addEventListener("click", () => {
+          document.getElementById("rom-input").click();
+        });
+
+        document.getElementById("start-ps1-btn").addEventListener("click", () => {
+          if (!state.romUrl) {
+            const errorEl = document.getElementById("bios-error");
+            if (errorEl) errorEl.textContent = "Please select a PS1 ROM first.";
+            return;
+          }
+
+          if (!state.biosUrl) {
+            const errorEl = document.getElementById("bios-error");
+            if (errorEl) errorEl.textContent = "Please select a BIOS file to continue.";
+            return;
+          }
+
+          launchWithRom(state.romUrl, { biosUrl: state.biosUrl });
+        });
+      }
+
+      function renderRomPicker(initialErrorText = "") {
+        resetPicker();
+
         const wrap = document.createElement("div");
         wrap.className = "picker-wrap";
         wrap.innerHTML = `
@@ -267,25 +488,28 @@
               </div>
             </div>
             <div class="picker-row">
-              <button class="btn" id="browse-btn">Browse Files</button>
+              <button class="btn" id="browse-btn">Browse ROM</button>
+              ${config.core === "mednafen_psx_hw" ? '<button class="btn" id="browse-bios-btn">Load BIOS</button>' : ""}
               <span class="muted">ROM files are user-supplied and loaded locally.</span>
             </div>
-            <div id="picker-error" class="error"></div>
+            <div id="picker-error" class="error">${initialErrorText || ""}</div>
           </div>
         `;
 
         document.body.appendChild(wrap);
 
         const input = document.getElementById("rom-input");
+        const biosInput = document.getElementById("bios-input");
         const dropZone = document.getElementById("drop-zone");
         const browseBtn = document.getElementById("browse-btn");
+        const browseBiosBtn = document.getElementById("browse-bios-btn");
 
         browseBtn.addEventListener("click", () => input.click());
         dropZone.addEventListener("click", () => input.click());
 
-        input.addEventListener("change", (event) => {
-          handlePickedFile(event.target.files && event.target.files[0]);
-        });
+        if (browseBiosBtn) {
+          browseBiosBtn.addEventListener("click", () => biosInput.click());
+        }
 
         ["dragenter", "dragover"].forEach((eventName) => {
           dropZone.addEventListener(eventName, (event) => {
@@ -305,35 +529,57 @@
 
         dropZone.addEventListener("drop", (event) => {
           const files = event.dataTransfer && event.dataTransfer.files;
-          handlePickedFile(files && files[0]);
+          handleRomFile(files && files[0]);
         });
       }
 
-      async function start() {
-        if (romUrl) {
-          const isObjectUrl = romUrl.startsWith("blob:");
-          if (!isObjectUrl) {
-            try {
-              const response = await fetch(romUrl, { method: "HEAD" });
-              if (!response.ok) {
-                showLoaderError("ROM not found. Drop a ROM file to play.");
-                renderRomPicker();
-                return;
-              }
-            } catch {
-              showLoaderError("ROM not found. Drop a ROM file to play.");
-              renderRomPicker();
-              return;
-            }
-          }
-          launchWithRom(romUrl);
+      async function validateAndLaunchIfPossible() {
+        if (!state.romUrl) {
+          renderRomPicker();
           return;
         }
 
-        renderRomPicker();
+        let shouldFallbackToPicker = false;
+
+        if (!state.romUrl.startsWith("blob:") && !state.romUrl.startsWith("data:")) {
+          const absoluteRomUrl = toAbsoluteUrl(state.romUrl);
+          const romOrigin = new URL(absoluteRomUrl, window.location.href).origin;
+
+          if (romOrigin === window.location.origin) {
+            // Vite/GH pages can return HTML fallback documents with status 200 for missing files.
+            // Treat "text/html" as a missing ROM so users get the picker instead of a broken launch.
+            const resource = await getResourceInfo(absoluteRomUrl);
+            shouldFallbackToPicker = !resource.ok || isHtmlFallbackContentType(resource.contentType);
+          }
+        }
+
+        if (shouldFallbackToPicker) {
+          renderRomPicker("ROM not found. Drop a ROM file to play.");
+          return;
+        }
+
+        if (config.core === "mednafen_psx_hw" && !state.biosUrl) {
+          renderPs1BiosGate({
+            reason: "PlayStation BIOS is required before launch.",
+            existingRomUrl: state.romUrl,
+          });
+          return;
+        }
+
+        launchWithRom(state.romUrl, { biosUrl: state.biosUrl });
       }
 
-      start();
+      document.getElementById("rom-input").addEventListener("change", (event) => {
+        const file = event.target.files && event.target.files[0];
+        handleRomFile(file);
+      });
+
+      document.getElementById("bios-input").addEventListener("change", (event) => {
+        const file = event.target.files && event.target.files[0];
+        handleBiosFile(file);
+      });
+
+      validateAndLaunchIfPossible();
     </script>
   </body>
 </html>
