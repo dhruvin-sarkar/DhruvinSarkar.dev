@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const NESEmulator = () => (
   <RetroIframeApp
@@ -8,7 +9,7 @@ const NESEmulator = () => (
     setterKey="setNESExpand"
     windowName="NES Emulator"
     icon="/icons/nes.png"
-    iframeSrc="/emulators/ejs-loader.html?core=nes"
+    iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=nes")}
     defaultWidth={512}
     defaultHeight={480}
     defaultPosition={{ x: 150, y: 130 }}

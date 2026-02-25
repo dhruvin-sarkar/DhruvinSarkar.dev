@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const CommanderKeen4 = () => (
   <RetroIframeApp
@@ -8,7 +9,7 @@ const CommanderKeen4 = () => (
     setterKey="setKeen4Expand"
     windowName="Commander Keen 4"
     icon="/icons/reference/jsdos.png"
-    iframeSrc="/emulators/keen4.html"
+    iframeSrc={resolvePublicUrl("emulators/keen4.html")}
     defaultWidth={800}
     defaultHeight={600}
     defaultPosition={{ x: 100, y: 80 }}

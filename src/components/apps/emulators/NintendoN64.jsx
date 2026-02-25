@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const NintendoN64 = () => (
   <RetroIframeApp
@@ -8,7 +9,7 @@ const NintendoN64 = () => (
     setterKey="setN64Expand"
     windowName="Nintendo 64"
     icon="/icons/n64.png"
-    iframeSrc="/emulators/ejs-loader.html?core=n64"
+    iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=n64")}
     defaultWidth={800}
     defaultHeight={600}
     defaultPosition={{ x: 90, y: 70 }}

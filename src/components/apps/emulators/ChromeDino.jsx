@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const ChromeDino = () => (
   <RetroIframeApp
@@ -8,7 +9,7 @@ const ChromeDino = () => (
     setterKey="setDinoExpand"
     windowName="Chrome Dino"
     icon="/icons/reference/dino.png"
-    iframeSrc="/games/dino/index.html"
+    iframeSrc={resolvePublicUrl("games/dino/index.html")}
     externalUrl="https://github.com/wayou/t-rex-runner"
     defaultWidth={800}
     defaultHeight={300}

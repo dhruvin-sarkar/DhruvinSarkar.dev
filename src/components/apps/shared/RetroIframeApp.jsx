@@ -19,6 +19,8 @@ const RetroIframeApp = ({
   loadingVariant,
   loadingSubtitle,
   timeoutMessage,
+  loadTimeoutMs,
+  iframeAllow = "autoplay; fullscreen; gamepad; pointer-lock",
   perfWarning,
   appNotice,
 }) => {
@@ -40,6 +42,7 @@ const RetroIframeApp = ({
   } = useEmulatorWindow({
     iframeSrc,
     externalUrl,
+    loadTimeoutMs,
   });
 
   const warningKey = perfWarning?.storageKey;
@@ -151,8 +154,7 @@ const RetroIframeApp = ({
         className="retro-emulator-iframe"
         onLoad={handleLoad}
         onError={handleError}
-        allow="autoplay; fullscreen; gamepad"
-        allowFullScreen
+        allow={iframeAllow}
       />
 
       {hasError ? (

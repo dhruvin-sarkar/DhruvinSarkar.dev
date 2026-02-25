@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const GameBoyAdvance = () => (
   <RetroIframeApp
@@ -8,7 +9,7 @@ const GameBoyAdvance = () => (
     setterKey="setGBAExpand"
     windowName="Game Boy Advance"
     icon="/icons/gba.png"
-    iframeSrc="/emulators/ejs-loader.html?core=gba"
+    iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=gba")}
     defaultWidth={480}
     defaultHeight={320}
     defaultPosition={{ x: 130, y: 110 }}

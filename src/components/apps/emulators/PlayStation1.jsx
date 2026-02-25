@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const PlayStation1 = () => (
   <RetroIframeApp
@@ -8,7 +9,7 @@ const PlayStation1 = () => (
     setterKey="setPS1Expand"
     windowName="PlayStation 1"
     icon="/icons/ps1.png"
-    iframeSrc="/emulators/ejs-loader.html?core=ps1"
+    iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=ps1")}
     defaultWidth={800}
     defaultHeight={600}
     defaultPosition={{ x: 110, y: 90 }}

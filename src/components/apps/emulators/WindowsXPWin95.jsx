@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const WindowsXPWin95 = () => (
   <RetroIframeApp
@@ -8,7 +9,7 @@ const WindowsXPWin95 = () => (
     setterKey="setWin95Expand"
     windowName="Windows 95"
     icon="/icons/reference/v86.png"
-    iframeSrc="/emulators/win95.html"
+    iframeSrc={resolvePublicUrl("emulators/win95.html")}
     defaultWidth={800}
     defaultHeight={600}
     defaultPosition={{ x: 70, y: 60 }}

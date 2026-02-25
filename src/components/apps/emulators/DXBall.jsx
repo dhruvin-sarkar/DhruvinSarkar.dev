@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const DXBall = () => (
   <RetroIframeApp
@@ -8,7 +9,7 @@ const DXBall = () => (
     setterKey="setDXBallExpand"
     windowName="DX-Ball"
     icon="/icons/reference/dxball.png"
-    iframeSrc="/games/dxball/index.html"
+    iframeSrc={resolvePublicUrl("games/dxball/index.html")}
     externalUrl="https://dustinbrett.com/"
     defaultWidth={640}
     defaultHeight={480}
