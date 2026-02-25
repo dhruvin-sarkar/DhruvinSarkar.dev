@@ -1,4 +1,4 @@
-import React, { useContext, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
 import UseContext from "../../../Context";
 import AppWindowShell from "./AppWindowShell";
 import EmulatorLoadingScreen from "./EmulatorLoadingScreen";
@@ -29,6 +29,7 @@ const RetroIframeApp = ({
   const setState = context[setterKey];
 
   const [dontShowAgain, setDontShowAgain] = useState(false);
+  const [warningDismissed, setWarningDismissed] = useState(false);
 
   const {
     iframeUrl,
@@ -46,13 +47,21 @@ const RetroIframeApp = ({
   });
 
   const warningKey = perfWarning?.storageKey;
-  const warningAccepted = warningKey
-    ? window.localStorage.getItem(warningKey) === "1"
-    : true;
+  const warningAccepted = useMemo(() => {
+    if (!warningKey || typeof window === "undefined") return true;
+    return window.localStorage.getItem(warningKey) === "1";
+  }, [warningKey]);
 
   const shouldShowWarning = Boolean(
-    state?.show && perfWarning && !warningAccepted,
+    state?.show && perfWarning && !warningAccepted && !warningDismissed,
   );
+
+  useEffect(() => {
+    if (!state?.show) {
+      setWarningDismissed(false);
+      setDontShowAgain(false);
+    }
+  }, [state?.show]);
 
   const warningTitle = perfWarning?.title || "Performance Notice";
   const warningText =
@@ -123,6 +132,7 @@ const RetroIframeApp = ({
                 <button
                   type="button"
                   onClick={() => {
+                    setWarningDismissed(true);
                     if (warningKey && dontShowAgain) {
                       window.localStorage.setItem(warningKey, "1");
                     }
