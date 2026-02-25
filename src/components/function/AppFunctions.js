@@ -50,6 +50,10 @@ import GBAIcon from '../../assets/GBA.png'
 import NESIcon from '../../assets/NES.png'
 import Quake1Icon from '../../assets/Quake 1.png'
 import SkiFreeIcon from '../../assets/Skifree.png'
+import Quake3Icon from '../../assets/quake3.png'
+import ChromeDinoIcon from '../../assets/dino.png'
+import DXBallIcon from '../../assets/dxball.png'
+import Windows95Icon from '../../assets/image-removebg-preview.png'
 
 const withBase = (relativePath) =>
   `${import.meta.env.BASE_URL}${String(relativePath).replace(/^\/+/, '')}`;
@@ -151,7 +155,7 @@ export function imageMapping (name, type) {
       return NESIcon;
 
     case 'Windows 95':
-      return withBase('icons/win95.svg');
+      return Windows95Icon;
 
     case 'Commander Keen 4':
       return withBase('icons/commanderkeen.svg');
@@ -160,17 +164,17 @@ export function imageMapping (name, type) {
       return withBase('icons/spacecadet.svg');
 
     case 'Quake III Arena':
-      return withBase('icons/quake3.svg');
+      return Quake3Icon;
 
     case 'Quake I':
     case 'Quake':
       return Quake1Icon;
 
     case 'Chrome Dino':
-      return withBase('icons/chromedino.svg');
+      return ChromeDinoIcon;
 
     case 'DX-Ball':
-      return withBase('icons/dxball.svg');
+      return DXBallIcon;
 
     case 'SkiFree':
       return SkiFreeIcon;
