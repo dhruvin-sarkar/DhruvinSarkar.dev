@@ -24,7 +24,7 @@
       property="og:description"
       content="Step into nostalgia with Dhruvin Sarkar's Windows 95-themed portfolio, featuring cutting-edge React web projects and interactive retro designs."
     />
-    <meta property="og:image" content="/src/assets/95icon.png" />
+    <meta property="og:image" content="%BASE_URL%icons/95icon.png" />
     <meta property="og:url" content="https://yourportfolio.com" />
     <meta property="og:type" content="website" />
 
@@ -35,28 +35,18 @@
       name="twitter:description"
       content="Dive into Dhruvin Sarkar's retro-inspired portfolio built with React. Discover web development projects and nostalgic Windows 95 aesthetics."
     />
-    <meta name="twitter:image" content="/src/assets/95icon.png" />
+    <meta name="twitter:image" content="%BASE_URL%icons/95icon.png" />
 
     <!-- Favicons -->
-    <link rel="icon" type="image/png" href="/src/assets/95icon.png" />
-    <link rel="apple-touch-icon" href="/src/assets/95icon.png" />
+    <link rel="icon" type="image/png" href="%BASE_URL%icons/95icon.png" />
+    <link rel="apple-touch-icon" href="%BASE_URL%icons/95icon.png" />
 
     <!-- Preloading and Resource Hints -->
-    <link rel="preload" href="/src/assets/95icon.png" as="image" />
+    <link rel="preload" href="%BASE_URL%icons/95icon.png" as="image" />
     <link rel="preload" href="/src/main.jsx" as="script" />
 
     <!-- js-dos CDN fallback for DOOM game -->
     <script src="https://v8.js-dos.com/latest/js-dos.js"></script>
-    <script>
-      // Debug: Check if js-dos loaded properly
-      window.addEventListener('load', function() {
-        console.log('Window.Dos available:', !!window.Dos);
-        console.log('Window object keys:', Object.keys(window).filter(key => key.toLowerCase().includes('dos')));
-        if (window.Dos) {
-          console.log('Dos object:', window.Dos);
-        }
-      });
-    </script>
 
     <!-- Title -->
     <title>Dhruvin Sarkar | Windows 95 Developer Portfolio</title>
@@ -76,4 +66,3 @@
     <script type="module" src="/src/main.jsx" defer></script>
   </body>
 </html>
-
