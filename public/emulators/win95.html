@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Windows 95 - v86</title>
     <style>
-      html, body {
+      html,
+      body {
         margin: 0;
         width: 100%;
         height: 100%;
         background: #000;
         overflow: hidden;
+        color: #e5edff;
+        font-family: Consolas, "Courier New", monospace;
       }
 
       #screen-container {
@@ -30,60 +33,283 @@
         left: 10px;
         z-index: 5;
         color: #d9e4ff;
-        background: rgba(17, 23, 38, 0.7);
+        background: rgba(17, 23, 38, 0.75);
         border: 1px solid rgba(122, 152, 222, 0.6);
         padding: 6px 8px;
-        font-family: Consolas, monospace;
         font-size: 11px;
+      }
+
+      .overlay {
+        position: absolute;
+        inset: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: rgba(5, 7, 12, 0.92);
+      }
+
+      .panel {
+        width: min(620px, 96vw);
+        background: #141d32;
+        border: 1px solid rgba(123, 160, 245, 0.6);
+        border-radius: 10px;
+        padding: 16px;
+      }
+
+      .panel h2 {
+        margin: 0 0 10px;
+        font-size: 20px;
+      }
+
+      .panel p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 1.45;
+        opacity: 0.92;
+      }
+
+      .panel ul {
+        margin: 10px 0;
+        padding-left: 18px;
+        font-size: 12px;
+      }
+
+      .row {
+        margin-top: 12px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .btn {
+        border: 1px solid #7697e7;
+        border-radius: 8px;
+        background: #2a3f6e;
+        color: #fff;
+        padding: 8px 12px;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      .error {
+        margin-top: 10px;
+        color: #ffb3b3;
+        font-size: 12px;
+      }
+
+      .ok {
+        margin-top: 10px;
+        color: #9de8af;
+        font-size: 12px;
+      }
+
+      #img-input {
+        display: none;
+      }
+
+      code {
+        background: rgba(0, 0, 0, 0.25);
+        border-radius: 4px;
+        padding: 1px 4px;
       }
     </style>
   </head>
   <body>
     <div class="boot-note">Click inside to capture mouse. Press Esc to release.</div>
     <div id="screen-container"></div>
+    <input id="img-input" type="file" accept=".img,.bin,.iso" />
 
     <script>
-      (function () {
-        const script = document.createElement("script");
-        script.src = "/emulators/v86/libv86.js";
-        script.onerror = () => {
-          const fallback = document.createElement("script");
-          fallback.src = "https://copy.sh/v86/build/libv86.js";
-          fallback.onload = start;
-          fallback.onerror = () => {
-            document.body.innerHTML = "<pre style='color:#fff;padding:16px'>Failed to load libv86.js</pre>";
-          };
-          document.body.appendChild(fallback);
-        };
-        script.onload = start;
-        document.body.appendChild(script);
+      const overlay = document.createElement("div");
+      overlay.className = "overlay";
+      overlay.id = "boot-overlay";
+      document.body.appendChild(overlay);
 
-        function start() {
-          const imageUrl = "/emulators/win95.img";
-          if (!window.V86Starter) {
-            document.body.innerHTML = "<pre style='color:#fff;padding:16px'>V86Starter is unavailable.</pre>";
-            return;
-          }
+      const marker = "/emulators/";
+      const markerIndex = window.location.pathname.toLowerCase().lastIndexOf(marker);
+      const BASE_PREFIX = markerIndex === -1 ? "/" : window.location.pathname.slice(0, markerIndex + 1) || "/";
+      const V86_PATH = `${BASE_PREFIX}emulators/v86/`;
+      const params = new URLSearchParams(window.location.search);
+      const DEFAULT_IMAGE = params.get("img") || `${BASE_PREFIX}emulators/win95.img`;
+      const FALLBACK_V86 = "https://copy.sh/v86/build/libv86.js";
 
-          window.emulator = new window.V86Starter({
-            wasm_path: "/emulators/v86/v86.wasm",
-            memory_size: 64 * 1024 * 1024,
-            vga_memory_size: 8 * 1024 * 1024,
-            screen_container: document.getElementById("screen-container"),
-            bios: { url: "/emulators/v86/bios/seabios.bin" },
-            vga_bios: { url: "/emulators/v86/bios/vgabios.bin" },
-            hda: { url: imageUrl, async: true, size: 242 * 1024 * 1024 },
-            boot_order: 0x2,
-            autostart: true,
-            mouse: { enabled: true },
-            keyboard: { enabled: true },
-          });
+      let runtimeLoaded = false;
+      let loadedScriptUrl = "";
 
-          window.emulator.add_listener("emulator-ready", () => {
-            console.log("V86: Windows 95 ready");
-          });
+      const requiredFiles = [
+        { key: "libv86", url: `${V86_PATH}libv86.js` },
+        { key: "wasm", url: `${V86_PATH}v86.wasm` },
+        { key: "bios", url: `${V86_PATH}bios/seabios.bin` },
+        { key: "vgabios", url: `${V86_PATH}bios/vgabios.bin` },
+      ];
+
+      function renderPanel(html) {
+        overlay.innerHTML = `<div class="panel">${html}</div>`;
+      }
+
+      async function exists(url) {
+        try {
+          const response = await fetch(url, { method: "HEAD", cache: "no-store" });
+          return response.ok;
+        } catch {
+          return false;
         }
-      })();
+      }
+
+      function loadScript(url) {
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = url;
+          script.onload = () => resolve(url);
+          script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
+          document.body.appendChild(script);
+        });
+      }
+
+      async function ensureV86Runtime() {
+        if (runtimeLoaded) return true;
+
+        try {
+          loadedScriptUrl = await loadScript(requiredFiles[0].url);
+          runtimeLoaded = true;
+          return true;
+        } catch {
+          try {
+            loadedScriptUrl = await loadScript(FALLBACK_V86);
+            runtimeLoaded = true;
+            return true;
+          } catch {
+            renderPanel(`
+              <h2>v86 Runtime Load Failed</h2>
+              <p>Could not load <code>libv86.js</code> from local files or fallback CDN.</p>
+              <div class="row">
+                <button class="btn" id="retry-runtime">Retry</button>
+              </div>
+              <div class="error">Expected local file: <code>${requiredFiles[0].url}</code></div>
+            `);
+
+            document.getElementById("retry-runtime").addEventListener("click", () => {
+              window.location.reload();
+            });
+
+            return false;
+          }
+        }
+      }
+
+      function bootEmulator(imageConfig) {
+        if (!window.V86Starter) {
+          renderPanel(`
+            <h2>V86Starter is unavailable</h2>
+            <p>The runtime loaded from <code>${loadedScriptUrl || "unknown"}</code> but <code>window.V86Starter</code> is missing.</p>
+            <div class="row">
+              <button class="btn" id="reload-btn">Reload</button>
+            </div>
+          `);
+          document.getElementById("reload-btn").addEventListener("click", () => window.location.reload());
+          return;
+        }
+
+        overlay.remove();
+
+        window.emulator = new window.V86Starter({
+          wasm_path: `${V86_PATH}v86.wasm`,
+          memory_size: 64 * 1024 * 1024,
+          vga_memory_size: 8 * 1024 * 1024,
+          screen_container: document.getElementById("screen-container"),
+          bios: { url: `${V86_PATH}bios/seabios.bin` },
+          vga_bios: { url: `${V86_PATH}bios/vgabios.bin` },
+          hda: imageConfig,
+          boot_order: 0x2,
+          autostart: true,
+          mouse: { enabled: true },
+          keyboard: { enabled: true },
+        });
+
+        window.emulator.add_listener("emulator-ready", () => {
+          console.log("V86: Windows 95 ready");
+        });
+      }
+
+      function bindImageUpload() {
+        const input = document.getElementById("img-input");
+        input.addEventListener("change", async (event) => {
+          const file = event.target.files && event.target.files[0];
+          if (!file) return;
+
+          const runtimeOk = await ensureV86Runtime();
+          if (!runtimeOk) return;
+
+          const objectUrl = URL.createObjectURL(file);
+          bootEmulator({
+            url: objectUrl,
+            async: false,
+            size: file.size,
+          });
+        });
+      }
+
+      async function start() {
+        bindImageUpload();
+
+        renderPanel(`
+          <h2>Windows 95 (Virtual x86)</h2>
+          <p>Preparing runtime checks and boot options...</p>
+        `);
+
+        const runtimeChecks = await Promise.all(
+          requiredFiles.map(async (file) => ({ file, ok: await exists(file.url) }))
+        );
+
+        const missingRuntime = runtimeChecks.filter((item) => !item.ok);
+        const localImageExists = await exists(DEFAULT_IMAGE);
+
+        renderPanel(`
+          <h2>Windows 95 Boot</h2>
+          <p>Local runtime files are checked before boot. You can boot the default image or select your own <code>.img</code>.</p>
+          <ul>
+            ${runtimeChecks
+              .map((item) => `<li>${item.ok ? "OK" : "Missing"} - <code>${item.file.url}</code></li>`)
+              .join("")}
+            <li>${localImageExists ? "OK" : "Missing"} - <code>${DEFAULT_IMAGE}</code></li>
+          </ul>
+          <div class="row">
+            <button class="btn" id="boot-default" ${localImageExists ? "" : "disabled"}>Boot Default Image</button>
+            <button class="btn" id="choose-image">Choose Local Image</button>
+            <button class="btn" id="reload-page">Reload</button>
+          </div>
+          ${missingRuntime.length ? '<div class="error">Some local runtime files are missing. The loader will try fallback runtime where possible.</div>' : '<div class="ok">Runtime files look good.</div>'}
+          ${!localImageExists ? '<div class="error">No default disk image found. Place it at <code>/public/emulators/win95.img</code> or choose a local image file.</div>' : ""}
+        `);
+
+        document.getElementById("boot-default").addEventListener("click", async () => {
+          const runtimeOk = await ensureV86Runtime();
+          if (!runtimeOk) return;
+
+          bootEmulator({
+            url: DEFAULT_IMAGE,
+            async: true,
+            size: 242 * 1024 * 1024,
+          });
+        });
+
+        document.getElementById("choose-image").addEventListener("click", () => {
+          document.getElementById("img-input").click();
+        });
+
+        document.getElementById("reload-page").addEventListener("click", () => {
+          window.location.reload();
+        });
+      }
+
+      start();
     </script>
   </body>
 </html>

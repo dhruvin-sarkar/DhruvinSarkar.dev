@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Commander Keen 4 - js-dos</title>
     <style>
-      html, body {
+      html,
+      body {
         margin: 0;
         width: 100%;
         height: 100%;
@@ -28,11 +29,11 @@
         align-items: center;
         justify-content: center;
         padding: 16px;
-        background: rgba(8, 12, 22, 0.9);
+        background: rgba(8, 12, 22, 0.92);
       }
 
       .card {
-        width: min(560px, 96vw);
+        width: min(620px, 96vw);
         background: #1b2540;
         border: 1px solid rgba(136, 169, 250, 0.55);
         border-radius: 12px;
@@ -56,6 +57,11 @@
         cursor: pointer;
       }
 
+      .btn:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
       #keen-input {
         display: none;
       }
@@ -63,67 +69,189 @@
       .note {
         font-size: 12px;
         opacity: 0.9;
-        line-height: 1.4;
+        line-height: 1.45;
+      }
+
+      .error {
+        margin-top: 10px;
+        color: #ffb5b5;
+        font-size: 12px;
+      }
+
+      .ok {
+        margin-top: 10px;
+        color: #a5f4bb;
+        font-size: 12px;
+      }
+
+      code {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 4px;
+        padding: 1px 4px;
       }
     </style>
   </head>
   <body>
     <div id="keen"></div>
     <input id="keen-input" type="file" accept=".jsdos,.zip,.exe" />
-    <div class="overlay" id="overlay">
-      <div class="card">
-        <h2 style="margin-top:0">Commander Keen 4 (js-dos)</h2>
-        <p class="note">Load a <code>.jsdos</code>, <code>.zip</code>, or <code>.exe</code> game package. If <code>/games/commanderkeen/keen4.jsdos</code> exists, you can auto-start it.</p>
-        <div class="row">
-          <button class="btn" id="auto-start">Auto Start Bundled</button>
-          <button class="btn" id="upload-start">Choose File</button>
-        </div>
-      </div>
-    </div>
+    <div class="overlay" id="overlay"></div>
 
     <script>
       const overlay = document.getElementById("overlay");
       const input = document.getElementById("keen-input");
       const container = document.getElementById("keen");
 
-      function hideOverlay() {
-        if (overlay) overlay.style.display = "none";
+      const marker = "/emulators/";
+      const markerIndex = window.location.pathname.toLowerCase().lastIndexOf(marker);
+      const BASE_PREFIX = markerIndex === -1 ? "/" : window.location.pathname.slice(0, markerIndex + 1) || "/";
+      const params = new URLSearchParams(window.location.search);
+      const DEFAULT_BUNDLE = params.get("bundle") || `${BASE_PREFIX}games/commanderkeen/keen4.jsdos`;
+
+      let jsDosLoaded = false;
+
+      function renderCard(content) {
+        overlay.innerHTML = `<div class="card">${content}</div>`;
       }
 
-      function bootWithUrl(url) {
-        hideOverlay();
-        const script = document.createElement("script");
-        script.src = "https://v8.js-dos.com/latest/js-dos.js";
-        script.onload = () => {
+      async function urlExists(url) {
+        try {
+          const response = await fetch(url, { method: "HEAD", cache: "no-store" });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+
+      async function getResourceInfo(url) {
+        try {
+          const response = await fetch(url, { method: "HEAD", cache: "no-store" });
+          return {
+            ok: response.ok,
+            status: response.status,
+            contentType: (response.headers.get("content-type") || "").toLowerCase(),
+          };
+        } catch {
+          return {
+            ok: false,
+            status: 0,
+            contentType: "",
+          };
+        }
+      }
+
+      function isHtmlFallbackContentType(contentType = "") {
+        return contentType.includes("text/html");
+      }
+
+      function loadJsDosRuntime() {
+        if (jsDosLoaded) return Promise.resolve();
+
+        return new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = "https://v8.js-dos.com/latest/js-dos.js";
+          script.onload = () => {
+            jsDosLoaded = true;
+            resolve();
+          };
+          script.onerror = () => reject(new Error("Failed to load js-dos runtime."));
+          document.head.appendChild(script);
+        });
+      }
+
+      function showHome(message = "") {
+        renderCard(`
+          <h2 style="margin-top:0">Commander Keen 4 (js-dos)</h2>
+          <p class="note">Load a <code>.jsdos</code>, <code>.zip</code>, or <code>.exe</code> game package. If a bundled file exists at <code>${DEFAULT_BUNDLE}</code>, you can auto-start it.</p>
+          <div class="row">
+            <button class="btn" id="auto-start">Auto Start Bundled</button>
+            <button class="btn" id="upload-start">Choose File</button>
+            <button class="btn" id="reload-page">Reload</button>
+          </div>
+          <div class="error" id="keen-error">${message}</div>
+        `);
+
+        document.getElementById("auto-start").addEventListener("click", async () => {
+          try {
+            const absoluteBundleUrl = new URL(DEFAULT_BUNDLE, window.location.href);
+            const isSameOrigin = absoluteBundleUrl.origin === window.location.origin;
+
+            if (isSameOrigin) {
+              // Prevent Vite HTML fallback responses from being treated as real .jsdos bundles.
+              const resource = await getResourceInfo(absoluteBundleUrl.toString());
+              const invalidBundle = !resource.ok || isHtmlFallbackContentType(resource.contentType);
+
+              if (invalidBundle) {
+                const errorEl = document.getElementById("keen-error");
+                if (errorEl) {
+                  errorEl.textContent = `Bundled file not found: ${DEFAULT_BUNDLE}`;
+                }
+                return;
+              }
+            }
+          } catch {
+            const exists = await urlExists(DEFAULT_BUNDLE);
+            if (!exists) {
+              const errorEl = document.getElementById("keen-error");
+              if (errorEl) {
+                errorEl.textContent = `Bundled file not found: ${DEFAULT_BUNDLE}`;
+              }
+              return;
+            }
+          }
+
+          bootWithUrl(DEFAULT_BUNDLE);
+        });
+
+        document.getElementById("upload-start").addEventListener("click", () => {
+          input.click();
+        });
+
+        document.getElementById("reload-page").addEventListener("click", () => {
+          window.location.reload();
+        });
+      }
+
+      async function bootWithUrl(url) {
+        renderCard(`
+          <h2 style="margin-top:0">Booting Commander Keen</h2>
+          <p class="note">Initializing js-dos runtime and loading package...</p>
+          <div class="ok">Source: <code>${url}</code></div>
+        `);
+
+        try {
+          await loadJsDosRuntime();
+
+          if (!window.Dos) {
+            throw new Error("window.Dos is unavailable after runtime load.");
+          }
+
+          overlay.style.display = "none";
+
           window.Dos(container, {
             url,
             autoStart: true,
             kiosk: true,
             onEvent: (event) => {
-              if (event === "ci-ready") console.log("js-dos ready");
+              if (event === "ci-ready") {
+                console.log("js-dos ready");
+              }
             },
           });
-        };
-        script.onerror = () => {
-          alert("Failed to load js-dos runtime.");
-        };
-        document.head.appendChild(script);
+        } catch (error) {
+          overlay.style.display = "flex";
+          showHome(error && error.message ? error.message : "Failed to start js-dos emulator.");
+        }
       }
-
-      document.getElementById("auto-start").addEventListener("click", () => {
-        bootWithUrl("/games/commanderkeen/keen4.jsdos");
-      });
-
-      document.getElementById("upload-start").addEventListener("click", () => {
-        input.click();
-      });
 
       input.addEventListener("change", (event) => {
         const file = event.target.files && event.target.files[0];
         if (!file) return;
+
         const objectUrl = URL.createObjectURL(file);
         bootWithUrl(objectUrl);
       });
+
+      showHome();
     </script>
   </body>
 </html>
