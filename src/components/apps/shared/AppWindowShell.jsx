@@ -27,6 +27,12 @@ const AppWindowShell = ({
 
   if (!state?.show) return null;
 
+  const hasPersistedPosition =
+    state?.hasPosition === true ||
+    (Number.isFinite(state?.x) &&
+      Number.isFinite(state?.y) &&
+      !(state?.x === 0 && state?.y === 0 && state?.hasPosition !== true));
+
   const windowStyle = state.expand
     ? {
         ...inlineStyleExpand(stateName),
@@ -46,6 +52,7 @@ const AppWindowShell = ({
       ...previous,
       x: data.x,
       y: data.y,
+      hasPosition: true,
     }));
   };
 
@@ -79,14 +86,10 @@ const AppWindowShell = ({
       disabled={state.expand}
       bounds={{ top: 0 }}
       defaultPosition={{
-        x: Number.isFinite(state.x) ? state.x : defaultPosition.x,
-        y: Number.isFinite(state.y) ? state.y : defaultPosition.y,
+        x: hasPersistedPosition ? state.x : defaultPosition.x,
+        y: hasPersistedPosition ? state.y : defaultPosition.y,
       }}
-      position={
-        Number.isFinite(state.x) && Number.isFinite(state.y)
-          ? { x: state.x, y: state.y }
-          : undefined
-      }
+      position={hasPersistedPosition ? { x: state.x, y: state.y } : undefined}
       onStop={handleDragStop}
       onStart={focusWindow}
     >
@@ -141,7 +144,7 @@ const AppWindowShell = ({
               title="Close"
               data-no-drag
             >
-              <span>×</span>
+              <span>{"\u00D7"}</span>
             </button>
           </div>
         </div>
@@ -153,3 +156,4 @@ const AppWindowShell = ({
 };
 
 export default AppWindowShell;
+

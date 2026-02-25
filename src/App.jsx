@@ -338,9 +338,6 @@ function App() {
   });
 
   const [desktopIcon, setDesktopIcon] = useState(() => {
-    // Clear localStorage to start fresh and prevent double icons
-    localStorage.removeItem("icons");
-    
     const deleteIcon = ["Cat", "AiAgent", "Winamp", "Paint", "3dObject", "TaskManager", "Patch", "SpinningCat", "NewsApp", "Notification", "Shutdown", "Bitcoin", "Github", "ResetStorage", "Utility", "Picture", "Hard Disk (C:)", "Hard Disk (D:)", "CD-ROM", "001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011"];
 
     const filteredItems = iconInfo.filter(
@@ -956,7 +953,7 @@ function App() {
       };
 
       socket.current.onclose = () => {
-        console.log("🔌 WebSocket closed");
+        console.log("\uD83D\uDD0C WebSocket closed");
         setWebsocketConnection(false);
       };
     } catch (err) {
@@ -2890,3 +2887,4 @@ function App() {
 }
 
 export default App;
+
