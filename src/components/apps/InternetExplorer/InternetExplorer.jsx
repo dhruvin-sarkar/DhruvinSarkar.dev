@@ -460,7 +460,6 @@ const InternetExplorer = () => {
   const urlInputRef = useRef(null);
   const tabsRef = useRef([]);
   const activeTabIdRef = useRef("");
-  const positionedRef = useRef(false);
   const preMaxPositionRef = useRef(null);
 
   const launchPosition = useMemo(
@@ -512,13 +511,20 @@ const InternetExplorer = () => {
   });
 
   const [reloadTokens, setReloadTokens] = useState({});
-  const resolvedWindowPosition = useMemo(
-    () => ({
-      x: Number.isFinite(IEExpand.x) ? IEExpand.x : launchPosition.x,
-      y: Number.isFinite(IEExpand.y) ? IEExpand.y : launchPosition.y,
-    }),
-    [IEExpand.x, IEExpand.y, launchPosition.x, launchPosition.y],
+  const hasPersistedPosition = useMemo(
+    () =>
+      IEExpand?.hasPosition === true ||
+      (Number.isFinite(IEExpand?.x) &&
+        Number.isFinite(IEExpand?.y) &&
+        !(IEExpand?.x === 0 && IEExpand?.y === 0 && IEExpand?.hasPosition !== true)),
+    [IEExpand?.hasPosition, IEExpand?.x, IEExpand?.y],
   );
+  const resolvedWindowPosition = hasPersistedPosition
+    ? {
+        x: IEExpand.x,
+        y: IEExpand.y,
+      }
+    : undefined;
 
   useEffect(() => {
     tabsRef.current = tabs;
@@ -922,18 +928,6 @@ const InternetExplorer = () => {
     }
   }, [IEExpand.show, IEExpand.focusItem]);
 
-  useEffect(() => {
-    if (!IEExpand.show || positionedRef.current) return;
-    if ((IEExpand.x ?? 0) === 0 && (IEExpand.y ?? 0) === 0) {
-      setIEExpand((previous) => ({
-        ...previous,
-        x: launchPosition.x,
-        y: launchPosition.y,
-      }));
-    }
-    positionedRef.current = true;
-  }, [IEExpand.show, IEExpand.x, IEExpand.y, launchPosition.x, launchPosition.y, setIEExpand]);
-
   const handleClose = () => {
     deleteTap("InternetExplorer");
   };
@@ -946,9 +940,14 @@ const InternetExplorer = () => {
   const handleMaximize = () => {
     setIEExpand((previous) => {
       if (!previous.expand) {
+        const previousHasPosition =
+          previous?.hasPosition === true ||
+          (Number.isFinite(previous?.x) &&
+            Number.isFinite(previous?.y) &&
+            !(previous?.x === 0 && previous?.y === 0 && previous?.hasPosition !== true));
         preMaxPositionRef.current = {
-          x: Number.isFinite(previous.x) ? previous.x : launchPosition.x,
-          y: Number.isFinite(previous.y) ? previous.y : launchPosition.y,
+          x: previousHasPosition ? previous.x : launchPosition.x,
+          y: previousHasPosition ? previous.y : launchPosition.y,
         };
         return { ...previous, expand: true };
       }
@@ -956,7 +955,7 @@ const InternetExplorer = () => {
       const restore = preMaxPositionRef.current;
       preMaxPositionRef.current = null;
       if (restore && Number.isFinite(restore.x) && Number.isFinite(restore.y)) {
-        return { ...previous, expand: false, x: restore.x, y: restore.y };
+        return { ...previous, expand: false, x: restore.x, y: restore.y, hasPosition: true };
       }
       return { ...previous, expand: false };
     });
@@ -967,6 +966,7 @@ const InternetExplorer = () => {
       ...previous,
       x: Number.isFinite(data?.x) ? data.x : previous.x,
       y: Number.isFinite(data?.y) ? data.y : previous.y,
+      hasPosition: true,
     }));
   };
 
