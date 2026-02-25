@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ieIcon from '../../../../assets/ie.png';
 
 const StartPage = ({ onNavigate, sites }) => {
   return (
     <div className="ie-startpage">
       <div className="ie-startpage-header">
-        <img 
-          src="/assets/ie.png" 
-          alt="IE" 
+        <img
+          src={ieIcon}
+          alt="IE"
           className="ie-startpage-icon"
         />
         <h1>Welcome to Internet Explorer</h1>
@@ -17,7 +18,7 @@ const StartPage = ({ onNavigate, sites }) => {
       </div>
 
       <div className="ie-startpage-section">
-        <h2>🌐 Sites You Can Visit</h2>
+        <h2>Sites You Can Visit</h2>
         <p>These sites allow iframe embedding and will work perfectly:</p>
         <div className="ie-sitelist">
           {sites.map((site) => (
@@ -37,18 +38,18 @@ const StartPage = ({ onNavigate, sites }) => {
       </div>
 
       <div className="ie-startpage-section">
-        <h2>ℹ️ About This Browser</h2>
+        <h2>About This Browser</h2>
         <p>
-          This is a recreation of Windows 95 Internet Explorer. Due to modern 
-          web security (X-Frame-Options, CSP headers), many sites cannot be 
-          embedded in iframes. Sites like Google, Facebook, and Twitter will 
-          show an error - this is intentional security designed to prevent 
+          This is a recreation of Windows 95 Internet Explorer. Due to modern
+          web security (X-Frame-Options, CSP headers), many sites cannot be
+          embedded in iframes. Sites like Google, Facebook, and Twitter will
+          show an error - this is intentional security designed to prevent
           clickjacking attacks.
         </p>
       </div>
 
       <div className="ie-startpage-section">
-        <h2>🔒 Why Some Sites Don't Work</h2>
+        <h2>Why Some Sites Do Not Work</h2>
         <ul className="ie-info-list">
           <li>
             <strong>Security Headers:</strong> Sites send <code>X-Frame-Options: DENY</code> to prevent embedding
@@ -61,7 +62,7 @@ const StartPage = ({ onNavigate, sites }) => {
           </li>
         </ul>
         <p>
-          When you encounter a blocked site, you can always open it in a new tab!
+          When you encounter a blocked site, you can always open it in a new tab.
         </p>
       </div>
     </div>

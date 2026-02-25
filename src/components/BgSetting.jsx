@@ -225,7 +225,7 @@ function BgSetting() {
         } else {
           // Set default 90s.jpg background
           bodyBG.style.backgroundColor = '#098684'
-          bodyBG.style.backgroundImage = 'url(/src/assets/90s.jpg)';
+          bodyBG.style.backgroundImage = `url(${bg13})`;
         }
       }
       
