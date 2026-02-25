@@ -8,7 +8,7 @@ const CommanderKeen4 = () => (
     stateKey="Keen4Expand"
     setterKey="setKeen4Expand"
     windowName="Commander Keen 4"
-    icon="/icons/reference/jsdos.png"
+    icon={resolvePublicUrl("icons/reference/jsdos.png")}
     iframeSrc={resolvePublicUrl("emulators/keen4.html")}
     defaultWidth={800}
     defaultHeight={600}

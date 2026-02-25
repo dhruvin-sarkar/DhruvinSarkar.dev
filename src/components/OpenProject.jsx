@@ -178,8 +178,7 @@ function OpenProject() {
           width="100%"
           height="100%"
           frameBorder="0"
-          allow="autoplay; encrypted-media; picture-in-picture"
-          allowFullScreen
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
           scrolling="yes"
         />
         )}

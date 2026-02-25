@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const Quake3Arena = () => (
   <RetroIframeApp
@@ -7,7 +8,7 @@ const Quake3Arena = () => (
     stateKey="Quake3Expand"
     setterKey="setQuake3Expand"
     windowName="Quake III Arena"
-    icon="/icons/reference/quake3.png"
+    icon={resolvePublicUrl("icons/reference/quake3.png")}
     iframeSrc="https://lrusso.github.io/Quake3/"
     externalUrl="https://lrusso.github.io/Quake3/"
     defaultWidth={1024}

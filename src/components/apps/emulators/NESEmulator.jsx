@@ -8,7 +8,7 @@ const NESEmulator = () => (
     stateKey="NESExpand"
     setterKey="setNESExpand"
     windowName="NES Emulator"
-    icon="/icons/nes.png"
+    icon={resolvePublicUrl("icons/nes.png")}
     iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=nes")}
     defaultWidth={512}
     defaultHeight={480}

@@ -8,7 +8,7 @@ const GameBoyAdvance = () => (
     stateKey="GBAExpand"
     setterKey="setGBAExpand"
     windowName="Game Boy Advance"
-    icon="/icons/gba.png"
+    icon={resolvePublicUrl("icons/gba.png")}
     iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=gba")}
     defaultWidth={480}
     defaultHeight={320}

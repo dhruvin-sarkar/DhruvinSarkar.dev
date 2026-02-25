@@ -8,7 +8,7 @@ const NintendoN64 = () => (
     stateKey="N64Expand"
     setterKey="setN64Expand"
     windowName="Nintendo 64"
-    icon="/icons/n64.png"
+    icon={resolvePublicUrl("icons/n64.png")}
     iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=n64")}
     defaultWidth={800}
     defaultHeight={600}

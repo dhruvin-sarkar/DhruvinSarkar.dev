@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const QuakeOriginal = () => (
   <RetroIframeApp
@@ -7,7 +8,7 @@ const QuakeOriginal = () => (
     stateKey="Quake1Expand"
     setterKey="setQuake1Expand"
     windowName="Quake"
-    icon="/icons/quake1.png"
+    icon={resolvePublicUrl("icons/quake1.png")}
     iframeSrc="https://www.quakejs.com/"
     externalUrl="https://www.quakejs.com/"
     defaultWidth={960}

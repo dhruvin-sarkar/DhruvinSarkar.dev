@@ -1,5 +1,6 @@
 import React from "react";
 import RetroIframeApp from "../shared/RetroIframeApp";
+import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const SpaceCadet = () => (
   <RetroIframeApp
@@ -7,7 +8,7 @@ const SpaceCadet = () => (
     stateKey="SpaceCadetExpand"
     setterKey="setSpaceCadetExpand"
     windowName="Space Cadet Pinball"
-    icon="/icons/reference/pinball.png"
+    icon={resolvePublicUrl("icons/reference/pinball.png")}
     iframeSrc="https://pinball.alula.me/"
     externalUrl="https://pinball.alula.me/"
     defaultWidth={800}
