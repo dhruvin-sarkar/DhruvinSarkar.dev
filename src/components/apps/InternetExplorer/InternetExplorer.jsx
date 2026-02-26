@@ -460,7 +460,6 @@ const InternetExplorer = () => {
   const urlInputRef = useRef(null);
   const tabsRef = useRef([]);
   const activeTabIdRef = useRef("");
-  const preMaxPositionRef = useRef(null);
 
   const launchPosition = useMemo(
     () => ({
@@ -938,27 +937,13 @@ const InternetExplorer = () => {
   };
 
   const handleMaximize = () => {
-    setIEExpand((previous) => {
-      if (!previous.expand) {
-        const previousHasPosition =
-          previous?.hasPosition === true ||
-          (Number.isFinite(previous?.x) &&
-            Number.isFinite(previous?.y) &&
-            !(previous?.x === 0 && previous?.y === 0 && previous?.hasPosition !== true));
-        preMaxPositionRef.current = {
-          x: previousHasPosition ? previous.x : launchPosition.x,
-          y: previousHasPosition ? previous.y : launchPosition.y,
-        };
-        return { ...previous, expand: true };
-      }
-
-      const restore = preMaxPositionRef.current;
-      preMaxPositionRef.current = null;
-      if (restore && Number.isFinite(restore.x) && Number.isFinite(restore.y)) {
-        return { ...previous, expand: false, x: restore.x, y: restore.y, hasPosition: true };
-      }
-      return { ...previous, expand: false };
-    });
+    // Let WindowDraggable manage pre-max snapshot and restore; keeps position sync stable.
+    setIEExpand((previous) => ({
+      ...previous,
+      expand: !previous.expand,
+      hide: false,
+      focusItem: true,
+    }));
   };
 
   const handleDragStop = (_, data) => {

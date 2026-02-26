@@ -2797,6 +2797,8 @@ function App() {
     });
 
     if (item) {
+      const safeX = Number.isFinite(item.usestate?.x) ? item.usestate.x : 0;
+      const safeY = Number.isFinite(item.usestate?.y) ? item.usestate.y : 0;
       return {
         display: item.usestate.show
           ? name === "Terminal"
@@ -2806,8 +2808,9 @@ function App() {
         maxWidth: "none",
         width: "100%",
         height: "calc(100vh - 50px)",
-        left: `${item.usestate.x <= 0 ? Math.abs(item.usestate.x) * 2 + item.usestate.x : -item.usestate.x}px`,
-        top: `${item.usestate.y <= 0 ? Math.abs(item.usestate.y) * 2 + item.usestate.y : -item.usestate.y}px`,
+        // Offset the draggable transform while expanded so the window fills viewport from (0,0).
+        left: `${-safeX}px`,
+        top: `${-safeY}px`,
         opacity: item.usestate.hide ? "0" : "1",
         zIndex: item.usestate.hide
           ? "-1"
