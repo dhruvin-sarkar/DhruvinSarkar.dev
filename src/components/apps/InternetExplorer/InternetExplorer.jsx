@@ -341,20 +341,21 @@ const UrlBarRow = ({
   return (
     <div className="iex-urlbar-row">
       <div className="iex-nav-controls">
-        <button type="button" onClick={onBack} disabled={!canGoBack}>
+        <button type="button" className="iex-nav-btn" onClick={onBack} disabled={!canGoBack} title="Back">
           {"\u2190"}
         </button>
-        <button type="button" onClick={onForward} disabled={!canGoForward}>
+        <button type="button" className="iex-nav-btn" onClick={onForward} disabled={!canGoForward} title="Forward">
           {"\u2192"}
         </button>
-        <button type="button" onClick={onRefresh}>
+        <button type="button" className="iex-nav-btn" onClick={onRefresh} title="Refresh">
           {"\u21BB"}
         </button>
-        <button type="button" onClick={onHome}>
+        <button type="button" className="iex-nav-btn" onClick={onHome} title="Home">
           {"\u2302"}
         </button>
       </div>
-      <div className="iex-omnibox">
+      <div className="iex-omnibox-container">
+        <div className="iex-omnibox">
         <LockIndicator isLoading={activeTab?.isLoading} url={activeTab?.url} />
         <input
           ref={inputRef}
@@ -369,13 +370,15 @@ const UrlBarRow = ({
           spellCheck={false}
           placeholder="Search Google or type a URL"
         />
+          <button type="button" className="iex-bookmark-btn" onClick={onToggleBookmark} title="Bookmark">
+            {isBookmarked ? "\u2605" : "\u2606"}
+          </button>
+        </div>
       </div>
       <div className="iex-right-controls">
-        <button type="button" onClick={onToggleBookmark} title="Bookmark">
-          {isBookmarked ? "\u2605" : "\u2606"}
-        </button>
         <button
           type="button"
+          className={`iex-bar-toggle ${bookmarksBarVisible ? "active" : ""}`}
           onClick={onToggleBookmarksBar}
           title="Toggle bookmarks bar"
         >
@@ -388,9 +391,17 @@ const UrlBarRow = ({
 
 const BookmarksBar = ({ bookmarks, onNavigate }) => {
   const items = bookmarks.length > 0 ? bookmarks : DEFAULT_PROFILE_BOOKMARKS;
+  const barRef = useRef(null);
+
+  const handleWheel = (e) => {
+    if (barRef.current) {
+      barRef.current.scrollLeft += e.deltaY;
+    }
+  };
 
   return (
-    <div className="iex-bookmarks-bar">
+    <div className="iex-bookmarks-bar" ref={barRef} onWheel={handleWheel}>
+      <div className="iex-bookmarks-inner">
       {items.map((item) => {
         const favicon = item.favicon || getFaviconUrl(item.url);
         const title = item.title || item.label || deriveTitleFromUrl(item.url, item.url);
@@ -416,6 +427,7 @@ const BookmarksBar = ({ bookmarks, onNavigate }) => {
           </button>
         );
       })}
+      </div>
     </div>
   );
 };
