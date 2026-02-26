@@ -9,18 +9,19 @@ const Quake3Arena = () => (
     setterKey="setQuake3Expand"
     windowName="Quake III Arena"
     icon={resolvePublicUrl("icons/reference/quake3.png")}
-    iframeSrc="https://lrusso.github.io/Quake3/"
-    externalUrl="https://lrusso.github.io/Quake3/"
+    iframeSrc={resolvePublicUrl("games/quake3/Quake3.htm")}
+    externalUrl="https://lrusso.github.io/Quake3/Quake3.htm"
     defaultWidth={1024}
     defaultHeight={768}
     defaultPosition={{ x: 160, y: 100 }}
     loadingVariant="quake"
-    loadingSubtitle="Click to capture mouse, press Escape to release."
+    loadingSubtitle="Click the red icon to load PK3 files, then the game boots automatically."
+    loadTimeoutMs={30000}
     perfWarning={{
       storageKey: "perf-quake3-ok",
       title: "Performance Warning",
       message:
-        "Quake III is resource-heavy and may impact frame rate on weaker hardware.",
+        "Quake III Arena is resource-heavy and may impact frame rate on weaker hardware.",
     }}
   />
 );
