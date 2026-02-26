@@ -81,8 +81,7 @@ const BrowserFrame = ({
         } catch (e) {
           // Cross-origin or blocked - check if it's been too long
           if (e.name === 'SecurityError') {
-            // This is expected for cross-origin sites, but if it's been a while, might be blocked
-            console.log('Cross-origin iframe detected (normal for most sites)');
+            // Expected for most cross-origin pages; do not treat as a hard error here.
           }
         }
       }

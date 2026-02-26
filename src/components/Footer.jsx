@@ -592,7 +592,7 @@ export default function Footer() {
     useEffect(() => { // display clippy when windows start
         clearTimeout(firstTimoutShowclippy.current)
         clearTimeout(ClearTOclippySendemailfunction.current)
-        clearTimeout(ClearTOclippyThanksYouFunction.curremt)
+        clearTimeout(ClearTOclippyThanksYouFunction.current)
         clearTimeout(ClearTOSongfunction.current)
         clearTimeout(ClearTOclippyUsernameFunction.current)
 
@@ -612,7 +612,7 @@ export default function Footer() {
         const randomTime = Math.floor(Math.random() * (50000 - 30000 + 1)) + 30000;
 
         clearTimeout(ClearTOclippySendemailfunction.current)
-        clearTimeout(ClearTOclippyThanksYouFunction.curremt)
+        clearTimeout(ClearTOclippyThanksYouFunction.current)
         clearTimeout(ClearTOSongfunction.current)
 
         RandomTimeoutShowClippy.current = setTimeout(() => { // random clippy index from length

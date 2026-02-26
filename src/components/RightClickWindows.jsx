@@ -129,8 +129,6 @@ function RightClickWindows() {
         const findIconToRestore = prevIcons.find(icon => icon.name === droppedIcon.name)
         const updatedIcons = prevIcons.filter(icon => icon.name !== droppedIcon.name);
         const restoredIcon = { ...findIconToRestore, folderId: droppedIcon.OldFolder };
-        console.log(restoredIcon)
-
         setKey(prev => prev + 1); // make folder icon by re-mount
 
         const newDesktopIcons = [...updatedIcons, restoredIcon];
