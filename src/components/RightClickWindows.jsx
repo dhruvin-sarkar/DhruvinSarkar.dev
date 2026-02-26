@@ -148,8 +148,12 @@ function RightClickWindows() {
 
   useEffect(() => { // the only way to make it works is to mutate state like this for DELETE ICON
     if (restoreIcon > 0) {
-      if(!binRestoreArr) return;
-      const iconBeingRestored = binRestoreArr.find(icon => icon.name === iconBeingRightClicked.name)
+      if (!Array.isArray(binRestoreArr) || !iconBeingRightClicked?.name) return;
+      const iconBeingRestored = binRestoreArr.find(
+        (icon) => icon.name === iconBeingRightClicked.name
+      );
+      if (!iconBeingRestored) return;
+
         setBinRestoreArr(prev => {
           const newBinArr = prev.filter(icon => icon.name !== iconBeingRightClicked.name);
           localStorage.setItem('restoreArray', JSON.stringify(newBinArr)); // Update localStorage

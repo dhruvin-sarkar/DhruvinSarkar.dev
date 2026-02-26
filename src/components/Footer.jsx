@@ -412,6 +412,7 @@ export default function Footer() {
 
      const handleWheelScroll = (e) => { // wheel from x to Y on tap
         const container = wheelTapContainer.current;
+        if (!container) return;
         container.scrollLeft += e.deltaY;
       };
 
