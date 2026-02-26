@@ -97,7 +97,7 @@ export default function Footer() {
             },
         },
         {
-            className: "ghithub",
+            className: "github",
             imgSrc: github,
             imgAlt: "github",
             style: { borderRadius: '5px' },
@@ -791,7 +791,12 @@ export default function Footer() {
                         ref={startPopUpRef}
                         style={{display: startActive? '' : 'none'}}
                     >
-                        {footerItems.map((item, index) => (
+                        {footerItems[0] && (
+                            <div className={footerItems[0].className} onMouseEnter={footerItems[0].onmouseenter}>
+                                <img src={footerItems[0].imgSrc} alt={footerItems[0].imgAlt} />
+                            </div>
+                        )}
+                        {footerItems.slice(1).map((item, index) => (
                             <motion.div
                             key={index}
                             className={item.className}

@@ -406,7 +406,7 @@ select {
 
 .start_popup .sidebar_popup {
     grid-column: 1;
-    grid-row: 1 / -1;
+    grid-row: 1 / 100; /* Span many rows to be safe */
     background: #7b7d7b;
     position: sticky;
     top: 0;

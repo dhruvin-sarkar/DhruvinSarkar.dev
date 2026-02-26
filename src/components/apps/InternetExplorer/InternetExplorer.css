@@ -10,7 +10,7 @@
   border: 2px solid;
   border-color: #dfdfdf #808080 #808080 #dfdfdf;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-  font-family: 'MS Sans Serif', 'Microsoft Sans Serif', Arial, sans-serif;
+  font-family: 'win95', sans-serif;
   font-size: 11px;
   user-select: none;
   -webkit-user-select: none;
@@ -31,7 +31,7 @@
   background: linear-gradient(to right, #000080, #1084d0);
   color: white;
   padding: 2px 4px 2px 2px;
-  height: 18px;
+  height: 22px;
   cursor: move;
   flex-shrink: 0;
 }
@@ -39,7 +39,7 @@
 .folder_barname-InternetExplorer {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-weight: bold;
   font-size: 11px;
   pointer-events: none;
@@ -85,59 +85,8 @@
   color: white;
 }
 
-.dash-InternetExplorer {
-  margin: 0;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.expand-InternetExplorer {
-  width: 12px;
-  height: 12px;
-  background: #c0c0c0;
-  border: 1px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  position: relative;
-}
-
-.expand-InternetExplorer.full {
-  background: #c0c0c0;
-}
-
-.expand-InternetExplorer.full::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 6px;
-  height: 6px;
-  border: 1px solid #000;
-  border-right: none;
-  border-bottom: none;
-}
-
-.expand_2-InternetExplorer {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 6px;
-  height: 6px;
-  border: 1px solid #000;
-  border-left: none;
-  border-top: none;
-}
-
-.x-InternetExplorer {
-  margin: 0;
-  font-size: 12px;
-  font-weight: bold;
-  color: #000;
-}
-
 /* ============================================
-   CONTENT WRAPPER
+   NAV & ADDRESS AREA (NEW PREMIUM LOOK)
    ============================================ */
 
 .ie-content-wrapper {
@@ -145,160 +94,272 @@
   flex-direction: column;
   flex: 1;
   overflow: hidden;
+  background: #1a1b26;
 }
 
-/* ============================================
-   MENU BAR
-   ============================================ */
-
-.ie-menubar {
+.iex-tabbar {
   display: flex;
-  background: #c0c0c0;
-  border-bottom: 1px solid #808080;
-  padding: 2px 0;
-  flex-shrink: 0;
-  height: 18px;
+  align-items: flex-end;
+  background: #0d1117;
+  padding: 8px 8px 0 8px;
+  gap: 4px;
+  height: 40px;
+  border-bottom: 1px solid #30363d;
 }
 
-.ie-menu-item {
-  padding: 2px 8px;
+.iex-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 12px;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  color: #8b949e;
+  font-size: 12px;
   cursor: pointer;
+  transition: all 0.2s;
+  max-width: 180px;
+  min-width: 100px;
   position: relative;
 }
 
-.ie-menu-item:hover {
-  background: #000080;
-  color: white;
+.iex-tab.active {
+  background: #1f2937;
+  color: #f9fafb;
+  border-color: #30363d;
+  height: 34px;
+  z-index: 2;
 }
 
-.ie-menu-text::first-letter {
-  text-decoration: underline;
+/* Glassmorphism for active tab if supported */
+@supports (backdrop-filter: blur(10px)) {
+  .iex-tab.active {
+    background: rgba(31, 41, 55, 0.8);
+    backdrop-filter: blur(10px);
+  }
 }
 
-/* ============================================
-   NAVIGATION BAR
-   ============================================ */
-
-.ie-navbar {
-  display: flex;
-  gap: 2px;
-  padding: 3px 4px;
-  background: #c0c0c0;
-  border-bottom: 1px solid #808080;
-  flex-shrink: 0;
-  height: 28px;
-  align-items: center;
+.iex-tab:hover:not(.active) {
+  background: #21262d;
+  color: #c9d1d9;
 }
 
-.ie-nav-button {
-  min-width: 24px;
-  height: 22px;
-  background: #c0c0c0;
-  border: 1px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  cursor: pointer;
-  font-size: 14px;
+.iex-tab-favicon {
+  width: 14px;
+  height: 14px;
+}
+
+.iex-tab-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.iex-tab-close {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  font-size: 10px;
+  opacity: 0;
+  transition: all 0.2s;
 }
 
-.ie-nav-button:hover:not(:disabled) {
-  background: #d0d0d0;
+.iex-tab:hover .iex-tab-close {
+  opacity: 1;
 }
 
-.ie-nav-button:active:not(:disabled) {
-  border-color: #808080 #ffffff #ffffff #808080;
-  background: #a0a0a0;
-  transform: translate(1px, 1px);
+.iex-tab-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ff4444;
 }
 
-.ie-nav-button:disabled {
-  color: #808080;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.ie-nav-separator {
-  width: 1px;
-  height: 18px;
-  background: #808080;
-  margin: 0 2px;
-}
-
-/* ============================================
-   ADDRESS BAR
-   ============================================ */
-
-.ie-addressbar {
+.iex-new-tab {
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 3px 4px;
-  background: #c0c0c0;
-  border-bottom: 2px solid #808080;
-  flex-shrink: 0;
-  height: 26px;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #8b949e;
+  cursor: pointer;
+  border-radius: 6px;
+  margin-bottom: 4px;
 }
 
-.ie-addressbar-label {
-  font-weight: normal;
-  white-space: nowrap;
-  user-select: none;
+.iex-new-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
 }
 
-.ie-addressbar-form {
+/* URL Bar Row */
+.iex-urlbar-row {
   display: flex;
-  flex: 1;
+  align-items: center;
+  background: #1f2937;
+  padding: 8px 12px;
+  gap: 12px;
+  border-bottom: 1px solid #30363d;
+}
+
+.iex-nav-controls {
+  display: flex;
   gap: 4px;
 }
 
-.ie-addressbar-input {
-  flex: 1;
-  height: 20px;
-  padding: 1px 4px;
-  border: 1px solid;
-  border-color: #808080 #ffffff #ffffff #808080;
-  font-family: 'MS Sans Serif', Arial, sans-serif;
-  font-size: 11px;
-  background: white;
-  user-select: text;
-}
-
-.ie-addressbar-input:focus {
-  outline: 1px dotted #000000;
-  outline-offset: -2px;
-}
-
-.ie-addressbar-input:disabled {
-  background: #e0e0e0;
-  color: #808080;
-}
-
-.ie-addressbar-go {
-  height: 20px;
-  padding: 0 12px;
-  background: #c0c0c0;
-  border: 1px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
+.iex-nav-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #c9d1d9;
+  font-size: 14px;
   cursor: pointer;
-  font-size: 11px;
-  font-weight: bold;
+  border-radius: 50%;
+  transition: background 0.2s;
 }
 
-.ie-addressbar-go:hover:not(:disabled) {
-  background: #d0d0d0;
+.iex-nav-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.ie-addressbar-go:active:not(:disabled) {
-  border-color: #808080 #ffffff #ffffff #808080;
-  transform: translate(1px, 1px);
-}
-
-.ie-addressbar-go:disabled {
-  color: #808080;
+.iex-nav-btn:disabled {
+  opacity: 0.3;
   cursor: not-allowed;
+}
+
+.iex-omnibox-container {
+  flex: 1;
+  max-width: 800px;
+}
+
+.iex-omnibox {
+  display: flex;
+  align-items: center;
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 20px;
+  padding: 0 12px;
+  height: 32px;
+  gap: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.iex-omnibox:focus-within {
+  border-color: #58a6ff;
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+}
+
+.iex-omnibox input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #f0f6fc;
+  font-size: 13px;
+  outline: none;
+  width: 100%;
+}
+
+.iex-lock-indicator {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.iex-bookmark-btn {
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0 4px;
+}
+
+.iex-bookmark-btn:hover {
+  color: #d29922;
+}
+
+.iex-bar-toggle {
+  background: #161b22;
+  border: 1px solid #30363d;
+  color: #c9d1d9;
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.iex-bar-toggle:hover {
+  background: #21262d;
+  border-color: #8b949e;
+}
+
+.iex-bar-toggle.active {
+  background: #238636;
+  border-color: #2ea043;
+  color: white;
+}
+
+/* Bookmarks Bar with proper overflow handling */
+.iex-bookmarks-bar {
+  display: flex;
+  background: #1f2937;
+  border-bottom: 1px solid #30363d;
+  padding: 4px 12px;
+  min-height: 32px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE 10+ */
+}
+
+.iex-bookmarks-bar::-webkit-scrollbar {
+  display: none;
+  /* Safari and Chrome */
+}
+
+.iex-bookmarks-inner {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.iex-bookmark-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  color: #c9d1d9;
+  font-size: 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+
+.iex-bookmark-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #30363d;
+  transform: translateY(-1px);
+}
+
+.iex-bookmark-chip img {
+  width: 12px;
+  height: 12px;
 }
 
 /* ============================================
@@ -310,37 +371,12 @@
   position: relative;
   background: white;
   overflow: hidden;
-  min-height: 0;
-}
-
-.ie-browser-frame {
-  width: 100%;
-  height: 100%;
-  position: relative;
 }
 
 .ie-iframe {
   width: 100%;
   height: 100%;
   border: none;
-  display: block;
-}
-
-.ie-loading-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 8px;
-  background: #ffffcc;
-  border-bottom: 1px solid #808080;
-  text-align: center;
-  z-index: 10;
-  animation: fadeIn 0.2s;
-}
-
-.ie-loading-text {
-  font-size: 11px;
 }
 
 /* ============================================
@@ -351,345 +387,52 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 20px;
-  padding: 2px 4px;
-  background: #c0c0c0;
-  border-top: 1px solid #ffffff;
-  flex-shrink: 0;
-  gap: 4px;
-}
-
-.ie-status-left {
-  flex: 1;
-  display: flex;
-  gap: 4px;
+  height: 22px;
+  padding: 0 8px;
+  background: #0d1117;
+  border-top: 1px solid #30363d;
+  color: #8b949e;
+  font-size: 11px;
 }
 
 .ie-status-text {
   flex: 1;
-  padding: 0 4px;
-  border: 1px solid;
-  border-color: #808080 #ffffff #ffffff #808080;
-  background: white;
-  height: 16px;
-  line-height: 16px;
-  font-size: 11px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.ie-status-right {
+.ie-status-zone {
   display: flex;
+  align-items: center;
   gap: 4px;
 }
 
-.ie-status-zone {
-  padding: 0 6px;
-  border: 1px solid;
-  border-color: #808080 #ffffff #ffffff #808080;
-  height: 16px;
-  line-height: 16px;
-  font-size: 11px;
-  white-space: nowrap;
-}
-
 /* ============================================
-   START PAGE
+   SPINNER
    ============================================ */
-
-.ie-startpage {
-  padding: 24px;
-  background: white;
-  overflow-y: auto;
-  height: 100%;
+.iex-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-left-color: #58a6ff;
+  border-radius: 50%;
+  animation: iex-spin 0.8s linear infinite;
 }
 
-.ie-startpage-header {
-  text-align: center;
-  margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #000080;
-}
-
-.ie-startpage-icon {
-  width: 64px;
-  height: 64px;
-  margin-bottom: 16px;
-}
-
-.ie-startpage-header h1 {
-  color: #000080;
-  margin: 0 0 8px 0;
-  font-size: 24px;
-  font-weight: bold;
-}
-
-.ie-startpage-subtitle {
-  color: #606060;
-  margin: 0;
-  font-size: 13px;
-}
-
-.ie-startpage-section {
-  margin-bottom: 28px;
-}
-
-.ie-startpage-section h2 {
-  color: #000080;
-  margin: 0 0 12px 0;
-  font-size: 16px;
-  font-weight: bold;
-}
-
-.ie-startpage-section p {
-  margin: 8px 0;
-  line-height: 1.5;
-  color: #000000;
-}
-
-.ie-sitelist {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 8px;
-  margin: 16px 0;
-}
-
-.ie-site-button {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 12px;
-  background: #f0f0f0;
-  border: 2px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  cursor: pointer;
-  text-align: left;
-  transition: background 0.1s;
-  user-select: none;
-}
-
-.ie-site-button:hover {
-  background: #e8e8e8;
-  border-color: #dfdfdf #606060 #606060 #dfdfdf;
-}
-
-.ie-site-button:active {
-  border-color: #808080 #ffffff #ffffff #808080;
-  background: #d0d0d0;
-}
-
-.ie-site-name {
-  font-weight: bold;
-  margin-bottom: 4px;
-  font-size: 12px;
-  color: #000080;
-}
-
-.ie-site-url {
-  font-size: 10px;
-  color: #0000ff;
-  margin-bottom: 4px;
-}
-
-.ie-site-description {
-  font-size: 10px;
-  color: #606060;
-  margin-top: 4px;
-}
-
-.ie-info-list {
-  margin: 12px 0;
-  padding-left: 24px;
-}
-
-.ie-info-list li {
-  margin: 8px 0;
-  line-height: 1.5;
-}
-
-.ie-info-list code {
-  background: #f0f0f0;
-  padding: 2px 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 10px;
-  border: 1px solid #d0d0d0;
-}
-
-/* ============================================
-   ERROR PAGE
-   ============================================ */
-
-.ie-errorpage {
-  padding: 32px 24px;
-  background: white;
-  overflow-y: auto;
-  height: 100%;
-}
-
-.ie-error-icon {
-  font-size: 48px;
-  text-align: center;
-  margin-bottom: 16px;
-}
-
-.ie-error-title {
-  color: #cc0000;
-  text-align: center;
-  margin: 0 0 16px 0;
-  font-size: 18px;
-  font-weight: bold;
-}
-
-.ie-error-reason {
-  text-align: center;
-  margin: 0 0 24px 0;
-  color: #404040;
-  font-size: 12px;
-  line-height: 1.5;
-}
-
-.ie-error-details {
-  background: #f8f8f8;
-  padding: 16px;
-  margin: 16px 0;
-  border: 1px solid #d0d0d0;
-}
-
-.ie-error-details p {
-  margin: 8px 0;
-  font-size: 11px;
-}
-
-.ie-error-details code {
-  background: white;
-  padding: 2px 4px;
-  font-family: 'Courier New', monospace;
-  font-size: 10px;
-  border: 1px solid #c0c0c0;
-}
-
-.ie-error-technical {
-  font-family: 'Courier New', monospace;
-  font-size: 10px;
-  background: white;
-  padding: 12px;
-  margin-top: 12px;
-  border: 1px solid #c0c0c0;
-  line-height: 1.6;
-}
-
-.ie-error-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  margin: 28px 0;
-}
-
-.ie-error-button,
-.ie-error-button-primary {
-  padding: 8px 16px;
-  background: #c0c0c0;
-  border: 2px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  cursor: pointer;
-  font-size: 11px;
-  font-weight: bold;
-  min-width: 120px;
-}
-
-.ie-error-button-primary {
-  background: #000080;
-  color: white;
-}
-
-.ie-error-button:hover,
-.ie-error-button-primary:hover {
-  filter: brightness(1.1);
-}
-
-.ie-error-button:active,
-.ie-error-button-primary:active {
-  border-color: #808080 #ffffff #ffffff #808080;
-  transform: translate(1px, 1px);
-}
-
-.ie-error-suggestions {
-  background: #ffffcc;
-  padding: 16px;
-  border: 2px solid #ffcc00;
-  margin-top: 24px;
-}
-
-.ie-error-suggestions h3 {
-  color: #000080;
-  margin: 0 0 12px 0;
-  font-size: 13px;
-  font-weight: bold;
-}
-
-.ie-error-suggestions ul {
-  margin: 8px 0;
-  padding-left: 24px;
-}
-
-.ie-error-suggestions li {
-  margin: 4px 0;
-  font-size: 11px;
-}
-
-.ie-error-footer {
-  margin-top: 24px;
-  padding: 16px;
-  background: #e8f4ff;
-  border-left: 3px solid #000080;
-}
-
-.ie-error-footer p {
-  margin: 0;
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-/* ============================================
-   ANIMATIONS
-   ============================================ */
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
+@keyframes iex-spin {
   to {
-    opacity: 1;
+    transform: rotate(360deg);
   }
 }
 
-/* ============================================
-   SCROLLBARS (Win95 Style)
-   ============================================ */
-
-.ie-startpage::-webkit-scrollbar,
-.ie-errorpage::-webkit-scrollbar {
+/* Old styles to remove/clean up */
+.folder_barname-InternetExplorer img {
   width: 16px;
 }
 
-.ie-startpage::-webkit-scrollbar-track,
-.ie-errorpage::-webkit-scrollbar-track {
-  background: #c0c0c0;
-}
-
-.ie-startpage::-webkit-scrollbar-thumb,
-.ie-errorpage::-webkit-scrollbar-thumb {
-  background: #c0c0c0;
-  border: 1px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-}
-
-.ie-startpage::-webkit-scrollbar-button,
-.ie-errorpage::-webkit-scrollbar-button {
-  background: #c0c0c0;
-  border: 1px solid;
-  border-color: #ffffff #808080 #808080 #ffffff;
-  height: 16px;
+.ie-navbar,
+.ie-addressbar,
+.ie-menubar {
+  display: none;
 }
