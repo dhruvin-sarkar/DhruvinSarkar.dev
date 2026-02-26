@@ -6,22 +6,31 @@ const useEmulatorWindow = ({
   iframeSrc,
   externalUrl,
   loadTimeoutMs = LOAD_TIMEOUT_MS,
+  isEnabled = true,
 }) => {
-  const [src, setSrc] = useState(iframeSrc);
-  const [isLoading, setIsLoading] = useState(true);
+  const [src, setSrc] = useState(isEnabled ? iframeSrc : "about:blank");
+  const [isLoading, setIsLoading] = useState(isEnabled);
   const [hasError, setHasError] = useState(false);
   const [timedOut, setTimedOut] = useState(false);
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
+    if (!isEnabled) {
+      setSrc("about:blank");
+      setIsLoading(false);
+      setHasError(false);
+      setTimedOut(false);
+      return;
+    }
+
     setSrc(iframeSrc);
     setIsLoading(true);
     setHasError(false);
     setTimedOut(false);
-  }, [iframeSrc]);
+  }, [iframeSrc, isEnabled]);
 
   useEffect(() => {
-    if (!isLoading) return undefined;
+    if (!isEnabled || !isLoading) return undefined;
 
     const timer = window.setTimeout(() => {
       setTimedOut(true);
@@ -30,7 +39,7 @@ const useEmulatorWindow = ({
     }, loadTimeoutMs);
 
     return () => window.clearTimeout(timer);
-  }, [isLoading, loadTimeoutMs, src, reloadToken]);
+  }, [isEnabled, isLoading, loadTimeoutMs, src, reloadToken]);
 
   const handleLoad = useCallback(() => {
     setIsLoading(false);
@@ -44,14 +53,16 @@ const useEmulatorWindow = ({
   }, []);
 
   const reload = useCallback(() => {
+    if (!isEnabled) return;
     setReloadToken((previous) => previous + 1);
     setIsLoading(true);
     setHasError(false);
     setTimedOut(false);
-  }, []);
+  }, [isEnabled]);
 
   const iframeUrl = useMemo(() => {
     if (!src) return "";
+    if (src === "about:blank") return "about:blank";
 
     try {
       const url = new URL(src, window.location.href);
@@ -63,7 +74,7 @@ const useEmulatorWindow = ({
     }
   }, [reloadToken, src]);
 
-  const resolvedExternalUrl = externalUrl || src;
+  const resolvedExternalUrl = externalUrl || iframeSrc;
 
   return {
     iframeUrl,

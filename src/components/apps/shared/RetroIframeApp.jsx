@@ -21,6 +21,8 @@ const RetroIframeApp = ({
   timeoutMessage,
   loadTimeoutMs,
   iframeAllow = "autoplay; fullscreen; gamepad; pointer-lock",
+  iframeLoading = "lazy",
+  iframeAllowFullScreen = true,
   perfWarning,
   appNotice,
 }) => {
@@ -30,6 +32,17 @@ const RetroIframeApp = ({
 
   const [dontShowAgain, setDontShowAgain] = useState(false);
   const [warningDismissed, setWarningDismissed] = useState(false);
+
+  const warningKey = perfWarning?.storageKey;
+  const warningAccepted = useMemo(() => {
+    if (!warningKey || typeof window === "undefined") return true;
+    return window.localStorage.getItem(warningKey) === "1";
+  }, [warningKey]);
+
+  const isWarningActive = Boolean(
+    perfWarning && !warningAccepted && !warningDismissed,
+  );
+  const shouldShowWarning = Boolean(state?.show && isWarningActive);
 
   const {
     iframeUrl,
@@ -44,17 +57,8 @@ const RetroIframeApp = ({
     iframeSrc,
     externalUrl,
     loadTimeoutMs,
+    isEnabled: !isWarningActive,
   });
-
-  const warningKey = perfWarning?.storageKey;
-  const warningAccepted = useMemo(() => {
-    if (!warningKey || typeof window === "undefined") return true;
-    return window.localStorage.getItem(warningKey) === "1";
-  }, [warningKey]);
-
-  const shouldShowWarning = Boolean(
-    state?.show && perfWarning && !warningAccepted && !warningDismissed,
-  );
 
   useEffect(() => {
     if (!state?.show) {
@@ -73,16 +77,25 @@ const RetroIframeApp = ({
     window.open(resolvedExternalUrl, "_blank", "noopener,noreferrer");
   };
 
+  const timeoutSeconds = useMemo(() => {
+    const fallback = 10000;
+    const resolved =
+      Number.isFinite(loadTimeoutMs) && loadTimeoutMs > 0
+        ? loadTimeoutMs
+        : fallback;
+    return Math.max(1, Math.round(resolved / 1000));
+  }, [loadTimeoutMs]);
+
   const errorDescription = useMemo(() => {
     if (timedOut) {
       return (
         timeoutMessage ||
-        `Could not connect to ${title} within 10 seconds. You can retry or open it externally.`
+        `Could not connect to ${title} within ${timeoutSeconds} seconds. You can retry or open it externally.`
       );
     }
 
     return `The embedded page for ${title} failed to load. Retry, or open externally.`;
-  }, [timedOut, timeoutMessage, title]);
+  }, [timedOut, timeoutMessage, title, timeoutSeconds]);
 
   if (!state || !setState) return null;
 
@@ -129,6 +142,9 @@ const RetroIframeApp = ({
                 >
                   Cancel
                 </button>
+                <button type="button" onClick={openExternally}>
+                  Open Externally
+                </button>
                 <button
                   type="button"
                   onClick={() => {
@@ -165,6 +181,8 @@ const RetroIframeApp = ({
         onLoad={handleLoad}
         onError={handleError}
         allow={iframeAllow}
+        loading={iframeLoading}
+        allowFullScreen={iframeAllowFullScreen}
       />
 
       {hasError ? (
