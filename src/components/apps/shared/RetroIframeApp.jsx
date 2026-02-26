@@ -67,6 +67,12 @@ const RetroIframeApp = ({
     }
   }, [state?.show]);
 
+  useEffect(() => {
+    if (state?.show && state?.hide) {
+      setState((previous) => ({ ...previous, hide: false }));
+    }
+  }, [state?.show, state?.hide, setState]);
+
   const warningTitle = perfWarning?.title || "Performance Notice";
   const warningText =
     perfWarning?.message ||

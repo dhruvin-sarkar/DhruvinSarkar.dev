@@ -1,5 +1,5 @@
 import UseContext from '../Context'
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from 'react';
 import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';
 import { SketchPicker } from 'react-color';

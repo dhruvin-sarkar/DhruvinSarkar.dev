@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext, useState } from 'react';
+import React, { useEffect, useRef, useContext, useState } from 'react';
 import UseContext from '../Context';
 import '../css/RightClickWindows.css';
 import { BsFillCaretRightFill } from "react-icons/bs";

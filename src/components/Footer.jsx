@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext, useState } from 'react';
+import React, { useEffect, useRef, useContext, useState } from 'react';
 import UseContext from '../Context'
 import { motion, AnimatePresence  } from 'framer-motion';
 import startIcon from '../assets/95icon.png';

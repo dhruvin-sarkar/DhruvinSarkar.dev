@@ -1,4 +1,4 @@
-import { useEffect, useContext, useRef, useState } from 'react';
+import React, { useEffect, useContext, useRef, useState } from 'react';
 import UseContext from '../Context';
 import Draggable from './system/WindowDraggable';
 import binEmp from '../assets/bin2.png'

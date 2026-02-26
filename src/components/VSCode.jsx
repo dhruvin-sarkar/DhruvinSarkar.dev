@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import UseContext from '../Context';
 import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';

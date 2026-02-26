@@ -1,4 +1,4 @@
-import { useRef, useContext, useState, useEffect } from 'react';
+import React, { useRef, useContext, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDrag, useDrop } from 'react-dnd';
 import UseContext from '../Context';

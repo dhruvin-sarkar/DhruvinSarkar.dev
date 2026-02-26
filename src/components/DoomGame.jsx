@@ -1,5 +1,5 @@
 import UseContext from '../Context'
-import { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import Draggable from './system/WindowDraggable';
 import { imageMapping } from './function/AppFunctions';
 import '../css/DoomGame.css'

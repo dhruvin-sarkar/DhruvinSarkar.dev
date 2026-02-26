@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useContext } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import Draggable from './system/WindowDraggable';
 import UseContext from '../Context';
 import '../css/Terminal.css';

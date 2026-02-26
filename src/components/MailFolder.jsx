@@ -1,6 +1,6 @@
 import UseContext from '../Context'
 import emailjs from '@emailjs/browser';
-import { useContext, useRef } from "react";
+import React, { useContext, useRef } from 'react';
 import Draggable from './system/WindowDraggable';
 import Mail from '../assets/mail.png'
 import '../css/MailFolder.css'

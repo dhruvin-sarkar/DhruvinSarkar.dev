@@ -1,5 +1,5 @@
 import UseContext from '../Context';
-import { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import axios from "axios";
 import { motion, AnimatePresence } from 'framer-motion';
 import "../css/NewsApp.css";

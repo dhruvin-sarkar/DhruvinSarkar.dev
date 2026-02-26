@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import UseContext from '../Context';
 import pcshutdown from '../assets/shutdown.png';
 import '../css/Shutdown.css';

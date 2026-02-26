@@ -1,5 +1,5 @@
 import UseContext from '../Context'
-import { useContext, useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react';
 import Error from '../assets/error.png'
 import '../css/ErrorBtn.css'
 

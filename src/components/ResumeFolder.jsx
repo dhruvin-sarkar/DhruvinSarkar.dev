@@ -1,5 +1,5 @@
 import UseContext from '../Context';
-import { Fragment, useContext, useEffect, useRef, useState} from "react";
+import React, { Fragment, useContext, useEffect, useRef, useState} from 'react';
 import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';
 import Resume from '../assets/folder.png';

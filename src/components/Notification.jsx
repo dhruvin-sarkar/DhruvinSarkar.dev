@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import '../css/Notification.css';
 import { motion, AnimatePresence } from 'framer-motion';
 import UseContext from '../Context';

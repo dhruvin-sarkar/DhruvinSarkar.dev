@@ -1,3 +1,4 @@
+import React from 'react';
 import '../css/WindowsShutdown.css';
 import windowsshut from '../assets/shuttingdownbg.png'
 

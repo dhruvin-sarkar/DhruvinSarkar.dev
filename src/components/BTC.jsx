@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from "react"
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import UseContext from "../Context"
 import { LineChart, AreaChart , Area, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts"
 import "../css/BTC.css"

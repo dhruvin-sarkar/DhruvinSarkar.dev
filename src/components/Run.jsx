@@ -1,6 +1,6 @@
 import ErrorBtn from './ErrorBtn';
 import UseContext from '../Context'
-import { useContext, useEffect } from "react";
+import React, { useContext, useEffect } from 'react';
 import Draggable from './system/WindowDraggable';
 import RunIcon from '../assets/run.png'
 import '../css/Run.css'

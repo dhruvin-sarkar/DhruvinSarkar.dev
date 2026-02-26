@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, useRef } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import UseContext from '../Context';
 import '../css/SpinningCat.css';

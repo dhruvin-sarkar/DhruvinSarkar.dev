@@ -1,5 +1,5 @@
 import UseContext from '../Context'
-import { useContext } from "react";
+import React, { useContext } from 'react';
 import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';
 import file4 from '../assets/file4.png'

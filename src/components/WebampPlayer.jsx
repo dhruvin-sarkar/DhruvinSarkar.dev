@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext, useState } from 'react';
+import React, { useEffect, useRef, useContext, useState } from 'react';
 import UseContext from '../Context'
 import Webamp from 'webamp';
 import mp3 from '../assets/never-gonna-give-you-up.mp3';

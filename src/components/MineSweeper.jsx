@@ -1,5 +1,5 @@
 import UseContext from '../Context'
-import { useContext, useRef, useState, useEffect } from "react";
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import Draggable from './system/WindowDraggable';
 import smile from '../assets/smiley-face.png'
 import dead from '../assets/dead-face.png'
