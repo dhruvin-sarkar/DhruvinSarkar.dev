@@ -18,8 +18,6 @@ const RetroIframeApp = ({
   defaultPosition,
   loadingVariant,
   loadingSubtitle,
-  timeoutMessage,
-  loadTimeoutMs,
   iframeAllow = "autoplay; fullscreen; gamepad; pointer-lock",
   iframeLoading = "lazy",
   iframeAllowFullScreen = true,
@@ -48,7 +46,6 @@ const RetroIframeApp = ({
     iframeUrl,
     isLoading,
     hasError,
-    timedOut,
     resolvedExternalUrl,
     handleLoad,
     handleError,
@@ -56,7 +53,6 @@ const RetroIframeApp = ({
   } = useEmulatorWindow({
     iframeSrc,
     externalUrl,
-    loadTimeoutMs,
     isEnabled: !isWarningActive,
   });
 
@@ -83,25 +79,9 @@ const RetroIframeApp = ({
     window.open(resolvedExternalUrl, "_blank", "noopener,noreferrer");
   };
 
-  const timeoutSeconds = useMemo(() => {
-    const fallback = 10000;
-    const resolved =
-      Number.isFinite(loadTimeoutMs) && loadTimeoutMs > 0
-        ? loadTimeoutMs
-        : fallback;
-    return Math.max(1, Math.round(resolved / 1000));
-  }, [loadTimeoutMs]);
-
   const errorDescription = useMemo(() => {
-    if (timedOut) {
-      return (
-        timeoutMessage ||
-        `Could not connect to ${title} within ${timeoutSeconds} seconds. You can retry or open it externally.`
-      );
-    }
-
     return `The embedded page for ${title} failed to load. Retry, or open externally.`;
-  }, [timedOut, timeoutMessage, title, timeoutSeconds]);
+  }, [title]);
 
   if (!state || !setState) return null;
 

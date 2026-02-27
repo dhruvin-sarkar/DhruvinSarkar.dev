@@ -1,16 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-const LOAD_TIMEOUT_MS = 10000;
 
 const useEmulatorWindow = ({
   iframeSrc,
   externalUrl,
-  loadTimeoutMs = LOAD_TIMEOUT_MS,
   isEnabled = true,
 }) => {
   const [src, setSrc] = useState(isEnabled ? iframeSrc : "about:blank");
   const [isLoading, setIsLoading] = useState(isEnabled);
   const [hasError, setHasError] = useState(false);
-  const [timedOut, setTimedOut] = useState(false);
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
@@ -18,32 +15,17 @@ const useEmulatorWindow = ({
       setSrc("about:blank");
       setIsLoading(false);
       setHasError(false);
-      setTimedOut(false);
       return;
     }
 
     setSrc(iframeSrc);
     setIsLoading(true);
     setHasError(false);
-    setTimedOut(false);
   }, [iframeSrc, isEnabled]);
-
-  useEffect(() => {
-    if (!isEnabled || !isLoading) return undefined;
-
-    const timer = window.setTimeout(() => {
-      setTimedOut(true);
-      setHasError(true);
-      setIsLoading(false);
-    }, loadTimeoutMs);
-
-    return () => window.clearTimeout(timer);
-  }, [isEnabled, isLoading, loadTimeoutMs, src, reloadToken]);
 
   const handleLoad = useCallback(() => {
     setIsLoading(false);
     setHasError(false);
-    setTimedOut(false);
   }, []);
 
   const handleError = useCallback(() => {
@@ -56,7 +38,6 @@ const useEmulatorWindow = ({
     setReloadToken((previous) => previous + 1);
     setIsLoading(true);
     setHasError(false);
-    setTimedOut(false);
   }, [isEnabled]);
 
   const iframeUrl = useMemo(() => {
@@ -79,7 +60,6 @@ const useEmulatorWindow = ({
     iframeUrl,
     isLoading,
     hasError,
-    timedOut,
     resolvedExternalUrl,
     setSrc,
     handleLoad,
