@@ -8,7 +8,7 @@ const SkiFree = () => (
     stateKey="SkiFreeExpand"
     setterKey="setSkiFreeExpand"
     windowName="SkiFree"
-    icon={resolvePublicUrl("icons/skifree.png")}
+    icon={resolvePublicUrl("icons/skifree.svg")}
     iframeSrc="https://basicallydan.github.io/skifree.js/"
     externalUrl="https://basicallydan.github.io/skifree.js/"
     defaultWidth={800}

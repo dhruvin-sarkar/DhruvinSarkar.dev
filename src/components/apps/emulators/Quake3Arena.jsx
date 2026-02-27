@@ -8,15 +8,15 @@ const Quake3Arena = () => (
     stateKey="Quake3Expand"
     setterKey="setQuake3Expand"
     windowName="Quake III Arena"
-    icon={resolvePublicUrl("icons/reference/quake3.png")}
+    icon={resolvePublicUrl("icons/quake3.svg")}
     iframeSrc={resolvePublicUrl("games/quake3/Quake3.htm")}
     externalUrl="https://lrusso.github.io/Quake3/Quake3.htm"
     defaultWidth={1024}
     defaultHeight={768}
     defaultPosition={{ x: 160, y: 100 }}
     loadingVariant="quake"
-    loadingSubtitle="Click the red icon to load PK3 files, then the game boots automatically."
-    loadTimeoutMs={30000}
+    loadingSubtitle="Loading Quake III Arena..."
+    appNotice="Quake III Arena requires retail PAK files (pak0.pk3, pak1.pk3, pak4.pk3) in the in-game loader."
     perfWarning={{
       storageKey: "perf-quake3-ok",
       title: "Performance Warning",
