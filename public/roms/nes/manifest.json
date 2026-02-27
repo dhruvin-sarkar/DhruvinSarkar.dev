@@ -1,0 +1,25 @@
+{
+  "system": "nes",
+  "roms": [
+    {
+      "id": "contra",
+      "title": "Contra",
+      "file": "Contra (USA).nes"
+    },
+    {
+      "id": "legend-of-zelda",
+      "title": "The Legend of Zelda",
+      "file": "Legend of Zelda, The (USA) (Rev 1).nes"
+    },
+    {
+      "id": "super-mario-bros-3",
+      "title": "Super Mario Bros. 3",
+      "file": "Super Mario Bros. 3 (USA) (Rev 1).nes"
+    },
+    {
+      "id": "tetris",
+      "title": "Tetris",
+      "file": "Tetris (USA) (Tengen) (Unl).nes"
+    }
+  ]
+}

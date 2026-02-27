@@ -1,0 +1,35 @@
+{
+  "system": "gba",
+  "roms": [
+    {
+      "id": "zelda-minish-cap",
+      "title": "The Legend of Zelda: The Minish Cap",
+      "file": "Legend of Zelda, The - The Minish Cap (USA).gba"
+    },
+    {
+      "id": "pokemon-emerald",
+      "title": "Pokemon Emerald Version",
+      "file": "Pokemon - Emerald Version (USA, Europe).gba"
+    },
+    {
+      "id": "pokemon-firered",
+      "title": "Pokemon FireRed Version",
+      "file": "Pokemon - FireRed Version (USA).gba"
+    },
+    {
+      "id": "pokemon-unbound",
+      "title": "Pokemon Unbound",
+      "file": "Pokemon Unbound (v2.1.1.1).gba"
+    },
+    {
+      "id": "pokemon-lets-go-pikachu",
+      "title": "Pokemon Lets Go Pikachu GBA",
+      "file": "Pokemon_Lets_Go_Pikachu_GBA_eng-moves.gba"
+    },
+    {
+      "id": "pokemon-sword-and-shield",
+      "title": "Pokemon Sword and Shield",
+      "file": "Pokemon_Sword_and_Shield_b1.1_eng1.gba"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "system": "n64",
+  "roms": [
+    {
+      "id": "crash-bandicoot-64",
+      "title": "Crash Bandicoot 64",
+      "file": "Crash Bandicoot 64.n64"
+    },
+    {
+      "id": "donkey-kong-64",
+      "title": "Donkey Kong 64",
+      "file": "Donkey Kong 64 (USA).z64"
+    },
+    {
+      "id": "mario-kart-64",
+      "title": "Mario Kart 64",
+      "file": "Mario Kart 64 (USA).z64"
+    },
+    {
+      "id": "ocarina-gold-quest",
+      "title": "Ocarina of Time - Gold Quest",
+      "file": "Ocarina of Time - Gold Quest (v2.1).z64"
+    },
+    {
+      "id": "pokemon-stadium-2",
+      "title": "Pokemon Stadium 2",
+      "file": "Pokemon Stadium 2 (USA).z64"
+    },
+    {
+      "id": "super-mario-64",
+      "title": "Super Mario 64",
+      "file": "Super Mario 64 (USA).z64"
+    },
+    {
+      "id": "super-smash-bros",
+      "title": "Super Smash Bros.",
+      "file": "Super Smash Bros. (USA).z64"
+    }
+  ]
+}

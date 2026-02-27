@@ -1,19 +1,19 @@
 import React from "react";
-import RetroIframeApp from "../shared/RetroIframeApp";
+import ManifestRomEmulator from "./ManifestRomEmulator";
 import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const NESEmulator = () => (
-  <RetroIframeApp
+  <ManifestRomEmulator
     title="NES Emulator"
     stateKey="NESExpand"
     setterKey="setNESExpand"
     windowName="NES Emulator"
-    icon={resolvePublicUrl("icons/nes.png")}
-    iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=nes")}
+    icon={resolvePublicUrl("icons/nes.svg")}
+    system="nes"
+    core="fceumm"
     defaultWidth={512}
     defaultHeight={480}
     defaultPosition={{ x: 150, y: 130 }}
-    loadingSubtitle="Booting EmulatorJS core (NES)..."
   />
 );
 

@@ -1,19 +1,19 @@
 import React from "react";
-import RetroIframeApp from "../shared/RetroIframeApp";
+import ManifestRomEmulator from "./ManifestRomEmulator";
 import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const PlayStation1 = () => (
-  <RetroIframeApp
+  <ManifestRomEmulator
     title="PlayStation 1"
     stateKey="PS1Expand"
     setterKey="setPS1Expand"
     windowName="PlayStation 1"
-    icon={resolvePublicUrl("icons/ps1.png")}
-    iframeSrc={resolvePublicUrl("emulators/ejs-loader.html?core=ps1")}
+    icon={resolvePublicUrl("icons/ps1.svg")}
+    system="ps1"
+    core="mednafen_psx_hw"
     defaultWidth={800}
     defaultHeight={600}
     defaultPosition={{ x: 110, y: 90 }}
-    loadingSubtitle="Booting EmulatorJS core (PS1)..."
   />
 );
 
