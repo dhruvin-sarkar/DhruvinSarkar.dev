@@ -9,7 +9,7 @@ const Quake3Arena = () => (
     setterKey="setQuake3Expand"
     windowName="Quake III Arena"
     icon={resolvePublicUrl("icons/quake3.svg")}
-    iframeSrc={resolvePublicUrl("games/quake3/Quake3.htm")}
+    iframeSrc="https://lrusso.github.io/Quake3/Quake3.htm"
     externalUrl="https://lrusso.github.io/Quake3/Quake3.htm"
     defaultWidth={1024}
     defaultHeight={768}

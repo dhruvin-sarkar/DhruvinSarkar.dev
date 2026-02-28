@@ -681,6 +681,10 @@ function App() {
     setTimeout(() => {
       handleShow("Patch");
       handleShow("About");
+      // Auto-open MyComputer to show ROM folders
+      setTimeout(() => {
+        handleShow("MyComputer");
+      }, 500);
     }, 2500);
 
     // Startup sound praise
