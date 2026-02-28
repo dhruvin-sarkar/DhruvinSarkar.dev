@@ -282,9 +282,9 @@ function MyComputer() {
                 <div className="popup_select_folder">
                 <div className="selected_icon">
                   <ul>
-                  {popUpiconList.map((icon, index) => (
+                  {popUpiconList.map((icon) => (
                     <>
-                      <li key={index}
+                      <li key={`main-${icon.at}`}
                         onClick={() => {
                           setSelectedFolder({label: icon.name, img: imageMapping(icon.name)})
                           setPopUpFolder(false)
@@ -296,10 +296,10 @@ function MyComputer() {
                         />
                         <span>{icon.name}</span>
                       </li>
-                      {subFolders.map((subFolder, index) => (
+                      {subFolders.map((subFolder) => (
                         subFolder.folderId === icon.at && (
                           <>
-                            <li key={index} onClick={() => {
+                            <li key={`sub-${subFolder.name}`} onClick={() => {
                               setSelectedFolder({label: subFolder.name, img: imageMapping(subFolder.name)})
                               setPopUpFolder(false)
                               NevigateToFolder(subFolder.name)
@@ -311,9 +311,9 @@ function MyComputer() {
                               />
                             <span>{subFolder.name}</span>
                             </li>
-                            {subFolders.map((subSubFolder, index) => 
+                            {subFolders.map((subSubFolder) => 
                               subSubFolder.folderId === subFolder.name ? 
-                              <li key={index} onClick={() => {
+                              <li key={`subsub-${subSubFolder.name}`} onClick={() => {
                                 setSelectedFolder({label: subSubFolder.name, img: imageMapping(subSubFolder.name) === null ? imageMapping(subSubFolder.name, 'folder') : imageMapping(subSubFolder.name)})
                                 setPopUpFolder(false)
                                 NevigateToFolder(subSubFolder.name)

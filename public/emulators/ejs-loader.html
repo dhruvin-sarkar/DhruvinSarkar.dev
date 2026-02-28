@@ -175,6 +175,38 @@
         const romUrl = toAbsoluteUrl(rom);
         const dataPath = await resolveDataPath();
 
+        // Validate core file exists before attempting to load
+        const probe = CORE_PROBE_FILES[core];
+        if (probe && dataPath === LOCAL_DATA_PATH) {
+          const localProbe = `${LOCAL_DATA_PATH}${probe}`;
+          const hasCore = await urlExists(localProbe);
+          if (!hasCore) {
+            renderError(
+              `Core file ${probe} not found. Switching to CDN... Please wait.`,
+            );
+            // Fallback to CDN
+            window.EJS_player = "#game";
+            window.EJS_core = core;
+            window.EJS_gameUrl = romUrl;
+            window.EJS_pathtodata = CDN_DATA_PATH;
+            window.EJS_color = "#7ea2ff";
+            window.EJS_backgroundColor = "#11182b";
+            window.EJS_startOnLoaded = true;
+            if (bios) {
+              window.EJS_biosUrl = toAbsoluteUrl(bios);
+            }
+            const script = document.createElement("script");
+            script.src = `${CDN_DATA_PATH}loader.js`;
+            script.onerror = () => {
+              renderError(
+                `Unable to load from CDN (${CDN_DATA_PATH}). Please try again.`,
+              );
+            };
+            document.body.appendChild(script);
+            return;
+          }
+        }
+
         window.EJS_player = "#game";
         window.EJS_core = core;
         window.EJS_gameUrl = romUrl;
@@ -189,10 +221,17 @@
 
         const script = document.createElement("script");
         script.src = `${dataPath}loader.js`;
+        let loadTimeout = setTimeout(() => {
+          renderError(
+            `Emulator failed to initialize within 15 seconds. The data files may be unavailable. Please refresh and try again.`,
+          );
+        }, 15000);
         script.onload = () => {
+          clearTimeout(loadTimeout);
           overlay.remove();
         };
         script.onerror = () => {
+          clearTimeout(loadTimeout);
           renderError(
             `Emulator runtime failed to load from ${dataPath}. Confirm emulator files are available.`,
           );
