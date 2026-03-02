@@ -43,6 +43,7 @@ import EmptyFolder from "./components/EmptyFolder";
 import ErrorBtn from "./components/ErrorBtn";
 import RightClickWindows from "./components/RightClickWindows";
 import axios from "axios";
+import { Analytics } from "@vercel/analytics/next";
 import loadingSpin from "./assets/loading.gif";
 import NewsApp from "./components/NewsApp";
 import SpinningCat from "./components/SpinningCat";
@@ -1821,6 +1822,7 @@ function App() {
         <BTC />
         <Dragdrop />
         <Footer />
+        <Analytics />
       </UserContext.Provider>
     </>
   );
