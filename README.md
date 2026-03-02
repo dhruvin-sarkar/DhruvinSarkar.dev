@@ -2,7 +2,7 @@
 
 Windows 95 Portfolio
 
-Live: https://Dhruvin-Sarkar.com
+Live: https://Dhruvin-Sarkar.dev
 
 ## Featured Functionality
 
