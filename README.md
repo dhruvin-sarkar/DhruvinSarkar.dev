@@ -2,7 +2,7 @@
 
 Windows 95 Portfolio
 
-Live: https://Dhruvin-Sarkar.com
+Live: https://Dhruvin-Sarkar.dev
 
 ## Featured Functionality
 
@@ -159,6 +159,50 @@ Live: https://Dhruvin-Sarkar.com
   - Automatic letterboxing with black bars for authentic retro display
   - Improved canvas scaling and display optimization
   - Removed redundant fullscreen button for cleaner interface
+Window Resizing
+
+All windows can now be resized in all eight directions from any edge or corner
+Resize handles on all sides and corners with correct directional cursors
+Transparent overlay during resize prevents iframes from swallowing mouse events
+Minimum window size enforced so windows cannot be collapsed beyond usability
+
+
+Emulator Suite
+
+Nintendo 64 emulator with ROM library
+PlayStation 1 emulator with ROM library, large ROMs hosted on Cloudflare R2
+Game Boy Advance emulator with ROM library
+NES emulator with ROM library
+Windows 95 fully booting via Virtual x86 emulator with performance warning
+ROM library system with manifest-driven game card grid for each system
+Games launch instantly with one click, no file prompts
+
+
+Games
+
+Space Cadet Pinball fully playable
+Quake via WebAssembly
+Quake III Arena
+Chrome Dino
+DX-Ball
+SkiFree
+Commander Keen 4 via js-dos
+
+
+Internet Explorer Rebuilt
+
+Working address bar with URL and search query detection
+Back and forward navigation
+Bookmarks bar
+Error handling for sites that block iframe embedding
+
+
+Added VS Code powered by Monaco Editor
+Added Terminal with file system support
+Added custom wallpaper support, users can set and change desktop wallpaper
+Added system sound effects for window interactions and notifications
+Expanded notification system with more contextual alerts
+Performance improvements including fewer unnecessary re-renders and better iframe handling across all apps
 
 ## Library Used
 
@@ -173,63 +217,3 @@ All the Windows 95 icons and others can be found here:
 [Old Windows Icons](https://oldwindowsicons.tumblr.com/tagged/windows%2095)
 
 Special thanks to whoever owns this website.
-
-To Do:
-win 95 inside win 95 using a emulator iframe
-comick iframe 
-steam iframe
-Solitaire
-snake
-tetris
-browser i frame
- Full Nintendo 64 Emulator 
-
-Use mupen64plus-ui-console compiled to WebAssembly
-Run actual N64 ROMs (Mario 64, Zelda OoT)
-Public domain ROMs to avoid legal issues
-Save states, controller mapping
-"Super Mario 64 running in a Windows 95 window" = INSTANT viral
-Shows: WebAssembly, emulation, low-level programming understanding
-Libraries: mupen64plus, compiled with Emscripten
-2. PlayStation 1 Emulator 
-
-PCSX-ReARMed in WebAssembly
-Run actual PS1 games (Crash Bandicoot, FF7)
-Memory card saves
-"PS1 in Win95" is chef's kiss
-Shows: Console emulation, 3D graphics
-Libraries: pcsx-rearmed compiled to WASM
-3. Game Boy / Game Boy Color / Game Boy Advance 
-
-Multiple emulators in one window
-Switch between systems
-Pokemon Red/Blue, Link's Awakening, etc.
-Link cable emulation (trade Pokemon between instances!)
-Shows: Multiple system emulation
-Libraries: mGBA, SameBoy compiled to WASM
-4. Sega Genesis/Mega Drive
-
-Run Sonic, Streets of Rage
-Save states, rewind feature
-Shows: 16-bit emulation
-Libraries: BlastEm or Genesis Plus GX
-5. NES Emulator
-
-Super Mario Bros, Contra, Metroid
-More lightweight than N64
-Easier to implement but still impressive
-Shows: 8-bit emulation fundamentals
-Libraries: JSNES (pure JavaScript!)
-6. Quake Full 3D FPS
-
-Original Quake engine in WebAssembly
-Full 3D, multiplayer capable
-"Quake running in Windows 95 window in browser"
-Shows: 3D game engines, networking
-Libraries: Quake.js (exists!), QuakeSpasm compiled to WASM
- Wolfenstein 3D 
-
-Predecessor to DOOM, raycasting engine
-Easier than full 3D but still impressive
-Shows: Raycasting, retro 3D
-Libraries: Wolf4SDL compiled to WASM
