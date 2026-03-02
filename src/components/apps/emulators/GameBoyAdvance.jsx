@@ -8,7 +8,7 @@ const GameBoyAdvance = () => (
     stateKey="GBAExpand"
     setterKey="setGBAExpand"
     windowName="Game Boy Advance"
-    icon={resolvePublicUrl("icons/gba.svg")}
+    icon={resolvePublicUrl("icons/gba.png")}
     system="gba"
     core="mgba"
     defaultWidth={480}

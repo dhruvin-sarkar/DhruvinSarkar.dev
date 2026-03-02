@@ -8,7 +8,7 @@ const PlayStation1 = () => (
     stateKey="PS1Expand"
     setterKey="setPS1Expand"
     windowName="PlayStation 1"
-    icon={resolvePublicUrl("icons/ps1.svg")}
+    icon={resolvePublicUrl("icons/ps1.png")}
     system="ps1"
     core="mednafen_psx_hw"
     defaultWidth={800}

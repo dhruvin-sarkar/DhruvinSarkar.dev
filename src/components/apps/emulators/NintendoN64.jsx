@@ -8,7 +8,7 @@ const NintendoN64 = () => (
     stateKey="N64Expand"
     setterKey="setN64Expand"
     windowName="Nintendo 64"
-    icon={resolvePublicUrl("icons/n64.svg")}
+    icon={resolvePublicUrl("icons/n64.png")}
     system="n64"
     core="n64"
     defaultWidth={800}

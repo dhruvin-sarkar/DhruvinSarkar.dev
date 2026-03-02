@@ -8,7 +8,7 @@ const QuakeOriginal = () => (
     stateKey="Quake1Expand"
     setterKey="setQuake1Expand"
     windowName="Quake"
-    icon={resolvePublicUrl("icons/quake1.svg")}
+    icon={resolvePublicUrl("icons/quake1.png")}
     iframeSrc={resolvePublicUrl("games/webquake/index.htm")}
     externalUrl="https://github.com/Triang3l/WebQuake"
     defaultWidth={960}

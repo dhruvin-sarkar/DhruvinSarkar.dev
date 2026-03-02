@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import Draggable from "../../system/WindowDraggable";
 import UseContext from "../../../Context";
-import defaultIcon from "../../assets/95icon.png"; // fallback for missing window icons
+import defaultIcon from "../../../assets/95icon.png"; // fallback for missing window icons
 
 const AppWindowShell = ({
   title,
@@ -117,8 +117,26 @@ const AppWindowShell = ({
               src={icon || defaultIcon}
               alt={title}
               onError={(e) => {
-                if (e.currentTarget.src !== defaultIcon) {
-                  e.currentTarget.src = defaultIcon;
+                const img = e.currentTarget;
+                const current = img.src || "";
+
+                // if the requested icon failed to load, try the same path with
+                // a `.png` extension (some assets provide both formats).  this
+                // solves intermittent cases where an SVG isn’t served but the
+                // PNG counterpart exists (e.g. n64.svg).  if that also fails,
+                // fall back to the generic default icon.
+                if (current && current !== defaultIcon) {
+                  if (current.endsWith(".svg")) {
+                    img.src = current.replace(/\.svg$/, ".png");
+                    return;
+                  }
+                  if (current.endsWith(".png") && icon && icon.endsWith(".svg")) {
+                    // we already tried the png version derived from the svg
+                    // prop, no luck – now use real default
+                    img.src = defaultIcon;
+                    return;
+                  }
+                  img.src = defaultIcon;
                 }
               }}
             />

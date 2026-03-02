@@ -8,7 +8,7 @@ const NESEmulator = () => (
     stateKey="NESExpand"
     setterKey="setNESExpand"
     windowName="NES Emulator"
-    icon={resolvePublicUrl("icons/nes.svg")}
+    icon={resolvePublicUrl("icons/nes.png")}
     system="nes"
     core="fceumm"
     defaultWidth={512}
