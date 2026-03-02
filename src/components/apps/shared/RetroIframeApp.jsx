@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo } from "react";
 import UseContext from "../../../Context";
 import AppWindowShell from "./AppWindowShell";
 import EmulatorLoadingScreen from "./EmulatorLoadingScreen";
@@ -28,19 +28,15 @@ const RetroIframeApp = ({
   const state = context[stateKey];
   const setState = context[setterKey];
 
-  const [dontShowAgain, setDontShowAgain] = useState(false);
-  const [warningDismissed, setWarningDismissed] = useState(false);
-
+  // Performance warnings are disabled globally.  The original
+  // implementation prompted users before launching CPU‑/memory‑heavy iframe
+  // apps; we suppress that overlay entirely so nothing ever appears.
+  // Any props passed via `perfWarning` are now ignored.
   const warningKey = perfWarning?.storageKey;
-  const warningAccepted = useMemo(() => {
-    if (!warningKey || typeof window === "undefined") return true;
-    return window.localStorage.getItem(warningKey) === "1";
-  }, [warningKey]);
+  const warningAccepted = true; // always pretend the user accepted the warning
 
-  const isWarningActive = Boolean(
-    perfWarning && !warningAccepted && !warningDismissed,
-  );
-  const shouldShowWarning = Boolean(state?.show && isWarningActive);
+  const isWarningActive = false; // never show warning
+  const shouldShowWarning = false; // shortcut
 
   const {
     iframeUrl,
@@ -56,12 +52,6 @@ const RetroIframeApp = ({
     isEnabled: !isWarningActive,
   });
 
-  useEffect(() => {
-    if (!state?.show) {
-      setWarningDismissed(false);
-      setDontShowAgain(false);
-    }
-  }, [state?.show]);
 
   useEffect(() => {
     if (state?.show && state?.hide) {
@@ -69,10 +59,6 @@ const RetroIframeApp = ({
     }
   }, [state?.show, state?.hide, setState]);
 
-  const warningTitle = perfWarning?.title || "Performance Notice";
-  const warningText =
-    perfWarning?.message ||
-    "This app may use high CPU/GPU resources. Continue if your device can handle it.";
 
   const openExternally = () => {
     if (!resolvedExternalUrl) return;
@@ -101,56 +87,6 @@ const RetroIframeApp = ({
         <div className="retro-emulator-note">{appNotice}</div>
       ) : null}
 
-      {shouldShowWarning ? (
-        <div className="retro-performance-overlay">
-          <div className="retro-performance-card">
-            <h3>{warningTitle}</h3>
-            <p>{warningText}</p>
-            <div className="retro-performance-row">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={dontShowAgain}
-                  onChange={(event) => setDontShowAgain(event.target.checked)}
-                />
-                Don&apos;t show again
-              </label>
-              <div className="iframe-error-actions">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setState((previous) => ({
-                      ...previous,
-                      show: false,
-                      hide: false,
-                    }));
-                  }}
-                >
-                  Cancel
-                </button>
-                <button type="button" onClick={openExternally}>
-                  Open Externally
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setWarningDismissed(true);
-                    if (warningKey && dontShowAgain) {
-                      window.localStorage.setItem(warningKey, "1");
-                    }
-                    setState((previous) => ({
-                      ...previous,
-                      show: true,
-                    }));
-                  }}
-                >
-                  Continue
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
 
       {isLoading ? (
         <EmulatorLoadingScreen

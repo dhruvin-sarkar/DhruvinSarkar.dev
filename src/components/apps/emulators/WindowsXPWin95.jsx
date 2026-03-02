@@ -16,12 +16,6 @@ const WindowsXPWin95 = () => (
     loadingVariant="warning"
     loadingSubtitle="Booting Virtual x86 (this can take a while)..."
     appNotice="Windows 95 disk image required at /public/emulators/win95.img"
-    perfWarning={{
-      storageKey: "perf-win95-ok",
-      title: "Performance Warning",
-      message:
-        "Windows 95 emulation can use significant CPU and memory. Continue if your device can handle it.",
-    }}
     externalUrl="https://github.com/copy/v86"
   />
 );

@@ -17,12 +17,6 @@ const Quake3Arena = () => (
     loadingVariant="quake"
     loadingSubtitle="Loading Quake III Arena..."
     appNotice="Quake III Arena requires retail PAK files (pak0.pk3, pak1.pk3, pak4.pk3) in the in-game loader."
-    perfWarning={{
-      storageKey: "perf-quake3-ok",
-      title: "Performance Warning",
-      message:
-        "Quake III Arena is resource-heavy and may impact frame rate on weaker hardware.",
-    }}
   />
 );
 

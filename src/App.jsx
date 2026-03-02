@@ -682,10 +682,14 @@ function App() {
     setTimeout(() => {
       handleShow("Patch");
       handleShow("About");
-      // Auto-open MyComputer to show ROM folders
-      setTimeout(() => {
-        handleShow("MyComputer");
-      }, 500);
+      // previously we auto‑opened MyComputer at startup to highlight the ROM
+      // folders.  Users complained that the computer window pops up every time,
+      // so we no longer open it automatically.
+      // if you ever want to re-enable this behaviour, uncomment below:
+      //
+      // setTimeout(() => {
+      //   handleShow("MyComputer");
+      // }, 500);
     }, 2500);
 
     // Startup sound praise

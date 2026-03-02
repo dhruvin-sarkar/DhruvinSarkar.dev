@@ -17,12 +17,6 @@ const QuakeOriginal = () => (
     loadingVariant="quake"
     loadingSubtitle="WebQuake HTML5/WebGL engine loading..."
     loadTimeoutMs={30000}
-    perfWarning={{
-      storageKey: "perf-quake1-ok",
-      title: "Performance Warning",
-      message:
-        "Quake uses WebGL rendering and may impact performance on weaker hardware. Quake PAK files (id1/ folder) are required for gameplay.",
-    }}
   />
 );
 
