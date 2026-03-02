@@ -274,7 +274,8 @@ export function imageMapping (name, type) {
       if(type === 'notepad') {
         return notepad;
       }
-      return null;
+      // fallback icon (windows logo) so we never return null
+      return Windows95Icon;
   }
 }
 

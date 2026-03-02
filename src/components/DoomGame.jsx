@@ -236,7 +236,14 @@ function DoomGame() {
              style={{ background: DoomExpand.focusItem ? themeDragBar : '#757579'}}
           >
             <div className="doom-title-text">
-              <img src={imageMapping('DOOM')} alt="DOOM" className="doom-title-icon" />
+              <img
+                src={imageMapping('DOOM')}
+                alt="DOOM"
+                className="doom-title-icon"
+                onError={(e) => {
+                  e.currentTarget.src = imageMapping('DOOM', 'folder') || '';
+                }}
+              />
               <span>DOOM</span>
             </div>
             <div className="doom-title-buttons">

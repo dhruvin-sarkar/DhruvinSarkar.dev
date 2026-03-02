@@ -107,17 +107,28 @@
 
     <script>
       const overlay = document.getElementById("overlay");
-      const marker = "/emulators/";
-      const markerIndex = window.location.pathname.toLowerCase().lastIndexOf(marker);
-      const basePrefix = markerIndex === -1 ? "/" : window.location.pathname.slice(0, markerIndex + 1) || "/";
-      const localV86Path = `${basePrefix}emulators/v86/`;
-      const imagePath = `${basePrefix}emulators/win95.img`;
+      // previous code computed a prefix based on pathname in order to
+      // support running from subdirectories.  in practice the iframe is
+      // always served from /emulators/, so a simple relative path works and
+      // avoids miscalculations that caused the local script to miss and
+      // trigger a network error.  keep the explicit paths in case the HTML is
+      // relocated later.
+      const localV86Path = "v86/";               // relative to this HTML file
+      const imagePath = "win95.img";            // same directory
 
-      const scriptCandidates = [
-        `${localV86Path}libv86.js`,
-        "https://copy.sh/v86/libv86.js",
-      ];
+      const localScript = `${localV86Path}libv86.js`;
+      const remoteScript = "https://copy.sh/v86/libv86.js";
 
+      // helper used only for local resource; remote HEAD requests trigger
+      // CORS failures so we avoid them altogether.
+      async function localExists(url) {
+        try {
+          const resp = await fetch(url, { method: "HEAD", cache: "no-store" });
+          return resp.ok;
+        } catch {
+          return false;
+        }
+      }
       function renderPanel(html) {
         overlay.innerHTML = `<div class="panel">${html}</div>`;
       }
@@ -149,15 +160,42 @@
       }
 
       async function ensureRuntime() {
-        let lastError = null;
-        for (const url of scriptCandidates) {
+        // try local script first; if it fails (404 or initialization error)
+        // fall through to the remote URL. we avoid any HEAD requests here to
+        // eliminate CORS errors when checking remote hosts.
+        if (await localExists(localScript)) {
           try {
-            return await loadScriptWithGuard(url);
-          } catch (error) {
-            lastError = error;
+            return await loadScriptWithGuard(localScript);
+          } catch (err) {
+            console.warn("local v86 load failed:", err);
           }
         }
-        throw lastError || new Error("Unable to load v86 runtime.");
+
+        try {
+          return await loadScriptWithGuard(remoteScript);
+        } catch (err) {
+          console.warn("remote v86 load failed:", err);
+        }
+
+        // still no runtime; show user instructions
+        renderPanel(`
+          <h2>v86 runtime unavailable</h2>
+          <p class="error">
+            Unable to load the v86 JavaScript runtime necessary for emulation.
+          </p>
+          <p class="note">
+            Please ensure <code>${localScript}</code> exists and is reachable
+            from this page.  You can download the latest build from
+            <a href="https://github.com/copy/v86" target="_blank" rel="noopener noreferrer">
+            https://github.com/copy/v86</a> and place it in the
+            <code>public/emulators/v86/</code> directory.
+          </p>
+          <div class="row">
+            <button class="btn" id="retry-btn">Retry</button>
+          </div>
+        `);
+        document.getElementById("retry-btn").addEventListener("click", () => window.location.reload());
+        throw new Error("v86 runtime missing");
       }
 
       async function boot() {

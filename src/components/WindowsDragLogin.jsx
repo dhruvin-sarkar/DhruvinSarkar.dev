@@ -138,13 +138,18 @@ export default function WindowsDragLogin() {
   }, []);
 
   async function fetchNewWallpaper(date) {
+    // Many of the old hosts do not supply a CORS header, which causes a
+    // console error even though the image would load fine if used directly
+    // as a CSS background.  Rather than fetching the content, just store the
+    // request URL and let the browser retrieve it normally.  This also avoids
+    // the TypeError logged when the fetch fails.
     try {
-      const res = await fetch('https://minimalistic-wallpaper.demolab.com/?random=1');
-      const url = res.redirected ? res.url : URL.createObjectURL(await res.blob());
+      const url = 'https://minimalistic-wallpaper.demolab.com/?random=1';
       localStorage.setItem('dailyWallpaper', JSON.stringify({ date, url }));
       setBackgroundImageUrl(url);
     } catch (e) {
-      console.error('Failed to fetch wallpaper:', e);
+      // this should never fire, but keep for safety
+      console.error('Failed to set wallpaper URL:', e);
     }
   }
 

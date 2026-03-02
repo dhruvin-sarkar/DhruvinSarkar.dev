@@ -233,7 +233,17 @@ function MyComputer() {
           style={{ background: MyComputerExpand.focusItem ? themeDragBar : '#757579' }}
         >
           <div className="folder_barname">
-            <img src={imageMapping(selectedFolder.label) === null ? imageMapping(selectedFolder.label, 'folder') : imageMapping(selectedFolder.label)} alt="" />
+            <img
+              src={
+                imageMapping(selectedFolder.label) ||
+                imageMapping(selectedFolder.label, 'folder') ||
+                imageMapping('MyComputer')
+              }
+              alt=""
+              onError={(e) => {
+                e.currentTarget.src = imageMapping('MyComputer');
+              }}
+            />
             <span>{selectedFolder.label}</span>
           </div>
           <div className="folder_barbtn">

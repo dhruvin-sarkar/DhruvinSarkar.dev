@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import Draggable from "../../system/WindowDraggable";
 import UseContext from "../../../Context";
+import defaultIcon from "../../assets/95icon.png"; // fallback for missing window icons
 
 const AppWindowShell = ({
   title,
@@ -112,7 +113,15 @@ const AppWindowShell = ({
           onDoubleClick={handleToggleExpand}
         >
           <div className="retro-dragbar-title">
-            {icon ? <img src={icon} alt={title} /> : null}
+            <img
+              src={icon || defaultIcon}
+              alt={title}
+              onError={(e) => {
+                if (e.currentTarget.src !== defaultIcon) {
+                  e.currentTarget.src = defaultIcon;
+                }
+              }}
+            />
             <span>{title}</span>
           </div>
           <div className="retro-dragbar-buttons" data-no-drag>

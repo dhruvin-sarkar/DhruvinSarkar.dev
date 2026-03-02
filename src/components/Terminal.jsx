@@ -4,6 +4,7 @@ import UseContext from '../Context';
 import '../css/Terminal.css';
 import { useSounds } from '../hooks/useSounds';
 import terminalIcon from '../assets/Msdos-icon.svg';
+import defaultIcon from '../assets/95icon.png';
 
 // Mock File System
 const fileSystem = {
@@ -305,7 +306,14 @@ const Terminal = () => {
                     onDoubleClick={handleExpandStateToggle}
                 >
                     <div className="folder_barname_terminal">
-                        <img src={terminalIcon} alt="cmd" style={{ width: '16px', height: '16px' }}/>
+                        <img
+                          src={terminalIcon}
+                          alt="cmd"
+                          style={{ width: '16px', height: '16px' }}
+                          onError={(e) => {
+                            e.currentTarget.src = defaultIcon;
+                          }}
+                        />
                         <span>MS-DOS Prompt</span>
                     </div>
                     <div className="terminal_barbtn">
