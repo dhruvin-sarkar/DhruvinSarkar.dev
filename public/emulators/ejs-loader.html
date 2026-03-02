@@ -23,6 +23,9 @@
       #game {
         width: 100%;
         height: 100%;
+        position: fixed;
+        top: 0;
+        left: 0;
       }
 
       .overlay {
@@ -34,6 +37,10 @@
         padding: 20px;
         background: rgba(8, 12, 21, 0.92);
         z-index: 20;
+      }
+
+      .overlay.hidden {
+        display: none;
       }
 
       .panel {
@@ -76,6 +83,10 @@
         padding: 8px 12px;
         font-size: 12px;
         cursor: pointer;
+      }
+
+      .btn:hover {
+        background: #3a4a78;
       }
     </style>
   </head>
@@ -181,10 +192,7 @@
           const localProbe = `${LOCAL_DATA_PATH}${probe}`;
           const hasCore = await urlExists(localProbe);
           if (!hasCore) {
-            renderError(
-              `Core file ${probe} not found. Switching to CDN... Please wait.`,
-            );
-            // Fallback to CDN
+            // Fallback to CDN silently
             window.EJS_player = "#game";
             window.EJS_core = core;
             window.EJS_gameUrl = romUrl;
@@ -199,7 +207,7 @@
             script.src = `${CDN_DATA_PATH}loader.js`;
             script.onerror = () => {
               renderError(
-                `Unable to load from CDN (${CDN_DATA_PATH}). Please try again.`,
+                `Unable to load emulator from CDN. Try again or check your connection.`,
               );
             };
             document.body.appendChild(script);
@@ -207,6 +215,7 @@
           }
         }
 
+        // Setup EJS globals
         window.EJS_player = "#game";
         window.EJS_core = core;
         window.EJS_gameUrl = romUrl;
@@ -219,21 +228,40 @@
           window.EJS_biosUrl = toAbsoluteUrl(bios);
         }
 
+        // Create MutationObserver to detect when emulator canvas is rendered
+        const checkForCanvas = () => {
+          const canvas = document.querySelector("#game canvas");
+          const overlay = document.getElementById("overlay");
+          if (canvas && overlay) {
+            overlay.classList.add("hidden");
+            return true;
+          }
+          return false;
+        };
+
+        // Setup monitoring for canvas creation
+        let canvasCheckInterval = setInterval(checkForCanvas, 100);
+        let initStartTime = Date.now();
+        let maxInitTime = 30000; // 30 second timeout
+
+        // Fallback timeout - if canvas doesn't appear, show error
+        let initTimeout = setTimeout(() => {
+          clearInterval(canvasCheckInterval);
+          if (!checkForCanvas()) {
+            renderError(
+              `Emulator failed to initialize. The ${core} core or data files may be unavailable.`,
+            );
+          }
+        }, maxInitTime);
+
+        // Load the emulator loader script
         const script = document.createElement("script");
         script.src = `${dataPath}loader.js`;
-        let loadTimeout = setTimeout(() => {
-          renderError(
-            `Emulator failed to initialize within 15 seconds. The data files may be unavailable. Please refresh and try again.`,
-          );
-        }, 15000);
-        script.onload = () => {
-          clearTimeout(loadTimeout);
-          overlay.remove();
-        };
         script.onerror = () => {
-          clearTimeout(loadTimeout);
+          clearInterval(canvasCheckInterval);
+          clearTimeout(initTimeout);
           renderError(
-            `Emulator runtime failed to load from ${dataPath}. Confirm emulator files are available.`,
+            `Failed to load emulator runtime from ${dataPath}. Check that emulator data files are available.`,
           );
         };
         document.body.appendChild(script);
