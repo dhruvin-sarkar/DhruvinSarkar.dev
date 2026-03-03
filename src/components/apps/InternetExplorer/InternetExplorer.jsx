@@ -1322,12 +1322,20 @@ const componentStyles = `
 }
 
 .iex-spinner {
-  width: 12px;
+  width: 18px;
   height: 12px;
-  border: 2px solid #808080;
-  border-top-color: #000080;
-  border-radius: 50%;
-  animation: iex-spin 0.8s linear infinite;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  background: repeating-linear-gradient(
+    90deg,
+    #000080 0,
+    #000080 4px,
+    #1084d0 4px,
+    #1084d0 8px
+  );
+  animation: iex-throb 0.8s linear infinite;
 }
 
 .iex-bookmarks-bar {
@@ -1469,9 +1477,12 @@ const componentStyles = `
   padding: 0 14px 12px;
 }
 
-@keyframes iex-spin {
+@keyframes iex-throb {
+  from {
+    background-position: 0 0;
+  }
   to {
-    transform: rotate(360deg);
+    background-position: 24px 0;
   }
 }
 

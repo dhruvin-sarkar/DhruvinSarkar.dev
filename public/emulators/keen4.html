@@ -19,7 +19,18 @@
       const basePrefix = markerIndex === -1 ? "/" : window.location.pathname.slice(0, markerIndex + 1) || "/";
       const bundlePath = `${basePrefix}roms/dos/commanderkeen4/keen4.jsdos`;
 
+      function showOverlay() {
+        overlay.classList.remove("hidden");
+        container.style.visibility = "hidden";
+      }
+
+      function hideOverlay() {
+        overlay.classList.add("hidden");
+        container.style.visibility = "visible";
+      }
+
       function renderDialog({ heading, message, error = "", status = "", actions = "", icon = "i" }) {
+        showOverlay();
         overlay.innerHTML = `
           <div class="win95-dialog">
             <div class="win95-titlebar">
@@ -40,6 +51,60 @@
             </div>
           </div>
         `;
+
+        if (overlay.querySelector("#reload-btn")) {
+          overlay.querySelector("#reload-btn").addEventListener("click", () => window.location.reload());
+        }
+
+        if (overlay.querySelector("#retry-btn")) {
+          overlay.querySelector("#retry-btn").addEventListener("click", () => window.location.reload());
+        }
+      }
+
+      function renderJsdosFailure(message) {
+        renderDialog({
+          heading: "Commander Keen 4 could not start",
+          message: "The bundled DOS runtime returned an error instead of launching the game.",
+          error: message || "Unknown js-dos runtime error.",
+          icon: "!",
+          status: bundlePath,
+          actions: '<button class="win95-button" id="retry-btn">Retry</button>',
+        });
+      }
+
+      function normalizeErrorText(text) {
+        return (text || "")
+          .split(/\r?\n+/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .join(" ");
+      }
+
+      function inspectRuntimeDom() {
+        if (container.querySelector("canvas")) {
+          hideOverlay();
+          return;
+        }
+
+        const text = normalizeErrorText(container.innerText);
+        if (!text) return;
+
+        const looksLikeJsdosFailure =
+          /oops\.\.\.\s*something went wrong/i.test(text) ||
+          /broken bundle/i.test(text) ||
+          /\.jsdos/i.test(text) ||
+          /dosbox\.conf/i.test(text) ||
+          /runtime error/i.test(text);
+
+        if (!looksLikeJsdosFailure) return;
+
+        const detailedMessage =
+          text.match(/broken bundle[^.]*\.[^.]*/i)?.[0] ||
+          text.match(/dosbox\.conf[^.]*not found/i)?.[0] ||
+          text.replace(/oops\.\.\.\s*something went wrong\.?/i, "").trim() ||
+          text;
+
+        renderJsdosFailure(detailedMessage);
       }
 
       async function urlExists(url) {
@@ -62,6 +127,13 @@
       }
 
       async function boot() {
+        const runtimeObserver = new MutationObserver(() => inspectRuntimeDom());
+        runtimeObserver.observe(container, {
+          childList: true,
+          subtree: true,
+          characterData: true,
+        });
+
         renderDialog({
           heading: "Loading bundled DOS package",
           message: "Starting Commander Keen 4 from the preconfigured archive.",
@@ -78,14 +150,13 @@
             icon: "!",
             actions: '<button class="win95-button" id="reload-btn">Reload</button>',
           });
-          document.getElementById("reload-btn")?.addEventListener("click", () => window.location.reload());
           return;
         }
 
         try {
           await loadRuntime();
           if (!window.Dos) throw new Error("window.Dos is unavailable after runtime load.");
-          overlay.remove();
+          hideOverlay();
           window.Dos(container, {
             url: bundlePath,
             autoStart: true,
@@ -99,7 +170,6 @@
             icon: "!",
             actions: '<button class="win95-button" id="retry-btn">Retry</button>',
           });
-          document.getElementById("retry-btn")?.addEventListener("click", () => window.location.reload());
         }
       }
 

@@ -1,6 +1,3 @@
-/* Import Internet Explorer CSS */
-@import './components/apps/InternetExplorer/InternetExplorer.css';
-
 /* Import Desktop CSS */
 @import './css/Desktop.css';
 
