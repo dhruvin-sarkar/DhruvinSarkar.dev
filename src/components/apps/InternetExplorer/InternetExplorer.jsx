@@ -1139,6 +1139,7 @@ const InternetExplorer = () => {
 
 const componentStyles = `
 .iex-window {
+  position: fixed;
   width: min(1080px, calc(100vw - 72px));
   height: min(700px, calc(100vh - 110px));
   min-width: 760px;
