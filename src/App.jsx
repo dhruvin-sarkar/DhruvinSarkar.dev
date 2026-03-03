@@ -2458,31 +2458,28 @@ function App() {
       return;
     }
 
+    const nextZIndex = (maxZindexRef.current || 0) + 1;
+
     allSetItems.forEach((item) => {
       const itemName = item.name.toLowerCase().trim().replace(/\s/g, "");
 
       if (itemName === lowerCaseName) {
-        setTimeout(() => {
-          if (item.type === "userCreatedFolder") {
-            // Handle user-created folders
-            item.setter({
-              show: true,
-              focusItem: true,
-              hide: false,
-              zIndex: maxZindexRef.current + 1,
-            });
-          } else {
-            // Handle static folders
-            item.setter((prev) => ({
-              ...prev,
-              show: true,
-              focusItem: true,
-              hide: false,
-              zIndex: maxZindexRef.current + 1,
-            }));
-          }
-          maxZindexRef.current += 1;
-        }, 100);
+        if (item.type === "userCreatedFolder") {
+          item.setter({
+            show: true,
+            focusItem: true,
+            hide: false,
+            zIndex: nextZIndex,
+          });
+        } else {
+          item.setter((prev) => ({
+            ...prev,
+            show: true,
+            focusItem: true,
+            hide: false,
+            zIndex: nextZIndex,
+          }));
+        }
 
         // Your existing special cases...
         if (lowerCaseName === "mail") clippySendemailfunction();
@@ -2537,6 +2534,8 @@ function App() {
         }
       }
     });
+
+    maxZindexRef.current = nextZIndex;
 
     PatchExpand ? null : setTileScreen(false);
 
@@ -2594,31 +2593,28 @@ function App() {
         return;
       }
 
+      const nextZIndex = (maxZindexRef.current || 0) + 1;
+
       allSetItems.forEach((item) => {
         const itemName = item.name.toLowerCase().trim();
 
         if (itemName === lowerCaseName) {
-          setTimeout(() => {
-            if (item.type === "userCreatedFolder") {
-              // Handle user-created folders
-              item.setter({
-                show: true,
-                focusItem: true,
-                hide: false,
-                zIndex: maxZindexRef.current + 1,
-              });
-            } else {
-              // Handle static folders
-              item.setter((prev) => ({
-                ...prev,
-                show: true,
-                focusItem: true,
-                hide: false,
-                zIndex: maxZindexRef.current + 1,
-              }));
-            }
-            maxZindexRef.current += 1;
-          }, 100);
+          if (item.type === "userCreatedFolder") {
+            item.setter({
+              show: true,
+              focusItem: true,
+              hide: false,
+              zIndex: nextZIndex,
+            });
+          } else {
+            item.setter((prev) => ({
+              ...prev,
+              show: true,
+              focusItem: true,
+              hide: false,
+              zIndex: nextZIndex,
+            }));
+          }
           if (lowerCaseName === "mail") clippySendemailfunction();
           if (lowerCaseName === "winamp") clippySongFunction();
           if (lowerCaseName === "msn") clippyUsernameFunction();
@@ -2673,6 +2669,7 @@ function App() {
           item.setter((prev) => ({ ...prev, focusItem: false }));
         }
       });
+      maxZindexRef.current = nextZIndex;
       PatchExpand ? null : setTileScreen(false);
 
       if (tap.includes(name)) return;
@@ -2900,4 +2897,3 @@ function App() {
 }
 
 export default App;
-

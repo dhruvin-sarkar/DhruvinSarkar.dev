@@ -15,8 +15,8 @@ const WindowsXPWin95 = () => (
     defaultPosition={{ x: 70, y: 60 }}
     loadingVariant="warning"
     loadingSubtitle="Booting Virtual x86 (this can take a while)..."
-    appNotice="Windows 95 disk image required at /public/emulators/win95.img"
-    externalUrl="https://github.com/copy/v86"
+    appNotice="Boots the local image when present, otherwise falls back to the hosted Windows 95 profile."
+    externalUrl="https://copy.sh/v86/?profile=windows95"
   />
 );
 

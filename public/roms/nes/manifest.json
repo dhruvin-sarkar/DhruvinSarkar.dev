@@ -4,22 +4,26 @@
     {
       "id": "contra",
       "title": "Contra",
-      "file": "Contra (USA).nes"
+      "file": "Contra (USA).nes",
+      "cover": "roms/nes/download (5).jpg"
     },
     {
       "id": "legend-of-zelda",
       "title": "The Legend of Zelda",
-      "file": "Legend of Zelda, The (USA) (Rev 1).nes"
+      "file": "Legend of Zelda, The (USA) (Rev 1).nes",
+      "cover": "roms/nes/download.jpg"
     },
     {
       "id": "super-mario-bros-3",
       "title": "Super Mario Bros. 3",
-      "file": "Super Mario Bros. 3 (USA) (Rev 1).nes"
+      "file": "Super Mario Bros. 3 (USA) (Rev 1).nes",
+      "cover": "roms/nes/download (1).jpg"
     },
     {
       "id": "tetris",
       "title": "Tetris",
-      "file": "Tetris (USA) (Tengen) (Unl).nes"
+      "file": "Tetris (USA) (Tengen) (Unl).nes",
+      "cover": "roms/nes/download (2).jpg"
     }
   ]
 }

@@ -22,6 +22,7 @@
       const imagePath = "win95.img";
       const localScript = `${localV86Path}libv86.js`;
       const remoteScript = "https://copy.sh/v86/libv86.js";
+      const remoteProfileUrl = "https://copy.sh/v86/?profile=windows95";
 
       async function localExists(url) {
         try {
@@ -118,14 +119,15 @@
         const hasImage = await urlExists(imagePath);
         if (!hasImage) {
           renderDialog({
-            heading: "Disk image missing",
-            message: "Place the Windows 95 image in the emulator directory and reload.",
+            heading: "Using bundled Windows 95 profile",
+            message: "The local disk image is missing, so the emulator is switching to the hosted Windows 95 profile.",
             error: "win95.img was not found in public/emulators/.",
             status: imagePath,
-            icon: "!",
-            actions: '<button class="win95-button" id="reload-btn">Reload</button>',
+            icon: "i",
           });
-          document.getElementById("reload-btn")?.addEventListener("click", () => window.location.reload());
+          window.setTimeout(() => {
+            window.location.replace(remoteProfileUrl);
+          }, 900);
           return;
         }
 

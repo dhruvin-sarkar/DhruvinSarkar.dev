@@ -4,32 +4,38 @@
     {
       "id": "zelda-minish-cap",
       "title": "The Legend of Zelda: The Minish Cap",
-      "file": "Legend of Zelda, The - The Minish Cap (USA).gba"
+      "file": "Legend of Zelda, The - The Minish Cap (USA).gba",
+      "cover": "roms/gba/TLOZ-_Minish_Cap_NA_Box_art.png"
     },
     {
       "id": "pokemon-emerald",
       "title": "Pokemon Emerald Version",
-      "file": "Pokemon - Emerald Version (USA, Europe).gba"
+      "file": "Pokemon - Emerald Version (USA, Europe).gba",
+      "cover": "roms/gba/download.jpg"
     },
     {
       "id": "pokemon-firered",
       "title": "Pokemon FireRed Version",
-      "file": "Pokemon - FireRed Version (USA).gba"
+      "file": "Pokemon - FireRed Version (USA).gba",
+      "cover": "roms/gba/71iLh5opvHL._AC_UF1000,1000_QL80_.jpg"
     },
     {
       "id": "pokemon-unbound",
       "title": "Pokemon Unbound",
-      "file": "Pokemon Unbound (v2.1.1.1).gba"
+      "file": "Pokemon Unbound (v2.1.1.1).gba",
+      "cover": "roms/gba/download (1).jpg"
     },
     {
       "id": "pokemon-lets-go-pikachu",
       "title": "Pokemon Lets Go Pikachu GBA",
-      "file": "Pokemon_Lets_Go_Pikachu_GBA_eng-moves.gba"
+      "file": "Pokemon_Lets_Go_Pikachu_GBA_eng-moves.gba",
+      "cover": "roms/gba/download (2).jpg"
     },
     {
       "id": "pokemon-sword-and-shield",
       "title": "Pokemon Sword and Shield",
-      "file": "Pokemon_Sword_and_Shield_b1.1_eng1.gba"
+      "file": "Pokemon_Sword_and_Shield_b1.1_eng1.gba",
+      "cover": "roms/gba/download (3).jpg"
     }
   ]
 }

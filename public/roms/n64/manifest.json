@@ -9,32 +9,38 @@
     {
       "id": "donkey-kong-64",
       "title": "Donkey Kong 64",
-      "file": "Donkey Kong 64 (USA).z64"
+      "file": "Donkey Kong 64 (USA).z64",
+      "cover": "roms/n64/0f9772682bf02bc65f24c85df6d750be8c312dc3.jpg"
     },
     {
       "id": "mario-kart-64",
       "title": "Mario Kart 64",
-      "file": "Mario Kart 64 (USA).z64"
+      "file": "Mario Kart 64 (USA).z64",
+      "cover": "roms/n64/download.jpg"
     },
     {
       "id": "ocarina-gold-quest",
       "title": "Ocarina of Time - Gold Quest",
-      "file": "Ocarina of Time - Gold Quest (v2.1).z64"
+      "file": "Ocarina of Time - Gold Quest (v2.1).z64",
+      "cover": "roms/n64/download (1).jpg"
     },
     {
       "id": "pokemon-stadium-2",
       "title": "Pokemon Stadium 2",
-      "file": "Pokemon Stadium 2 (USA).z64"
+      "file": "Pokemon Stadium 2 (USA).z64",
+      "cover": "roms/n64/download (2).jpg"
     },
     {
       "id": "super-mario-64",
       "title": "Super Mario 64",
-      "file": "Super Mario 64 (USA).z64"
+      "file": "Super Mario 64 (USA).z64",
+      "cover": "roms/n64/download (3).jpg"
     },
     {
       "id": "super-smash-bros",
       "title": "Super Smash Bros.",
-      "file": "Super Smash Bros. (USA).z64"
+      "file": "Super Smash Bros. (USA).z64",
+      "cover": "roms/n64/download (4).jpg"
     }
   ]
 }
