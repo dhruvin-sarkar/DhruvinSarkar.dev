@@ -1,7 +1,13 @@
 import React, { useContext } from "react";
 import Draggable from "../../system/WindowDraggable";
 import UseContext from "../../../Context";
-import defaultIcon from "../../../assets/95icon.png"; // fallback for missing window icons
+import defaultIcon from "../../../assets/95icon.png";
+
+const normalizeIconSource = (iconPath) => {
+  if (!iconPath) return defaultIcon;
+  return iconPath.endsWith(".svg") ? iconPath.replace(/\.svg$/i, ".png") : iconPath;
+};
+
 
 const AppWindowShell = ({
   title,
@@ -114,30 +120,22 @@ const AppWindowShell = ({
         >
           <div className="retro-dragbar-title">
             <img
-              src={icon || defaultIcon}
+              src={normalizeIconSource(icon)}
               alt={title}
               onError={(e) => {
                 const img = e.currentTarget;
-                const current = img.src || "";
+                const originalIcon = icon || "";
+                const current = img.getAttribute("src") || "";
 
-                // if the requested icon failed to load, try the same path with
-                // a `.png` extension (some assets provide both formats).  this
-                // solves intermittent cases where an SVG isn’t served but the
-                // PNG counterpart exists (e.g. n64.svg).  if that also fails,
-                // fall back to the generic default icon.
-                if (current && current !== defaultIcon) {
-                  if (current.endsWith(".svg")) {
-                    img.src = current.replace(/\.svg$/, ".png");
-                    return;
-                  }
-                  if (current.endsWith(".png") && icon && icon.endsWith(".svg")) {
-                    // we already tried the png version derived from the svg
-                    // prop, no luck – now use real default
-                    img.src = defaultIcon;
-                    return;
-                  }
-                  img.src = defaultIcon;
+                if (
+                  originalIcon.toLowerCase().endsWith(".svg") &&
+                  current.toLowerCase().endsWith(".png")
+                ) {
+                  img.src = originalIcon;
+                  return;
                 }
+
+                img.src = defaultIcon;
               }}
             />
             <span>{title}</span>
@@ -161,7 +159,7 @@ const AppWindowShell = ({
               title={state.expand ? "Restore" : "Maximize"}
               data-no-drag
             >
-              <span>{state.expand ? "?" : "?"}</span>
+              <span className={state.expand ? "retro-title-restore" : "retro-title-maximize"} />
             </button>
             <button
               type="button"

@@ -17,6 +17,10 @@
     <div class="win95-overlay" id="overlay"></div>
 
     <script>
+      const RETRO_APP_SOURCE = "retro-app";
+      const params = new URLSearchParams(window.location.search);
+      const appInstance = params.get("retroAppInstance") || "";
+      const runtimeTitle = "Windows 95";
       const overlay = document.getElementById("overlay");
       const localV86Path = "v86/";
       const imagePath = "win95.img";
@@ -24,19 +28,37 @@
       const remoteScript = "https://copy.sh/v86/libv86.js";
       const remoteProfileUrl = "https://copy.sh/v86/?profile=windows95";
 
-      async function localExists(url) {
+      function postToParent(type, detail = {}) {
         try {
-          const resp = await fetch(url, { method: "HEAD", cache: "no-store" });
-          return resp.ok;
+          window.parent?.postMessage(
+            {
+              source: RETRO_APP_SOURCE,
+              type,
+              appInstance,
+              title: runtimeTitle,
+              ...detail,
+            },
+            "*",
+          );
         } catch {
-          return false;
+          // Ignore cross-origin messaging errors.
         }
       }
 
-      async function urlExists(url) {
+      async function assetExists(url) {
         try {
-          const response = await fetch(url, { method: "HEAD", cache: "no-store" });
-          return response.ok;
+          const response = await fetch(url, {
+            method: "GET",
+            cache: "no-store",
+            headers: { Range: "bytes=0-0" },
+          });
+
+          if (!(response.ok || response.status === 206)) {
+            return false;
+          }
+
+          const contentType = (response.headers.get("content-type") || "").toLowerCase();
+          return !contentType.includes("text/html");
         } catch {
           return false;
         }
@@ -46,7 +68,7 @@
         overlay.innerHTML = `
           <div class="win95-dialog">
             <div class="win95-titlebar">
-              <span class="win95-titlebar-text">Windows 95</span>
+              <span class="win95-titlebar-text">${runtimeTitle}</span>
             </div>
             <div class="win95-body">
               <div class="win95-row">
@@ -65,17 +87,22 @@
         `;
       }
 
+      function getV86Constructor() {
+        return window.V86Starter || window.V86 || null;
+      }
+
       function loadScriptWithGuard(url) {
         return new Promise((resolve, reject) => {
           const script = document.createElement("script");
           script.src = url;
           script.async = true;
           script.onload = () => {
-            if (!window.V86Starter) {
-              reject(new Error(`Runtime loaded from ${url}, but window.V86Starter is missing.`));
+            const constructor = getV86Constructor();
+            if (!constructor) {
+              reject(new Error(`Runtime loaded from ${url}, but no browser v86 constructor was exposed.`));
               return;
             }
-            resolve(url);
+            resolve({ url, constructor });
           };
           script.onerror = () => reject(new Error(`Failed to load script: ${url}`));
           document.body.appendChild(script);
@@ -83,7 +110,7 @@
       }
 
       async function ensureRuntime() {
-        if (await localExists(localScript)) {
+        if (await assetExists(localScript)) {
           try {
             return await loadScriptWithGuard(localScript);
           } catch (err) {
@@ -101,7 +128,7 @@
           heading: "v86 runtime unavailable",
           message: "The emulator runtime could not be loaded from the bundled script or the upstream fallback.",
           error: `Expected ${localScript} in public/emulators/v86/.`,
-          status: "Download the global browser build of libv86.js and place it beside the BIOS files.",
+          status: "Download the browser build of libv86.js and place it beside the BIOS files.",
           icon: "!",
           actions: '<button class="win95-button" id="retry-btn">Retry</button>',
         });
@@ -110,31 +137,41 @@
       }
 
       async function boot() {
+        postToParent("retro-app:title", { title: runtimeTitle });
+        postToParent("retro-app:loading", { message: "Preparing Windows 95" });
+
         renderDialog({
           heading: "Preparing Windows 95",
           message: "Loading the virtual x86 runtime and disk image.",
           status: imagePath,
         });
 
-        const hasImage = await urlExists(imagePath);
+        const hasImage = await assetExists(imagePath);
         if (!hasImage) {
           renderDialog({
-            heading: "Using bundled Windows 95 profile",
+            heading: "Using hosted Windows 95 profile",
             message: "The local disk image is missing, so the emulator is switching to the hosted Windows 95 profile.",
             error: "win95.img was not found in public/emulators/.",
             status: imagePath,
             icon: "i",
           });
           window.setTimeout(() => {
+            postToParent("retro-app:ready", {
+              message: "Switching to the hosted Windows 95 profile.",
+            });
             window.location.replace(remoteProfileUrl);
           }, 900);
           return;
         }
 
-        let loadedScript = "";
+        let runtime = null;
         try {
-          loadedScript = await ensureRuntime();
+          runtime = await ensureRuntime();
         } catch (error) {
+          postToParent("retro-app:error", {
+            message: "Windows 95 could not start because the emulator runtime did not initialize.",
+            error: error?.message || "Unknown runtime error.",
+          });
           renderDialog({
             heading: "v86 runtime failed",
             message: "Windows 95 could not start because the emulator runtime did not initialize.",
@@ -146,13 +183,20 @@
           return;
         }
 
-        const remoteAssets = loadedScript.startsWith("https://copy.sh/v86/");
+        const remoteAssets = runtime.url.startsWith("https://copy.sh/v86/");
         const wasmPath = remoteAssets ? "https://copy.sh/v86/build/v86.wasm" : `${localV86Path}v86.wasm`;
         const biosPath = remoteAssets ? "https://copy.sh/v86/bios/seabios.bin" : `${localV86Path}bios/seabios.bin`;
         const vgaBiosPath = remoteAssets ? "https://copy.sh/v86/bios/vgabios.bin" : `${localV86Path}bios/vgabios.bin`;
 
+        window.addEventListener("error", (event) => {
+          postToParent("retro-app:error", {
+            message: "Windows 95 failed during boot.",
+            error: event?.message || event?.error?.message || "Unknown runtime crash.",
+          });
+        });
+
         overlay.remove();
-        window.emulator = new window.V86Starter({
+        window.emulator = new runtime.constructor({
           wasm_path: wasmPath,
           memory_size: 64 * 1024 * 1024,
           vga_memory_size: 8 * 1024 * 1024,
@@ -169,6 +213,8 @@
           mouse: { enabled: true },
           keyboard: { enabled: true },
         });
+
+        postToParent("retro-app:ready");
       }
 
       boot();

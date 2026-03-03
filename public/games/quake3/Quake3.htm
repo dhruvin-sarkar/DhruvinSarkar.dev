@@ -32,7 +32,8 @@
       #file-selector:focus{outline:1px solid #fff}
       #file-selector:hover{filter:brightness(110%)}
 
-      #game{width:100vw;height:100vh}
+      html,body{margin:0;width:100%;height:100%;overflow:hidden}
+      #game{width:100%;height:100%}
 
       .pleasewait{position:fixed;width:64px;height:64px;left:0;right:0;top:0;bottom:0;margin:auto auto;border:0}
       .lds-spinner{color:#fff;display:inline-block;position:relative;width:64px;height:64px}
@@ -98,6 +99,11 @@
     </div>
     <script src="Quake3.min.js"></script>
     <script>
+      var RETRO_APP_SOURCE = "retro-app"
+      var params = new URLSearchParams(window.location.search)
+      var appInstance = params.get("retroAppInstance") || ""
+      var runtimeTitle = "Quake III Arena"
+      var demoRequired = params.has("demo")
       var container = document.getElementById("container")
       var gameWrapper = document.getElementById("game")
       var demoLoader = document.getElementById("demo-loader")
@@ -105,107 +111,157 @@
       var fileInput = document.getElementById("file-input")
       var pleaseWait = document.querySelector(".pleasewait")
 
-      window.addEventListener("load", function () {
-        if (window.top == window.self) {
-          pleaseWait.style.display = "none"
-          container.style.display = "block"
+      function postToParent(type, detail) {
+        try {
+          window.parent &&
+            window.parent.postMessage(
+              Object.assign(
+                {
+                  source: RETRO_APP_SOURCE,
+                  type: type,
+                  appInstance: appInstance,
+                  title: runtimeTitle,
+                },
+                detail || {},
+              ),
+              "*",
+            )
+        } catch (error) {
+          console.warn("retro-app postMessage failed", error)
+        }
+      }
 
-          var currentURL = new URL(window.location.href).searchParams
-          var demoRequired = currentURL.has("demo")
+      function reportError(message, detail) {
+        pleaseWait.style.display = "none"
+        postToParent("retro-app:error", {
+          message: message,
+          error: detail || "Unknown Quake III startup failure.",
+        })
+      }
 
-          if (demoRequired) {
-            demoLoader.style.display = "block"
-            demoLoader.tabIndex = 1
-          } else {
-            fileSelector.style.display = "block"
-            fileSelector.tabIndex = 1
+      function startQuake(files) {
+        container.style.display = "none"
+        pleaseWait.style.display = "block"
+        postToParent("retro-app:loading", {
+          message: demoRequired
+            ? "Launching bundled Quake III demo."
+            : "Launching Quake III runtime.",
+        })
+
+        embedQuake3({
+          container: "game",
+          files: files,
+          cbStarted: function cbStarted() {
+            pleaseWait.style.display = "none"
+            postToParent("retro-app:ready")
+          },
+        })
+      }
+
+      function startDemo() {
+        container.style.display = "none"
+        pleaseWait.style.display = "block"
+        postToParent("retro-app:loading", {
+          message: "Loading bundled Quake III demo package.",
+        })
+
+        var xhr = new XMLHttpRequest()
+        xhr.open("GET", "DEMO.pk3", true)
+        xhr.responseType = "arraybuffer"
+        xhr.onerror = function () {
+          reportError(
+            "Failed to download the bundled Quake III demo package.",
+            "DEMO.pk3 could not be fetched from the local game assets.",
+          )
+        }
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState !== 4) return
+
+          if (xhr.status === 200 && xhr.response) {
+            var blob = new Blob([xhr.response], {
+              type: "application/octet-stream",
+            })
+            blob.name = "pak0.pk3"
+            startQuake([blob])
+            return
           }
 
-          gameWrapper.addEventListener("contextmenu", function (event) {
-            event.preventDefault()
-          })
-
-          fileSelector.addEventListener("click", function () {
-            fileInput.click()
-          })
-
-          demoLoader.addEventListener("click", function (event) {
-            container.style.display = "none"
-            pleaseWait.style.display = "block"
-
-            // no fetch here because the entire project
-            // is compatible with pre 2015 environments.
-            var xhr = new XMLHttpRequest()
-            xhr.open("GET", "DEMO.pk3", true)
-            xhr.responseType = "arraybuffer"
-            xhr.onreadystatechange = function () {
-              if (xhr.readyState === 4 && xhr.status === 200) {
-                var blob = new Blob([xhr.response], {
-                  type: "application/octet-stream",
-                })
-                blob.name = "pak0.pk3"
-
-                embedQuake3({
-                  container: "game",
-                  files: [blob],
-                  cbStarted: function cbStarted() {
-                    pleaseWait.style.display = "none"
-                  },
-                })
-              }
-            }
-
-            xhr.send(null)
-          })
-
-          fileInput.addEventListener("change", function (event) {
-            var files = event.target.files
-            var hasPk3 = false
-
-            for (var i = 0; i < files.length; i++) {
-              if (
-                files[i].name.toLowerCase().indexOf(".pk3") ===
-                files[i].name.length - 4
-              ) {
-                hasPk3 = true
-                break
-              }
-            }
-
-            if (!hasPk3) {
-              location.reload()
-              return
-            }
-
-            container.style.display = "none"
-            pleaseWait.style.display = "block"
-
-            embedQuake3({
-              container: "game",
-              files: event.target.files,
-              cbStarted: function cbStarted() {
-                pleaseWait.style.display = "none"
-                fileInput.value = null
-              },
-            })
-          })
-
-          window.addEventListener("keydown", function (event) {
-            var KEY_CTRL = event.ctrlKey || event.metaKey
-            var KEY_P = event.code === "KeyP"
-            var KEY_F = event.code === "KeyF"
-
-            if (KEY_CTRL && KEY_P) {
-              event.preventDefault()
-              downloadProfileFileQuake3()
-            }
-
-            if (KEY_CTRL && KEY_F) {
-              event.preventDefault()
-              requestFullscreenQuake3()
-            }
-          })
+          reportError(
+            "Failed to download the bundled Quake III demo package.",
+            xhr.statusText || "DEMO.pk3 request failed.",
+          )
         }
+
+        xhr.send(null)
+      }
+
+      window.addEventListener("load", function () {
+        postToParent("retro-app:title", { title: runtimeTitle })
+        gameWrapper.addEventListener("contextmenu", function (event) {
+          event.preventDefault()
+        })
+
+        if (window.top == window.self && !demoRequired) {
+          pleaseWait.style.display = "none"
+          container.style.display = "block"
+          fileSelector.style.display = "block"
+          fileSelector.tabIndex = 1
+        } else if (window.top == window.self && demoRequired) {
+          pleaseWait.style.display = "none"
+          container.style.display = "block"
+          demoLoader.style.display = "block"
+          demoLoader.tabIndex = 1
+        } else {
+          container.style.display = "none"
+          startDemo()
+        }
+
+        fileSelector.addEventListener("click", function () {
+          fileInput.click()
+        })
+
+        demoLoader.addEventListener("click", function () {
+          startDemo()
+        })
+
+        fileInput.addEventListener("change", function (event) {
+          var files = event.target.files
+          var hasPk3 = false
+
+          for (var i = 0; i < files.length; i++) {
+            if (
+              files[i].name.toLowerCase().indexOf(".pk3") ===
+              files[i].name.length - 4
+            ) {
+              hasPk3 = true
+              break
+            }
+          }
+
+          if (!hasPk3) {
+            location.reload()
+            return
+          }
+
+          startQuake(event.target.files)
+          fileInput.value = null
+        })
+
+        window.addEventListener("keydown", function (event) {
+          var KEY_CTRL = event.ctrlKey || event.metaKey
+          var KEY_P = event.code === "KeyP"
+          var KEY_F = event.code === "KeyF"
+
+          if (KEY_CTRL && KEY_P) {
+            event.preventDefault()
+            downloadProfileFileQuake3()
+          }
+
+          if (KEY_CTRL && KEY_F) {
+            event.preventDefault()
+            requestFullscreenQuake3()
+          }
+        })
       })
     </script>
   </body>

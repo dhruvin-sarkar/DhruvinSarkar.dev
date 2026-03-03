@@ -10,13 +10,13 @@ const QuakeOriginal = () => (
     windowName="Quake"
     icon={resolvePublicUrl("icons/quake1.png")}
     iframeSrc={resolvePublicUrl("games/webquake/index.htm")}
-    externalUrl="https://github.com/Triang3l/WebQuake"
+    externalUrl={resolvePublicUrl("games/webquake/index.htm")}
     defaultWidth={960}
-    defaultHeight={640}
+    defaultHeight={720}
     defaultPosition={{ x: 180, y: 110 }}
     loadingVariant="quake"
     loadingSubtitle="WebQuake HTML5/WebGL engine loading..."
-    loadTimeoutMs={30000}
+    awaitRuntimeSignal
   />
 );
 

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import UseContext from "../../../Context";
 import AppWindowShell from "../shared/AppWindowShell";
 import EmulatorLoadingScreen from "../shared/EmulatorLoadingScreen";
+import useEmulatorWindow from "../shared/useEmulatorWindow";
 import RomLibrary from "./RomLibrary";
 import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
@@ -21,27 +22,42 @@ const ManifestRomEmulator = ({
   const state = context[stateKey];
   const setState = context[setterKey];
   const [selectedRom, setSelectedRom] = useState(null);
-  const [isLoadingGame, setIsLoadingGame] = useState(false);
-  const [hasError, setHasError] = useState(false);
+  const [libraryRefreshKey, setLibraryRefreshKey] = useState(0);
 
   useEffect(() => {
     if (!state?.show) {
       setSelectedRom(null);
-      setIsLoadingGame(false);
-      setHasError(false);
+      setLibraryRefreshKey(0);
     }
   }, [state?.show]);
 
-  const iframeUrl = useMemo(() => {
+  const iframeSrc = useMemo(() => {
     if (!selectedRom?.file) return "";
     const romUrl = resolvePublicUrl(`roms/${system}/${selectedRom.file}`);
     const loaderPath = resolvePublicUrl("emulators/ejs-loader.html");
     const query = new URLSearchParams({
       core,
       rom: romUrl,
+      title: selectedRom.title || selectedRom.file,
+      system,
     });
     return `${loaderPath}?${query.toString()}`;
-  }, [core, selectedRom?.file, system]);
+  }, [core, selectedRom?.file, selectedRom?.title, system]);
+
+  const {
+    iframeUrl,
+    isLoading,
+    hasError,
+    errorMessage,
+    runtimeTitle,
+    handleLoad,
+    handleError,
+    reload,
+  } = useEmulatorWindow({
+    iframeSrc,
+    isEnabled: Boolean(selectedRom?.file),
+    awaitRuntimeSignal: true,
+  });
 
   if (!state || !setState) return null;
 
@@ -59,10 +75,10 @@ const ManifestRomEmulator = ({
     >
       {!selectedRom ? (
         <RomLibrary
+          key={libraryRefreshKey}
           system={system}
           onSelectRom={(rom) => {
-            setHasError(false);
-            setIsLoadingGame(true);
+            setLibraryRefreshKey((value) => value + 1);
             setSelectedRom(rom);
           }}
         />
@@ -73,21 +89,19 @@ const ManifestRomEmulator = ({
               type="button"
               onClick={() => {
                 setSelectedRom(null);
-                setHasError(false);
-                setIsLoadingGame(false);
               }}
             >
               Back
             </button>
-            <span className="rom-player-label">{selectedRom.title || selectedRom.file}</span>
+            <span className="rom-player-label">{runtimeTitle || selectedRom.title || selectedRom.file}</span>
             <span className="rom-player-meta">{selectedRom.file}</span>
           </div>
 
           <div className="rom-player-frame">
-            {isLoadingGame ? (
+            {isLoading ? (
               <EmulatorLoadingScreen
                 title={title}
-                subtitle={`Launching ${selectedRom.title || selectedRom.file}...`}
+                subtitle={`Launching ${runtimeTitle || selectedRom.title || selectedRom.file}...`}
                 variant="default"
               />
             ) : null}
@@ -96,14 +110,8 @@ const ManifestRomEmulator = ({
               title={`${title} Player`}
               src={iframeUrl}
               className="retro-emulator-iframe"
-              onLoad={() => {
-                setIsLoadingGame(false);
-                setHasError(false);
-              }}
-              onError={() => {
-                setIsLoadingGame(false);
-                setHasError(true);
-              }}
+              onLoad={handleLoad}
+              onError={handleError}
               allow="autoplay; fullscreen; gamepad; pointer-lock"
               loading="eager"
               allowFullScreen
@@ -116,14 +124,12 @@ const ManifestRomEmulator = ({
                   <div className="panel-body">
                     <div className="win95-panel-icon">!</div>
                     <div className="win95-panel-copy">
-                      <p>Unable to load {selectedRom.title || selectedRom.file}.</p>
+                      <p>{errorMessage || `Unable to load ${selectedRom.title || selectedRom.file}.`}</p>
                       <div className="iframe-error-actions">
                         <button
                           type="button"
                           onClick={() => {
-                            setHasError(false);
-                            setIsLoadingGame(true);
-                            setSelectedRom({ ...selectedRom });
+                            reload();
                           }}
                         >
                           Retry
@@ -132,8 +138,6 @@ const ManifestRomEmulator = ({
                           type="button"
                           onClick={() => {
                             setSelectedRom(null);
-                            setHasError(false);
-                            setIsLoadingGame(false);
                           }}
                         >
                           Library

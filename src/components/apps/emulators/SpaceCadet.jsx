@@ -8,14 +8,15 @@ const SpaceCadet = () => (
     stateKey="SpaceCadetExpand"
     setterKey="setSpaceCadetExpand"
     windowName="Space Cadet Pinball"
-    icon={resolvePublicUrl("icons/spacecadet.svg")}
-    iframeSrc="https://alula.github.io/SpaceCadetPinball/"
-    externalUrl="https://alula.github.io/SpaceCadetPinball/"
+    icon={resolvePublicUrl("icons/spacecadet.png")}
+    iframeSrc={resolvePublicUrl("games/spacecadet/index.html")}
+    externalUrl={resolvePublicUrl("games/spacecadet/index.html")}
     defaultWidth={800}
     defaultHeight={600}
     defaultPosition={{ x: 140, y: 90 }}
     loadingVariant="warning"
     loadingSubtitle="Use mouse. F2 = New Game, F3 = Pause."
+    awaitRuntimeSignal
   />
 );
 

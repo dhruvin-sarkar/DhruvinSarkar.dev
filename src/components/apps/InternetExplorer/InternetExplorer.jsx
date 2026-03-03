@@ -1010,7 +1010,11 @@ const InternetExplorer = () => {
         style={{
           ...(IEExpand.expand
             ? inlineStyleExpand("InternetExplorer")
-            : inlineStyle("InternetExplorer")),
+            : {
+                ...inlineStyle("InternetExplorer"),
+                width: "980px",
+                height: "720px",
+              }),
           display: "flex",
         }}
       >
@@ -1139,15 +1143,17 @@ const InternetExplorer = () => {
 
 const componentStyles = `
 .iex-window {
-  position: fixed;
-  width: min(1080px, calc(100vw - 72px));
-  height: min(700px, calc(100vh - 110px));
-  min-width: 760px;
-  min-height: 500px;
-  max-width: calc(100vw - 24px);
-  max-height: calc(100vh - 48px);
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  max-width: none;
+  max-height: none;
+  overflow: hidden;
+  box-sizing: border-box;
   background: #c0c0c0;
   border: 2px solid;
   border-color: #dfdfdf #808080 #808080 #dfdfdf;
@@ -1269,7 +1275,10 @@ const componentStyles = `
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0;
   min-height: 0;
+  width: 100%;
+  height: 100%;
   background: #c0c0c0;
   color: #000;
   overflow: hidden;
@@ -1280,6 +1289,9 @@ const componentStyles = `
   align-items: flex-end;
   gap: 2px;
   padding: 4px 4px 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   background: #c0c0c0;
   border-top: 1px solid #fff;
   border-left: 1px solid #fff;
@@ -1394,6 +1406,9 @@ const componentStyles = `
   align-items: center;
   gap: 6px;
   padding: 4px 6px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background: #c0c0c0;
   border-top: 1px solid #fff;
   border-bottom: 1px solid #808080;
@@ -1405,6 +1420,7 @@ const componentStyles = `
   display: flex;
   align-items: center;
   gap: 4px;
+  min-width: 0;
 }
 
 .iex-omnibox-container {
@@ -1459,10 +1475,12 @@ const componentStyles = `
 }
 
 .iex-bookmarks-bar {
-  display: flex;
-  align-items: center;
-  gap: 4px;
+  display: block;
   padding: 4px 6px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background: #c0c0c0;
   border-top: 1px solid #fff;
   border-bottom: 1px solid #808080;
@@ -1470,11 +1488,22 @@ const componentStyles = `
   overflow-y: hidden;
 }
 
+.iex-bookmarks-inner {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: max-content;
+  min-width: max-content;
+  max-width: none;
+  flex-wrap: nowrap;
+}
+
 .iex-bookmark-chip {
   height: 22px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  max-width: 148px;
   padding: 0 8px;
   color: #000;
   background: #c0c0c0;
@@ -1490,13 +1519,24 @@ const componentStyles = `
 .iex-bookmark-chip img {
   width: 14px;
   height: 14px;
+  flex-shrink: 0;
+}
+
+.iex-bookmark-chip span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .iex-content-area {
   position: relative;
+  display: flex;
   flex: 1;
+  min-width: 0;
   min-height: 0;
   margin: 2px;
+  overflow: hidden;
   background: #fff;
   border-top: 2px solid #808080;
   border-left: 2px solid #808080;
@@ -1517,14 +1557,21 @@ const componentStyles = `
 
 .iex-frame-container {
   position: relative;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
   width: 100%;
   height: 100%;
   background: #fff;
 }
 
 .iex-frame {
+  display: block;
   width: 100%;
   height: 100%;
+  min-width: 0;
+  min-height: 0;
   border: none;
   background: #fff;
 }
@@ -1616,13 +1663,6 @@ const componentStyles = `
 }
 
 @media (max-width: 900px) {
-  .iex-window {
-    min-width: 0;
-    min-height: 0;
-    width: calc(100vw - 24px);
-    height: calc(100vh - 56px);
-  }
-
   .iex-urlbar-row {
     grid-template-columns: 1fr;
   }

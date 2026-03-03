@@ -11,8 +11,8 @@ const NESEmulator = () => (
     icon={resolvePublicUrl("icons/nes.png")}
     system="nes"
     core="fceumm"
-    defaultWidth={512}
-    defaultHeight={480}
+    defaultWidth={800}
+    defaultHeight={600}
     defaultPosition={{ x: 150, y: 130 }}
   />
 );

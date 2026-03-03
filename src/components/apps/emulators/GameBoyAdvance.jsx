@@ -11,8 +11,8 @@ const GameBoyAdvance = () => (
     icon={resolvePublicUrl("icons/gba.png")}
     system="gba"
     core="mgba"
-    defaultWidth={480}
-    defaultHeight={320}
+    defaultWidth={800}
+    defaultHeight={600}
     defaultPosition={{ x: 130, y: 110 }}
   />
 );

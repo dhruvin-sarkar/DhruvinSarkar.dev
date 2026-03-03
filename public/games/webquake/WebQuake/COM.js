@@ -222,6 +222,14 @@ COM.WriteTextFile = function(filename, data)
 	return true;
 };
 
+COM.IsHtmlFallback = function(data)
+{
+	if (data == null)
+		return false;
+	var sample = data.substring(0, 256).replace(/^\s+/, '').toLowerCase();
+	return (sample.indexOf('<!doctype html') === 0) || (sample.indexOf('<html') === 0) || (sample.indexOf('<head') === 0);
+};
+
 COM.LoadFile = function(filename)
 {
 	filename = filename.toLowerCase();
@@ -267,7 +275,7 @@ COM.LoadFile = function(filename)
 		}
 		xhr.open('GET', netpath, false);
 		xhr.send();
-		if ((xhr.status >= 200) && (xhr.status <= 299))
+		if ((xhr.status >= 200) && (xhr.status <= 299) && (COM.IsHtmlFallback(xhr.responseText) !== true))
 		{
 			Sys.Print('FindFile: ' + netpath + '\n');
 			Draw.EndDisc();

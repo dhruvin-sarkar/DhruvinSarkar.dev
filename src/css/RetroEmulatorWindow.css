@@ -234,14 +234,28 @@
 .emulator-loading-bar {
   width: 100%;
   padding: 2px;
+  position: relative;
+  overflow: hidden;
+  contain: layout paint;
   background: #fff;
   border: 2px solid;
   border-color: #808080 #ffffff #ffffff #808080;
 }
 
 .emulator-loading-bar-fill {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 12px;
+  overflow: hidden;
+}
+
+.emulator-loading-bar-fill::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
   width: 32%;
-  height: 14px;
   background: repeating-linear-gradient(
     90deg,
     #000080 0,
@@ -249,6 +263,7 @@
     #1084d0 10px,
     #1084d0 20px
   );
+  will-change: transform;
   animation: win95-loading-progress 1.2s linear infinite;
 }
 
@@ -335,7 +350,7 @@
 
 .rom-player-meta {
   font-size: 10px;
-  color: #404040;
+  color: #111;
   text-align: right;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -392,6 +407,7 @@
   flex-direction: column;
   gap: 10px;
   font-size: 11px;
+  color: #111;
 }
 
 .rom-library-sidebar h4,
@@ -452,6 +468,7 @@
   text-align: left;
   min-width: 0;
   cursor: pointer;
+  color: #000;
   font-family: 'win95', sans-serif;
 }
 
@@ -520,7 +537,7 @@
 .rom-library-system,
 .rom-library-file {
   font-size: 10px;
-  color: #404040;
+  color: #111;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -570,4 +587,45 @@
   .rom-player-bar {
     grid-template-columns: auto 1fr;
   }
+}
+
+.retro-title-maximize {
+  display: inline-block;
+  width: 9px;
+  height: 7px;
+  border: 1px solid #000;
+  border-top-width: 2px;
+  box-sizing: border-box;
+}
+
+.retro-title-restore {
+  position: relative;
+  display: inline-block;
+  width: 10px;
+  height: 8px;
+}
+
+.retro-title-restore::before,
+.retro-title-restore::after {
+  content: "";
+  position: absolute;
+  box-sizing: border-box;
+  border: 1px solid #000;
+  background: #c0c0c0;
+}
+
+.retro-title-restore::before {
+  top: 1px;
+  right: 0;
+  width: 7px;
+  height: 5px;
+  border-top-width: 2px;
+}
+
+.retro-title-restore::after {
+  left: 0;
+  bottom: 0;
+  width: 7px;
+  height: 5px;
+  border-top-width: 2px;
 }

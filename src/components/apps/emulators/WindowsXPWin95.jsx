@@ -8,7 +8,7 @@ const WindowsXPWin95 = () => (
     stateKey="Win95Expand"
     setterKey="setWin95Expand"
     windowName="Windows 95"
-    icon={resolvePublicUrl("icons/win95.svg")}
+    icon={resolvePublicUrl("icons/win95.png")}
     iframeSrc={resolvePublicUrl("emulators/win95.html")}
     defaultWidth={800}
     defaultHeight={600}
@@ -17,6 +17,7 @@ const WindowsXPWin95 = () => (
     loadingSubtitle="Booting Virtual x86 (this can take a while)..."
     appNotice="Boots the local image when present, otherwise falls back to the hosted Windows 95 profile."
     externalUrl="https://copy.sh/v86/?profile=windows95"
+    awaitRuntimeSignal
   />
 );
 

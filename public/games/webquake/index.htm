@@ -523,5 +523,93 @@ void main(void)
 	gl_FragColor = texture2D(tTexture, vTexCoord + vec2(sin(vTexCoord.t * 15.70796 + uTime) * 0.003125, sin(vTexCoord.s * 9.817477 + uTime) * 0.005));
 }
 </script>
+<script type="text/javascript">
+(function () {
+	var RETRO_APP_SOURCE = "retro-app";
+	var params = new URLSearchParams(window.location.search);
+	var appInstance = params.get("retroAppInstance") || "";
+	var runtimeTitle = "Quake";
+	var readySent = false;
+	var progress = document.getElementById("progress");
+	var canvas = document.getElementById("mainwindow");
+	var end = document.getElementById("end");
+
+	function postToParent(type, detail) {
+		try {
+			window.parent && window.parent.postMessage(Object.assign({
+				source: RETRO_APP_SOURCE,
+				type: type,
+				appInstance: appInstance,
+				title: runtimeTitle
+			}, detail || {}), "*");
+		} catch (error) {
+			console.warn("retro-app postMessage failed", error);
+		}
+	}
+
+	function markReady() {
+		if (readySent) return;
+		readySent = true;
+		postToParent("retro-app:ready");
+	}
+
+	function reportError(message, detail) {
+		if (readySent) return;
+		postToParent("retro-app:error", {
+			message: message,
+			error: detail || "Unknown WebQuake startup error."
+		});
+	}
+
+	function inspectRuntime() {
+		if (canvas && canvas.style.display !== "none") {
+			markReady();
+			return;
+		}
+
+		var text = "";
+		if (progress && progress.textContent) text += progress.textContent + " ";
+		if (end && end.textContent) text += end.textContent;
+
+		if (/corrupted data file|failed|error|abort|exception/i.test(text)) {
+			reportError("WebQuake reported a startup error.", text.trim());
+		}
+	}
+
+	postToParent("retro-app:title", { title: runtimeTitle });
+	postToParent("retro-app:loading", { message: "Preparing WebQuake shareware data." });
+
+	window.alert = function (message) {
+		reportError("WebQuake reported a startup error.", String(message || ""));
+	};
+
+	window.addEventListener("error", function (event) {
+		if (readySent) return;
+		reportError(
+			"WebQuake crashed during startup.",
+			event && (event.message || (event.error && event.error.message)) || "Unknown runtime crash."
+		);
+	});
+
+	window.addEventListener("unhandledrejection", function (event) {
+		if (readySent) return;
+		var reason = event && event.reason;
+		reportError(
+			"WebQuake rejected a startup promise.",
+			typeof reason === "string" ? reason : (reason && (reason.message || reason.stack)) || "Unknown promise rejection."
+		);
+	});
+
+	if (window.MutationObserver) {
+		var observer = new MutationObserver(inspectRuntime);
+		if (progress) observer.observe(progress, { childList: true, subtree: true, characterData: true, attributes: true });
+		if (canvas) observer.observe(canvas, { attributes: true, attributeFilter: ["style"] });
+		if (end) observer.observe(end, { childList: true, subtree: true, characterData: true });
+	}
+
+	window.setInterval(inspectRuntime, 250);
+	window.setTimeout(inspectRuntime, 1000);
+})();
+</script>
 </body>
 </html>

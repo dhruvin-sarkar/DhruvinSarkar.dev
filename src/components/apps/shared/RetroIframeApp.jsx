@@ -23,6 +23,7 @@ const RetroIframeApp = ({
   iframeAllowFullScreen = true,
   perfWarning,
   appNotice,
+  awaitRuntimeSignal = false,
 }) => {
   const context = useContext(UseContext);
   const state = context[stateKey];
@@ -38,10 +39,13 @@ const RetroIframeApp = ({
     handleLoad,
     handleError,
     reload,
+    errorMessage,
+    runtimeTitle,
   } = useEmulatorWindow({
     iframeSrc,
     externalUrl,
     isEnabled: !isWarningActive,
+    awaitRuntimeSignal,
   });
 
   useEffect(() => {
@@ -56,8 +60,8 @@ const RetroIframeApp = ({
   };
 
   const errorDescription = useMemo(() => {
-    return `The embedded page for ${title} did not finish loading in this window.`;
-  }, [title]);
+    return errorMessage || `The embedded page for ${title} did not finish loading in this window.`;
+  }, [errorMessage, title]);
 
   if (!state || !setState) return null;
 
@@ -99,7 +103,7 @@ const RetroIframeApp = ({
           {hasError ? (
             <div className="iframe-error-overlay">
               <div className="iframe-error-panel">
-                <h3>{title}</h3>
+                <h3>{runtimeTitle || title}</h3>
                 <div className="panel-body">
                   <div className="win95-panel-icon">!</div>
                   <div className="win95-panel-copy">
