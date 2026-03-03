@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>3D Pinball for Windows - Space Cadet</title>
+    <link rel="stylesheet" href="../../emulators/win95-ui.css" />
+    <style>
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+
+      body.win95-screen {
+        background: #000;
+      }
+
+      #canvas {
+        display: block;
+        width: 100% !important;
+        height: 100% !important;
+        border: 0;
+        background: #000;
+        outline: none;
+      }
+
+      #status {
+        margin: 0;
+      }
+
+      #progress {
+        display: none;
+      }
+    </style>
+  </head>
+  <body class="win95-screen">
+    <canvas id="canvas" tabindex="-1"></canvas>
+    <div id="status" hidden></div>
+    <progress id="progress" max="100" value="0" hidden></progress>
+    <div class="win95-overlay" id="overlay"></div>
+
+    <script>
+      const RETRO_APP_SOURCE = "retro-app";
+      const runtimeTitle = "Space Cadet Pinball";
+      const params = new URLSearchParams(window.location.search);
+      const appInstance = params.get("retroAppInstance") || "";
+      const overlay = document.getElementById("overlay");
+      let readySent = false;
+
+      function postToParent(type, detail = {}) {
+        try {
+          window.parent?.postMessage(
+            {
+              source: RETRO_APP_SOURCE,
+              type,
+              appInstance,
+              title: runtimeTitle,
+              ...detail,
+            },
+            "*",
+          );
+        } catch {
+          // Ignore messaging issues in standalone mode.
+        }
+      }
+
+      function renderDialog({ heading, message, error = "", status = "", icon = "i" }) {
+        overlay.classList.remove("hidden");
+        overlay.innerHTML = `
+          <div class="win95-dialog">
+            <div class="win95-titlebar">
+              <span class="win95-titlebar-text">${runtimeTitle}</span>
+            </div>
+            <div class="win95-body">
+              <div class="win95-row">
+                <div class="win95-icon ${error ? "warning" : ""}">${icon}</div>
+                <div class="win95-copy">
+                  <h1>${heading}</h1>
+                  <p>${message}</p>
+                  ${error ? `<p class="win95-error">${error}</p>` : ""}
+                </div>
+              </div>
+              <div class="win95-progress">
+                <div class="win95-progress-bar is-indeterminate"></div>
+              </div>
+              ${status ? `<div class="win95-status">${status}</div>` : ""}
+            </div>
+          </div>
+        `;
+      }
+
+      function markReady() {
+        if (readySent) return;
+        readySent = true;
+        overlay.classList.add("hidden");
+        postToParent("retro-app:ready");
+      }
+
+      function reportError(message, detail) {
+        if (!readySent) {
+          postToParent("retro-app:error", {
+            message,
+            error: detail || "Unknown startup failure.",
+          });
+        }
+
+        renderDialog({
+          heading: "Unable to Start Pinball",
+          message,
+          error: detail || "Unknown startup failure.",
+          icon: "!",
+        });
+      }
+
+      postToParent("retro-app:title", { title: runtimeTitle });
+      postToParent("retro-app:loading", { message: "Preparing Space Cadet Pinball" });
+      renderDialog({
+        heading: "Loading Pinball Table",
+        message: "Preparing local Space Cadet resources.",
+        status: "F2 = New Game, F3 = Pause",
+      });
+
+      window.Module = {
+        canvas: document.getElementById("canvas"),
+        locateFile(path) {
+          return path;
+        },
+        setStatus(text) {
+          const normalized = typeof text === "string" ? text.trim() : "";
+
+          if (!normalized) {
+            markReady();
+            return;
+          }
+
+          if (/exception thrown|failed|abort|error/i.test(normalized)) {
+            reportError("Space Cadet Pinball failed during startup.", normalized);
+            return;
+          }
+
+          renderDialog({
+            heading: "Loading Pinball Table",
+            message: normalized,
+            status: "F2 = New Game, F3 = Pause",
+          });
+        },
+        printErr(message) {
+          if (!readySent && message && /error|abort|exception|failed/i.test(String(message))) {
+            reportError("Space Cadet Pinball reported a runtime error.", String(message));
+          }
+          console.error(message);
+        },
+        onRuntimeInitialized() {
+          markReady();
+        },
+      };
+
+      window.addEventListener("error", (event) => {
+        if (readySent) return;
+        reportError(
+          "Space Cadet Pinball crashed during startup.",
+          event?.message || event?.error?.message || "Unknown runtime crash.",
+        );
+      });
+
+      window.addEventListener("unhandledrejection", (event) => {
+        if (readySent) return;
+        const reason = event?.reason;
+        reportError(
+          "Space Cadet Pinball rejected a startup promise.",
+          typeof reason === "string" ? reason : reason?.message || reason?.stack || "Unknown promise rejection.",
+        );
+      });
+    </script>
+    <script src="./SpaceCadetPinball.js"></script>
+  </body>
+</html>
