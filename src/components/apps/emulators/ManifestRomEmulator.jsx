@@ -67,7 +67,7 @@ const ManifestRomEmulator = ({
           }}
         />
       ) : (
-        <>
+        <div className="rom-player-shell">
           <div className="rom-player-bar">
             <button
               type="button"
@@ -77,67 +77,75 @@ const ManifestRomEmulator = ({
                 setIsLoadingGame(false);
               }}
             >
-              Back to Library
+              Back
             </button>
-            <span>{selectedRom.title || selectedRom.file}</span>
+            <span className="rom-player-label">{selectedRom.title || selectedRom.file}</span>
+            <span className="rom-player-meta">{selectedRom.file}</span>
           </div>
 
-          {isLoadingGame ? (
-            <EmulatorLoadingScreen
-              title={title}
-              subtitle={`Launching ${selectedRom.title || selectedRom.file}...`}
-              variant="default"
+          <div className="rom-player-frame">
+            {isLoadingGame ? (
+              <EmulatorLoadingScreen
+                title={title}
+                subtitle={`Launching ${selectedRom.title || selectedRom.file}...`}
+                variant="default"
+              />
+            ) : null}
+
+            <iframe
+              title={`${title} Player`}
+              src={iframeUrl}
+              className="retro-emulator-iframe"
+              onLoad={() => {
+                setIsLoadingGame(false);
+                setHasError(false);
+              }}
+              onError={() => {
+                setIsLoadingGame(false);
+                setHasError(true);
+              }}
+              allow="autoplay; fullscreen; gamepad; pointer-lock"
+              loading="eager"
+              allowFullScreen
             />
-          ) : null}
 
-          <iframe
-            title={`${title} Player`}
-            src={iframeUrl}
-            className="retro-emulator-iframe"
-            onLoad={() => {
-              setIsLoadingGame(false);
-              setHasError(false);
-            }}
-            onError={() => {
-              setIsLoadingGame(false);
-              setHasError(true);
-            }}
-            allow="autoplay; fullscreen; gamepad; pointer-lock"
-            loading="eager"
-            allowFullScreen
-          />
-
-          {hasError ? (
-            <div className="iframe-error-overlay">
-              <div className="iframe-error-panel">
-                <h3>Unable to load {selectedRom.title || selectedRom.file}</h3>
-                <p>Try opening another ROM from the library.</p>
-                <div className="iframe-error-actions">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setHasError(false);
-                      setIsLoadingGame(true);
-                      setSelectedRom({ ...selectedRom });
-                    }}
-                  >
-                    Retry
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSelectedRom(null);
-                      setHasError(false);
-                      setIsLoadingGame(false);
-                    }}
-                  >
-                    Back to Library
-                  </button>
+            {hasError ? (
+              <div className="iframe-error-overlay">
+                <div className="iframe-error-panel">
+                  <h3>{title}</h3>
+                  <div className="panel-body">
+                    <div className="win95-panel-icon">!</div>
+                    <div className="win95-panel-copy">
+                      <p>Unable to load {selectedRom.title || selectedRom.file}.</p>
+                      <div className="iframe-error-actions">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setHasError(false);
+                            setIsLoadingGame(true);
+                            setSelectedRom({ ...selectedRom });
+                          }}
+                        >
+                          Retry
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedRom(null);
+                            setHasError(false);
+                            setIsLoadingGame(false);
+                          }}
+                        >
+                          Library
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : null}
-        </>
+            ) : null}
+          </div>
+        </div>
       )}
     </AppWindowShell>
   );

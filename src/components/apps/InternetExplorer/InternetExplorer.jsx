@@ -435,18 +435,23 @@ const BookmarksBar = ({ bookmarks, onNavigate }) => {
 const BlockedPageOverlay = ({ blocked, onOpenExternal, onGoBack }) => (
   <div className="iex-blocked-overlay">
     <div className="iex-blocked-card">
-      <div className="iex-blocked-icon">!</div>
-      <h3>This site can't be reached inside the portfolio browser</h3>
-      <p>
-        <strong>{blocked?.url || "Unknown URL"}</strong> was blocked by its security policy
-        (X-Frame-Options / frame-ancestors).
-      </p>
+      <div className="iex-blocked-titlebar">Navigation Canceled</div>
+      <div className="iex-blocked-body">
+        <div className="iex-blocked-icon">!</div>
+        <div className="iex-blocked-copy">
+          <h3>This page cannot be displayed in the portfolio browser.</h3>
+          <p>
+            <strong>{blocked?.url || "Unknown URL"}</strong> refused to load inside a frame.
+          </p>
+          <p>This is usually caused by X-Frame-Options or a frame-ancestors policy.</p>
+        </div>
+      </div>
       <div className="iex-blocked-actions">
         <button type="button" onClick={onOpenExternal}>
-          Open in real browser
+          Open in Browser
         </button>
         <button type="button" onClick={onGoBack}>
-          Go Back
+          Back
         </button>
       </div>
     </div>
@@ -1137,53 +1142,71 @@ const componentStyles = `
   max-height: calc(100vh - 48px);
   display: flex;
   flex-direction: column;
+  font-family: 'win95', sans-serif;
+  color: #000;
 }
 
 .iex-shell {
   display: flex;
   flex-direction: column;
   height: calc(100% - 18px);
-  background: #111827;
-  color: #e5e7eb;
+  background: #c0c0c0;
+  color: #000;
   overflow: hidden;
 }
 
 .iex-tabbar {
-  height: 32px;
   display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  background: #1a1a2e;
-  border-bottom: 1px solid #282c45;
+  align-items: flex-end;
+  gap: 2px;
+  padding: 4px 4px 0;
+  background: #c0c0c0;
+  border-top: 1px solid #fff;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
 }
 
+.iex-tabbar::-webkit-scrollbar,
+.iex-bookmarks-bar::-webkit-scrollbar {
+  height: 0;
+  width: 0;
+}
+
 .iex-tab {
-  border: 1px solid #30344a;
-  border-radius: 16px;
-  background: #1f2438;
-  color: #d1d5db;
   height: 24px;
-  min-width: 120px;
+  min-width: 132px;
   max-width: 220px;
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 0 8px;
+  color: #000;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
   cursor: pointer;
 }
 
 .iex-tab.active {
-  background: #f4f5f7;
-  color: #111827;
-  border-color: #f4f5f7;
+  position: relative;
+  top: 1px;
+  border-bottom-color: #c0c0c0;
 }
 
-.iex-tab:hover {
-  filter: brightness(1.08);
+.iex-tab:hover,
+.iex-tab:focus-visible,
+.iex-new-tab:hover,
+.iex-nav-btn:hover:not(:disabled),
+.iex-bookmark-chip:hover,
+.iex-bookmark-btn:hover,
+.iex-bar-toggle:hover {
+  background: #d4d0c8;
 }
 
 .iex-tab-title {
@@ -1201,131 +1224,137 @@ const componentStyles = `
 
 .iex-tab-close {
   margin-left: auto;
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
   flex-shrink: 0;
+  font-size: 10px;
 }
 
-.iex-tab-close:hover {
-  background: rgba(0, 0, 0, 0.15);
-}
-
-.iex-new-tab {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1px solid #3d425b;
-  background: #1f2438;
-  color: #d1d5db;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.iex-urlbar-row {
-  height: 40px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 10px;
-  background: #20263a;
-  border-bottom: 1px solid #2f354f;
-  overflow: hidden;
-}
-
-.iex-nav-controls,
-.iex-right-controls {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.iex-nav-controls button,
-.iex-right-controls button {
-  height: 28px;
-  border: 1px solid #3b4262;
-  background: #1d2336;
-  color: #d1d5db;
-  border-radius: 8px;
-  padding: 0 10px;
+.iex-new-tab,
+.iex-nav-btn,
+.iex-bookmark-btn,
+.iex-bar-toggle,
+.iex-blocked-actions button {
+  min-width: 24px;
+  min-height: 22px;
+  padding: 0 8px;
+  color: #000;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  font-family: 'win95', sans-serif;
   font-size: 11px;
   cursor: pointer;
 }
 
-.iex-nav-controls button:disabled {
-  opacity: 0.45;
+.iex-new-tab:active,
+.iex-nav-btn:active,
+.iex-bookmark-btn:active,
+.iex-bar-toggle:active,
+.iex-blocked-actions button:active {
+  border-top-color: #404040;
+  border-left-color: #404040;
+  border-right-color: #fff;
+  border-bottom-color: #fff;
+}
+
+.iex-nav-btn:disabled {
+  color: #808080;
   cursor: not-allowed;
 }
 
-.iex-omnibox {
-  height: 28px;
+.iex-urlbar-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  background: #c0c0c0;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #808080;
+}
+
+.iex-nav-controls,
+.iex-right-controls,
+.iex-bookmarks-inner {
   display: flex;
   align-items: center;
-  border: 1px solid #374056;
-  border-radius: 999px;
-  background: #0f1526;
-  padding: 0 10px;
-  gap: 8px;
+  gap: 4px;
+}
+
+.iex-omnibox-container {
+  min-width: 0;
+}
+
+.iex-omnibox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 24px;
+  padding: 0 6px;
+  background: #fff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
 }
 
 .iex-omnibox input {
-  height: 100%;
   width: 100%;
+  height: 100%;
   border: none;
   background: transparent;
-  color: #f3f4f6;
-  font-size: 12px;
+  color: #000;
+  font-family: 'win95', sans-serif;
+  font-size: 11px;
   outline: none;
 }
 
 .iex-lock-indicator {
-  min-width: 20px;
+  min-width: 16px;
+  color: #000080;
   font-size: 10px;
-  color: #a5b4fc;
 }
 
 .iex-spinner {
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #808080;
+  border-top-color: #000080;
   border-radius: 50%;
-  border: 2px solid #7c83a3;
-  border-top-color: #60a5fa;
-  animation: iex-spin 0.9s linear infinite;
+  animation: iex-spin 0.8s linear infinite;
 }
 
 .iex-bookmarks-bar {
-  height: 28px;
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  background: #272f45;
-  border-bottom: 1px solid #353f5b;
+  gap: 4px;
+  padding: 4px 6px;
+  background: #c0c0c0;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #808080;
   overflow-x: auto;
   overflow-y: hidden;
-  scrollbar-width: none;
-}
-
-.iex-tabbar::-webkit-scrollbar,
-.iex-bookmarks-bar::-webkit-scrollbar {
-  height: 0;
-  width: 0;
 }
 
 .iex-bookmark-chip {
-  height: 20px;
+  height: 22px;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #3e4867;
-  border-radius: 12px;
-  background: #1d2436;
-  color: #d1d5db;
   padding: 0 8px;
+  color: #000;
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  font-family: 'win95', sans-serif;
   font-size: 11px;
   cursor: pointer;
 }
@@ -1339,7 +1368,12 @@ const componentStyles = `
   position: relative;
   flex: 1;
   min-height: 0;
-  background: #0b1020;
+  margin: 2px;
+  background: #fff;
+  border-top: 2px solid #808080;
+  border-left: 2px solid #808080;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
 }
 
 .iex-loading-bar {
@@ -1348,105 +1382,118 @@ const componentStyles = `
   left: 0;
   width: 40%;
   height: 2px;
-  background: linear-gradient(90deg, #22d3ee, #3b82f6);
-  animation: iex-loading 1.2s ease-in-out infinite;
-  z-index: 5;
+  background: #000080;
+  animation: iex-loading 1.2s linear infinite;
+  z-index: 4;
 }
 
 .iex-frame-container {
   position: relative;
   width: 100%;
   height: 100%;
+  background: #fff;
 }
 
 .iex-frame {
   width: 100%;
   height: 100%;
   border: none;
-  background: white;
+  background: #fff;
 }
 
 .iex-blocked-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(8, 12, 24, 0.84);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 18px;
+  background: rgba(192, 192, 192, 0.72);
 }
 
 .iex-blocked-card {
-  max-width: 560px;
-  width: 100%;
-  background: rgba(30, 35, 55, 0.95);
-  border: 1px solid #4a5478;
-  border-radius: 12px;
-  padding: 20px;
-  text-align: center;
+  width: min(460px, calc(100% - 24px));
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow: 1px 1px 0 #000;
+}
+
+.iex-blocked-titlebar {
+  padding: 2px 4px;
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+}
+
+.iex-blocked-body {
+  display: flex;
+  gap: 12px;
+  padding: 14px 14px 8px;
 }
 
 .iex-blocked-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 12px auto;
-  border-radius: 50%;
-  background: #dc2626;
-  color: white;
-  display: grid;
-  place-items: center;
-  font-size: 24px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 700;
+  background: #ffff9c;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
 }
 
-.iex-blocked-card h3 {
-  margin-bottom: 10px;
-  color: #f9fafb;
+.iex-blocked-copy h3,
+.iex-blocked-copy p {
+  margin: 0;
 }
 
-.iex-blocked-card p {
-  color: #d1d5db;
-  font-size: 12px;
-  margin-bottom: 14px;
+.iex-blocked-copy h3 {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.iex-blocked-copy p + p {
+  margin-top: 4px;
 }
 
 .iex-blocked-actions {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   gap: 8px;
-}
-
-.iex-blocked-actions button {
-  border: 1px solid #4b5678;
-  background: #1b2338;
-  color: #e5e7eb;
-  border-radius: 8px;
-  height: 30px;
-  padding: 0 12px;
-  cursor: pointer;
-}
-
-@keyframes iex-loading {
-  0% { transform: translateX(0); opacity: 0.3; }
-  50% { transform: translateX(140%); opacity: 1; }
-  100% { transform: translateX(260%); opacity: 0.3; }
+  padding: 0 14px 12px;
 }
 
 @keyframes iex-spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes iex-loading {
+  0% {
+    transform: translateX(-120%);
+  }
+  100% {
+    transform: translateX(330%);
+  }
 }
 
 @media (max-width: 900px) {
   .iex-window {
-    min-width: 320px;
-    min-height: 380px;
-    width: calc(100vw - 20px);
-    height: calc(100vh - 88px);
+    min-width: 0;
+    min-height: 0;
+    width: calc(100vw - 24px);
+    height: calc(100vh - 56px);
   }
 
   .iex-urlbar-row {
     grid-template-columns: 1fr;
-    height: auto;
   }
 
   .iex-nav-controls,

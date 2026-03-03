@@ -4,100 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EmulatorJS Loader</title>
-    <style>
-      :root {
-        color-scheme: dark;
-      }
-
-      html,
-      body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: radial-gradient(circle at 20% 20%, #1f2942 0%, #11182b 55%, #070b16 100%);
-        color: #e6ecff;
-      }
-
-      #game {
-        width: 100%;
-        height: 100%;
-        position: fixed;
-        top: 0;
-        left: 0;
-      }
-
-      .overlay {
-        position: fixed;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        background: rgba(8, 12, 21, 0.92);
-        z-index: 20;
-      }
-
-      .overlay.hidden {
-        display: none;
-      }
-
-      .panel {
-        width: min(620px, 95vw);
-        background: rgba(25, 33, 56, 0.94);
-        border: 1px solid rgba(126, 153, 233, 0.55);
-        border-radius: 12px;
-        padding: 18px;
-      }
-
-      h1 {
-        margin: 0 0 10px;
-        font-size: 20px;
-      }
-
-      p {
-        margin: 0 0 10px;
-        font-size: 13px;
-        line-height: 1.45;
-        opacity: 0.92;
-      }
-
-      code {
-        background: rgba(0, 0, 0, 0.25);
-        border-radius: 4px;
-        padding: 1px 5px;
-      }
-
-      .actions {
-        margin-top: 12px;
-        display: flex;
-        gap: 8px;
-      }
-
-      .btn {
-        border: 1px solid #5f81d9;
-        border-radius: 8px;
-        background: #2b3c68;
-        color: #f3f7ff;
-        padding: 8px 12px;
-        font-size: 12px;
-        cursor: pointer;
-      }
-
-      .btn:hover {
-        background: #3a4a78;
-      }
-    </style>
+    <link rel="stylesheet" href="./win95-ui.css" />
   </head>
-  <body>
+  <body class="win95-screen">
     <div id="game"></div>
-    <div class="overlay" id="overlay">
-      <div class="panel">
-        <h1>Preparing emulator...</h1>
-        <p>Please wait while EmulatorJS loads.</p>
-      </div>
-    </div>
+    <div class="win95-overlay" id="overlay"></div>
 
     <script>
       const CORE_MAP = {
@@ -108,6 +19,13 @@
         mgba: "mgba",
         nes: "fceumm",
         fceumm: "fceumm",
+      };
+
+      const CORE_LABELS = {
+        n64: "Nintendo 64",
+        mednafen_psx_hw: "PlayStation",
+        mgba: "Game Boy Advance",
+        fceumm: "Nintendo Entertainment System",
       };
 
       const CORE_PROBE_FILES = {
@@ -121,6 +39,7 @@
       const params = new URLSearchParams(window.location.search);
       const requestedCore = (params.get("core") || "nes").toLowerCase();
       const core = CORE_MAP[requestedCore] || "fceumm";
+      const systemLabel = CORE_LABELS[core] || "Emulator";
       const rom = params.get("rom") || "";
       const bios = params.get("bios") || "";
       const overlay = document.getElementById("overlay");
@@ -153,16 +72,38 @@
         }
       }
 
-      function renderError(message) {
+      function renderDialog({ heading, message, status = "", error = "", actions = "", icon = "i" }) {
         overlay.innerHTML = `
-          <div class="panel">
-            <h1>Unable to launch emulator</h1>
-            <p>${message}</p>
-            <div class="actions">
-              <button class="btn" id="retry-btn">Retry</button>
+          <div class="win95-dialog">
+            <div class="win95-titlebar">
+              <span class="win95-titlebar-text">${systemLabel}</span>
+            </div>
+            <div class="win95-body">
+              <div class="win95-row">
+                <div class="win95-icon ${error ? "warning" : ""}">${icon}</div>
+                <div class="win95-copy">
+                  <h1>${heading}</h1>
+                  <p>${message}</p>
+                  ${error ? `<p class="win95-error">${error}</p>` : ""}
+                </div>
+              </div>
+              <div class="win95-progress"><div class="win95-progress-bar is-indeterminate"></div></div>
+              ${status ? `<div class="win95-status">${status}</div>` : ""}
+              ${actions ? `<div class="win95-button-row">${actions}</div>` : ""}
             </div>
           </div>
         `;
+      }
+
+      function renderError(message) {
+        renderDialog({
+          heading: "Unable to launch emulator",
+          message,
+          error: "Check the selected ROM, emulator data files, and network path.",
+          icon: "!",
+          actions: '<button class="win95-button" id="retry-btn">Retry</button>',
+        });
+
         const retryButton = document.getElementById("retry-btn");
         if (retryButton) {
           retryButton.addEventListener("click", () => window.location.reload());
@@ -179,59 +120,64 @@
 
       async function boot() {
         if (!rom) {
-          renderError("No ROM selected. Return to the ROM library and choose a game.");
+          renderDialog({
+            heading: "No game selected",
+            message: "Return to the ROM library and choose a bundled game.",
+            error: "No ROM path was passed to the emulator loader.",
+            icon: "!",
+            actions: '<button class="win95-button" id="retry-btn">Reload</button>',
+          });
+          document.getElementById("retry-btn")?.addEventListener("click", () => window.location.reload());
           return;
         }
 
         const romUrl = toAbsoluteUrl(rom);
         const dataPath = await resolveDataPath();
 
-        // Validate core file exists before attempting to load
-        const probe = CORE_PROBE_FILES[core];
-        if (probe && dataPath === LOCAL_DATA_PATH) {
-          const localProbe = `${LOCAL_DATA_PATH}${probe}`;
+        renderDialog({
+          heading: "Preparing emulator",
+          message: "Loading runtime and selected cartridge.",
+          status: `Core: ${core} | Data path: ${dataPath}`,
+        });
+
+        if (CORE_PROBE_FILES[core] && dataPath === LOCAL_DATA_PATH) {
+          const localProbe = `${LOCAL_DATA_PATH}${CORE_PROBE_FILES[core]}`;
           const hasCore = await urlExists(localProbe);
           if (!hasCore) {
-            // Fallback to CDN silently
             window.EJS_player = "#game";
             window.EJS_core = core;
             window.EJS_gameUrl = romUrl;
             window.EJS_pathtodata = CDN_DATA_PATH;
-            window.EJS_color = "#7ea2ff";
-            window.EJS_backgroundColor = "#11182b";
+            window.EJS_color = "#000080";
+            window.EJS_backgroundColor = "#000000";
             window.EJS_startOnLoaded = true;
             if (bios) {
               window.EJS_biosUrl = toAbsoluteUrl(bios);
             }
-            const script = document.createElement("script");
-            script.src = `${CDN_DATA_PATH}loader.js`;
-            script.onerror = () => {
-              renderError(
-                `Unable to load emulator from CDN. Try again or check your connection.`,
-              );
+            const cdnScript = document.createElement("script");
+            cdnScript.src = `${CDN_DATA_PATH}loader.js`;
+            cdnScript.onerror = () => {
+              renderError("Unable to load EmulatorJS from the CDN fallback.");
             };
-            document.body.appendChild(script);
+            document.body.appendChild(cdnScript);
             return;
           }
         }
 
-        // Setup EJS globals
         window.EJS_player = "#game";
         window.EJS_core = core;
         window.EJS_gameUrl = romUrl;
         window.EJS_pathtodata = dataPath;
-        window.EJS_color = "#7ea2ff";
-        window.EJS_backgroundColor = "#11182b";
+        window.EJS_color = "#000080";
+        window.EJS_backgroundColor = "#000000";
         window.EJS_startOnLoaded = true;
 
         if (bios) {
           window.EJS_biosUrl = toAbsoluteUrl(bios);
         }
 
-        // Create MutationObserver to detect when emulator canvas is rendered
-        const checkForCanvas = () => {
+        const hideOverlayIfReady = () => {
           const canvas = document.querySelector("#game canvas");
-          const overlay = document.getElementById("overlay");
           if (canvas && overlay) {
             overlay.classList.add("hidden");
             return true;
@@ -239,30 +185,20 @@
           return false;
         };
 
-        // Setup monitoring for canvas creation
-        let canvasCheckInterval = setInterval(checkForCanvas, 100);
-        let initStartTime = Date.now();
-        let maxInitTime = 30000; // 30 second timeout
-
-        // Fallback timeout - if canvas doesn't appear, show error
-        let initTimeout = setTimeout(() => {
+        const canvasCheckInterval = setInterval(hideOverlayIfReady, 100);
+        const initTimeout = setTimeout(() => {
           clearInterval(canvasCheckInterval);
-          if (!checkForCanvas()) {
-            renderError(
-              `Emulator failed to initialize. The ${core} core or data files may be unavailable.`,
-            );
+          if (!hideOverlayIfReady()) {
+            renderError(`The ${systemLabel} core did not finish initializing.`);
           }
-        }, maxInitTime);
+        }, 30000);
 
-        // Load the emulator loader script
         const script = document.createElement("script");
         script.src = `${dataPath}loader.js`;
         script.onerror = () => {
           clearInterval(canvasCheckInterval);
           clearTimeout(initTimeout);
-          renderError(
-            `Failed to load emulator runtime from ${dataPath}. Check that emulator data files are available.`,
-          );
+          renderError(`Failed to load emulator runtime from ${dataPath}.`);
         };
         document.body.appendChild(script);
       }

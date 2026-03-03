@@ -4,80 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Commander Keen 4 - js-dos</title>
-    <style>
-      html,
-      body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        background: #000;
-        color: #ebf2ff;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        overflow: hidden;
-      }
-
-      #keen {
-        width: 100%;
-        height: 100%;
-      }
-
-      .overlay {
-        position: fixed;
-        inset: 0;
-        z-index: 5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 16px;
-        background: rgba(8, 12, 22, 0.92);
-      }
-
-      .card {
-        width: min(620px, 96vw);
-        background: #1b2540;
-        border: 1px solid rgba(136, 169, 250, 0.55);
-        border-radius: 12px;
-        padding: 16px;
-      }
-
-      .btn {
-        border: 1px solid #6f96f2;
-        border-radius: 8px;
-        background: #2f4475;
-        color: #fff;
-        padding: 8px 12px;
-        font-size: 12px;
-        cursor: pointer;
-      }
-
-      .row {
-        margin-top: 10px;
-        display: flex;
-        gap: 10px;
-      }
-
-      .note {
-        font-size: 12px;
-        opacity: 0.9;
-        line-height: 1.45;
-      }
-
-      .error {
-        margin-top: 10px;
-        color: #ffb5b5;
-        font-size: 12px;
-      }
-
-      code {
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 4px;
-        padding: 1px 4px;
-      }
-    </style>
+    <link rel="stylesheet" href="./win95-ui.css" />
   </head>
-  <body>
+  <body class="win95-screen">
     <div id="keen"></div>
-    <div class="overlay" id="overlay"></div>
+    <div class="win95-overlay" id="overlay"></div>
 
     <script>
       const overlay = document.getElementById("overlay");
@@ -88,8 +19,27 @@
       const basePrefix = markerIndex === -1 ? "/" : window.location.pathname.slice(0, markerIndex + 1) || "/";
       const bundlePath = `${basePrefix}roms/dos/commanderkeen4/keen4.jsdos`;
 
-      function renderCard(content) {
-        overlay.innerHTML = `<div class="card">${content}</div>`;
+      function renderDialog({ heading, message, error = "", status = "", actions = "", icon = "i" }) {
+        overlay.innerHTML = `
+          <div class="win95-dialog">
+            <div class="win95-titlebar">
+              <span class="win95-titlebar-text">Commander Keen 4</span>
+            </div>
+            <div class="win95-body">
+              <div class="win95-row">
+                <div class="win95-icon ${error ? "warning" : ""}">${icon}</div>
+                <div class="win95-copy">
+                  <h1>${heading}</h1>
+                  <p>${message}</p>
+                  ${error ? `<p class="win95-error">${error}</p>` : ""}
+                </div>
+              </div>
+              <div class="win95-progress"><div class="win95-progress-bar is-indeterminate"></div></div>
+              ${status ? `<div class="win95-status">${status}</div>` : ""}
+              ${actions ? `<div class="win95-button-row">${actions}</div>` : ""}
+            </div>
+          </div>
+        `;
       }
 
       async function urlExists(url) {
@@ -112,23 +62,23 @@
       }
 
       async function boot() {
-        renderCard(`
-          <h2 style="margin-top:0">Commander Keen 4</h2>
-          <p class="note">Loading bundled game package...</p>
-        `);
+        renderDialog({
+          heading: "Loading bundled DOS package",
+          message: "Starting Commander Keen 4 from the preconfigured archive.",
+          status: bundlePath,
+        });
 
         const bundleExists = await urlExists(bundlePath);
         if (!bundleExists) {
-          renderCard(`
-            <h2 style="margin-top:0">Commander Keen 4 bundle not found</h2>
-            <p class="note">Expected bundle:</p>
-            <p><code>${bundlePath}</code></p>
-            <p class="error">Add the bundled <code>keen4.jsdos</code> file and refresh.</p>
-            <div class="row">
-              <button class="btn" id="reload-btn">Reload</button>
-            </div>
-          `);
-          document.getElementById("reload-btn").addEventListener("click", () => window.location.reload());
+          renderDialog({
+            heading: "Bundled game not found",
+            message: "Place the packaged Keen 4 archive at the path below.",
+            error: "The launcher could not find keen4.jsdos.",
+            status: bundlePath,
+            icon: "!",
+            actions: '<button class="win95-button" id="reload-btn">Reload</button>',
+          });
+          document.getElementById("reload-btn")?.addEventListener("click", () => window.location.reload());
           return;
         }
 
@@ -142,14 +92,14 @@
             kiosk: true,
           });
         } catch (error) {
-          renderCard(`
-            <h2 style="margin-top:0">Unable to start Commander Keen 4</h2>
-            <p class="error">${error?.message || "Unknown js-dos initialization error."}</p>
-            <div class="row">
-              <button class="btn" id="retry-btn">Retry</button>
-            </div>
-          `);
-          document.getElementById("retry-btn").addEventListener("click", () => window.location.reload());
+          renderDialog({
+            heading: "Unable to start Commander Keen 4",
+            message: "The bundled DOS runtime did not initialize correctly.",
+            error: error?.message || "Unknown js-dos initialization error.",
+            icon: "!",
+            actions: '<button class="win95-button" id="retry-btn">Retry</button>',
+          });
+          document.getElementById("retry-btn")?.addEventListener("click", () => window.location.reload());
         }
       }
 

@@ -28,15 +28,7 @@ const RetroIframeApp = ({
   const state = context[stateKey];
   const setState = context[setterKey];
 
-  // Performance warnings are disabled globally.  The original
-  // implementation prompted users before launching CPU‑/memory‑heavy iframe
-  // apps; we suppress that overlay entirely so nothing ever appears.
-  // Any props passed via `perfWarning` are now ignored.
-  const warningKey = perfWarning?.storageKey;
-  const warningAccepted = true; // always pretend the user accepted the warning
-
-  const isWarningActive = false; // never show warning
-  const shouldShowWarning = false; // shortcut
+  const isWarningActive = false;
 
   const {
     iframeUrl,
@@ -52,13 +44,11 @@ const RetroIframeApp = ({
     isEnabled: !isWarningActive,
   });
 
-
   useEffect(() => {
     if (state?.show && state?.hide) {
       setState((previous) => ({ ...previous, hide: false }));
     }
   }, [state?.show, state?.hide, setState]);
-
 
   const openExternally = () => {
     if (!resolvedExternalUrl) return;
@@ -66,7 +56,7 @@ const RetroIframeApp = ({
   };
 
   const errorDescription = useMemo(() => {
-    return `The embedded page for ${title} failed to load. Retry, or open externally.`;
+    return `The embedded page for ${title} did not finish loading in this window.`;
   }, [title]);
 
   if (!state || !setState) return null;
@@ -83,46 +73,52 @@ const RetroIframeApp = ({
       defaultPosition={defaultPosition}
       className="retro-emulator-window"
     >
-      {appNotice ? (
-        <div className="retro-emulator-note">{appNotice}</div>
-      ) : null}
+      <div className="retro-embed-shell">
+        {appNotice ? <div className="retro-emulator-note">{appNotice}</div> : null}
 
+        <div className="retro-embed-frame">
+          {isLoading ? (
+            <EmulatorLoadingScreen
+              title={title}
+              subtitle={loadingSubtitle}
+              variant={loadingVariant}
+            />
+          ) : null}
 
-      {isLoading ? (
-        <EmulatorLoadingScreen
-          title={title}
-          subtitle={loadingSubtitle}
-          variant={loadingVariant}
-        />
-      ) : null}
+          <iframe
+            title={title}
+            src={iframeUrl}
+            className="retro-emulator-iframe"
+            onLoad={handleLoad}
+            onError={handleError}
+            allow={iframeAllow}
+            loading={iframeLoading}
+            allowFullScreen={iframeAllowFullScreen}
+          />
 
-      <iframe
-        title={title}
-        src={iframeUrl}
-        className="retro-emulator-iframe"
-        onLoad={handleLoad}
-        onError={handleError}
-        allow={iframeAllow}
-        loading={iframeLoading}
-        allowFullScreen={iframeAllowFullScreen}
-      />
-
-      {hasError ? (
-        <div className="iframe-error-overlay">
-          <div className="iframe-error-panel">
-            <h3>Unable to load {title}</h3>
-            <p>{errorDescription}</p>
-            <div className="iframe-error-actions">
-              <button type="button" onClick={reload}>
-                Retry
-              </button>
-              <button type="button" onClick={openExternally}>
-                Open Externally
-              </button>
+          {hasError ? (
+            <div className="iframe-error-overlay">
+              <div className="iframe-error-panel">
+                <h3>{title}</h3>
+                <div className="panel-body">
+                  <div className="win95-panel-icon">!</div>
+                  <div className="win95-panel-copy">
+                    <p>{errorDescription}</p>
+                    <div className="iframe-error-actions">
+                      <button type="button" onClick={reload}>
+                        Retry
+                      </button>
+                      <button type="button" onClick={openExternally}>
+                        Open Externally
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          ) : null}
         </div>
-      ) : null}
+      </div>
     </AppWindowShell>
   );
 };

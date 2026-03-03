@@ -4,123 +4,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Windows 95 - v86</title>
+    <link rel="stylesheet" href="./win95-ui.css" />
     <style>
-      html,
-      body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
+      body.win95-screen {
         background: #000;
-        overflow: hidden;
-        color: #e5edff;
-        font-family: Consolas, "Courier New", monospace;
-      }
-
-      #screen-container {
-        width: 100%;
-        height: 100%;
-      }
-
-      #screen-container canvas {
-        width: 100% !important;
-        height: 100% !important;
-        display: block;
-      }
-
-      .boot-note {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-        z-index: 5;
-        color: #d9e4ff;
-        background: rgba(17, 23, 38, 0.75);
-        border: 1px solid rgba(122, 152, 222, 0.6);
-        padding: 6px 8px;
-        font-size: 11px;
-      }
-
-      .overlay {
-        position: absolute;
-        inset: 0;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        background: rgba(5, 7, 12, 0.92);
-      }
-
-      .panel {
-        width: min(620px, 96vw);
-        background: #141d32;
-        border: 1px solid rgba(123, 160, 245, 0.6);
-        border-radius: 10px;
-        padding: 16px;
-      }
-
-      .panel h2 {
-        margin: 0 0 10px;
-        font-size: 20px;
-      }
-
-      .panel p {
-        margin: 0;
-        font-size: 12px;
-        line-height: 1.45;
-        opacity: 0.92;
-      }
-
-      .row {
-        margin-top: 12px;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-      }
-
-      .btn {
-        border: 1px solid #7697e7;
-        border-radius: 8px;
-        background: #2a3f6e;
-        color: #fff;
-        padding: 8px 12px;
-        font-size: 12px;
-        cursor: pointer;
-      }
-
-      .error {
-        margin-top: 10px;
-        color: #ffb3b3;
-        font-size: 12px;
-      }
-
-      code {
-        background: rgba(0, 0, 0, 0.25);
-        border-radius: 4px;
-        padding: 1px 4px;
       }
     </style>
   </head>
-  <body>
-    <div class="boot-note">Click inside to capture mouse. Press Esc to release.</div>
+  <body class="win95-screen">
+    <div class="win95-toolbar-note">Click inside to capture the mouse. Press Esc to release it.</div>
     <div id="screen-container"></div>
-    <div class="overlay" id="overlay"></div>
+    <div class="win95-overlay" id="overlay"></div>
 
     <script>
       const overlay = document.getElementById("overlay");
-      // previous code computed a prefix based on pathname in order to
-      // support running from subdirectories.  in practice the iframe is
-      // always served from /emulators/, so a simple relative path works and
-      // avoids miscalculations that caused the local script to miss and
-      // trigger a network error.  keep the explicit paths in case the HTML is
-      // relocated later.
-      const localV86Path = "v86/";               // relative to this HTML file
-      const imagePath = "win95.img";            // same directory
-
+      const localV86Path = "v86/";
+      const imagePath = "win95.img";
       const localScript = `${localV86Path}libv86.js`;
       const remoteScript = "https://copy.sh/v86/libv86.js";
 
-      // helper used only for local resource; remote HEAD requests trigger
-      // CORS failures so we avoid them altogether.
       async function localExists(url) {
         try {
           const resp = await fetch(url, { method: "HEAD", cache: "no-store" });
@@ -128,9 +30,6 @@
         } catch {
           return false;
         }
-      }
-      function renderPanel(html) {
-        overlay.innerHTML = `<div class="panel">${html}</div>`;
       }
 
       async function urlExists(url) {
@@ -140,6 +39,29 @@
         } catch {
           return false;
         }
+      }
+
+      function renderDialog({ heading, message, error = "", status = "", actions = "", icon = "i" }) {
+        overlay.innerHTML = `
+          <div class="win95-dialog">
+            <div class="win95-titlebar">
+              <span class="win95-titlebar-text">Windows 95</span>
+            </div>
+            <div class="win95-body">
+              <div class="win95-row">
+                <div class="win95-icon ${error ? "warning" : ""}">${icon}</div>
+                <div class="win95-copy">
+                  <h1>${heading}</h1>
+                  <p>${message}</p>
+                  ${error ? `<p class="win95-error">${error}</p>` : ""}
+                </div>
+              </div>
+              <div class="win95-progress"><div class="win95-progress-bar is-indeterminate"></div></div>
+              ${status ? `<div class="win95-status">${status}</div>` : ""}
+              ${actions ? `<div class="win95-button-row">${actions}</div>` : ""}
+            </div>
+          </div>
+        `;
       }
 
       function loadScriptWithGuard(url) {
@@ -160,9 +82,6 @@
       }
 
       async function ensureRuntime() {
-        // try local script first; if it fails (404 or initialization error)
-        // fall through to the remote URL. we avoid any HEAD requests here to
-        // eliminate CORS errors when checking remote hosts.
         if (await localExists(localScript)) {
           try {
             return await loadScriptWithGuard(localScript);
@@ -177,44 +96,36 @@
           console.warn("remote v86 load failed:", err);
         }
 
-        // still no runtime; show user instructions
-        renderPanel(`
-          <h2>v86 runtime unavailable</h2>
-          <p class="error">
-            Unable to load the v86 JavaScript runtime necessary for emulation.
-          </p>
-          <p class="note">
-            Please ensure <code>${localScript}</code> exists and is reachable
-            from this page.  You can download the latest build from
-            <a href="https://github.com/copy/v86" target="_blank" rel="noopener noreferrer">
-            https://github.com/copy/v86</a> and place it in the
-            <code>public/emulators/v86/</code> directory.
-          </p>
-          <div class="row">
-            <button class="btn" id="retry-btn">Retry</button>
-          </div>
-        `);
-        document.getElementById("retry-btn").addEventListener("click", () => window.location.reload());
+        renderDialog({
+          heading: "v86 runtime unavailable",
+          message: "The emulator runtime could not be loaded from the bundled script or the upstream fallback.",
+          error: `Expected ${localScript} in public/emulators/v86/.`,
+          status: "Download the global browser build of libv86.js and place it beside the BIOS files.",
+          icon: "!",
+          actions: '<button class="win95-button" id="retry-btn">Retry</button>',
+        });
+        document.getElementById("retry-btn")?.addEventListener("click", () => window.location.reload());
         throw new Error("v86 runtime missing");
       }
 
       async function boot() {
-        renderPanel(`
-          <h2>Windows 95 Boot</h2>
-          <p>Preparing virtual x86 runtime...</p>
-        `);
+        renderDialog({
+          heading: "Preparing Windows 95",
+          message: "Loading the virtual x86 runtime and disk image.",
+          status: imagePath,
+        });
 
         const hasImage = await urlExists(imagePath);
         if (!hasImage) {
-          renderPanel(`
-            <h2>Windows 95 image missing</h2>
-            <p class="error">Win95 image not found at <code>/public/emulators/win95.img</code>.</p>
-            <p>Place a Win95 disk image there and refresh.</p>
-            <div class="row">
-              <button class="btn" id="reload-btn">Reload</button>
-            </div>
-          `);
-          document.getElementById("reload-btn").addEventListener("click", () => window.location.reload());
+          renderDialog({
+            heading: "Disk image missing",
+            message: "Place the Windows 95 image in the emulator directory and reload.",
+            error: "win95.img was not found in public/emulators/.",
+            status: imagePath,
+            icon: "!",
+            actions: '<button class="win95-button" id="reload-btn">Reload</button>',
+          });
+          document.getElementById("reload-btn")?.addEventListener("click", () => window.location.reload());
           return;
         }
 
@@ -222,14 +133,14 @@
         try {
           loadedScript = await ensureRuntime();
         } catch (error) {
-          renderPanel(`
-            <h2>V86 runtime failed</h2>
-            <p class="error">${error?.message || "Unknown runtime error."}</p>
-            <div class="row">
-              <button class="btn" id="retry-btn">Retry</button>
-            </div>
-          `);
-          document.getElementById("retry-btn").addEventListener("click", () => window.location.reload());
+          renderDialog({
+            heading: "v86 runtime failed",
+            message: "Windows 95 could not start because the emulator runtime did not initialize.",
+            error: error?.message || "Unknown runtime error.",
+            icon: "!",
+            actions: '<button class="win95-button" id="retry-btn">Retry</button>',
+          });
+          document.getElementById("retry-btn")?.addEventListener("click", () => window.location.reload());
           return;
         }
 

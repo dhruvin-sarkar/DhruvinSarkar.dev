@@ -23,6 +23,7 @@
   height: 24px;
   -webkit-user-select: none;
   user-select: none;
+  font-family: 'win95', sans-serif;
 }
 
 .retro-dragbar-title {
@@ -65,6 +66,7 @@
   cursor: pointer;
   padding: 0;
   line-height: 1;
+  font-family: 'win95', sans-serif;
 }
 
 .retro-title-button:active {
@@ -78,165 +80,227 @@
 .retro-window-content {
   width: 100%;
   height: calc(100% - 24px);
-  background: #111;
+  background: #c0c0c0;
   position: relative;
+  color: #000;
+  font-family: 'win95', sans-serif;
 }
 
-.emulator-loading-screen {
+.retro-window-content *,
+.retro-window-content *::before,
+.retro-window-content *::after {
+  box-sizing: border-box;
+}
+
+.retro-embed-shell,
+.rom-player-shell {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
+  background: #c0c0c0;
+}
+
+.retro-embed-frame,
+.rom-player-frame {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  background: #000;
+  border-top: 1px solid #808080;
+}
+
+.retro-emulator-note,
+.rom-player-bar,
+.rom-library-toolbar,
+.rom-library-statusbar,
+.rom-library-listhead {
+  font-family: 'win95', sans-serif;
+}
+
+.retro-emulator-note {
+  min-height: 28px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.retro-emulator-note::before {
+  content: '!';
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: radial-gradient(circle at 20% 20%, #1f2942 0%, #101522 55%, #080a12 100%);
+  flex-shrink: 0;
+  background: #ffffe1;
+  border: 1px solid #000;
+  font-weight: 700;
 }
 
-.emulator-loading-card {
-  width: min(520px, 90%);
-  padding: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(15, 19, 31, 0.78);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+.emulator-loading-screen,
+.rom-library-state,
+.iframe-error-overlay,
+.retro-performance-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(192, 192, 192, 0.92);
 }
 
-.emulator-loading-card h2 {
+.emulator-loading-card,
+.iframe-error-panel,
+.retro-performance-card,
+.rom-library-dialog {
+  width: min(540px, 100%);
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+  padding: 3px;
+}
+
+.emulator-loading-card h2,
+.iframe-error-panel h3,
+.retro-performance-card h3,
+.rom-library-dialog h3 {
   margin: 0;
-  font-size: 18px;
-  color: #f2f4ff;
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 6px;
 }
 
-.emulator-loading-card p {
-  margin: 8px 0 16px;
-  font-size: 12px;
-  color: #d4d9ef;
-  opacity: 0.92;
+.emulator-loading-card .panel-body,
+.iframe-error-panel .panel-body,
+.retro-performance-card .panel-body,
+.rom-library-dialog .panel-body {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: #c0c0c0;
+  color: #000;
+}
+
+.win95-panel-icon {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffe1;
+  border: 1px solid #000;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.win95-panel-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.win95-panel-copy p,
+.emulator-loading-card p,
+.iframe-error-panel p,
+.retro-performance-card p,
+.rom-library-dialog p {
+  margin: 0 0 10px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.win95-panel-copy p:last-child,
+.emulator-loading-card p:last-child,
+.iframe-error-panel p:last-child,
+.retro-performance-card p:last-child,
+.rom-library-dialog p:last-child {
+  margin-bottom: 0;
 }
 
 .emulator-loading-bar {
   width: 100%;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 999px;
-  overflow: hidden;
+  padding: 2px;
+  background: #fff;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
 }
 
 .emulator-loading-bar-fill {
-  width: 30%;
-  height: 100%;
-  border-radius: 999px;
-  animation: emulator-loading-progress 1.25s ease-in-out infinite;
+  width: 32%;
+  height: 14px;
+  background: repeating-linear-gradient(
+    90deg,
+    #000080 0,
+    #000080 10px,
+    #1084d0 10px,
+    #1084d0 20px
+  );
+  animation: win95-loading-progress 1.2s linear infinite;
 }
 
-@keyframes emulator-loading-progress {
+@keyframes win95-loading-progress {
   0% {
     transform: translateX(-120%);
   }
   100% {
-    transform: translateX(420%);
+    transform: translateX(320%);
   }
 }
 
-.iframe-error-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 20;
-  background: rgba(8, 11, 18, 0.96);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.iframe-error-panel {
-  width: min(560px, 95%);
-  background: #1a2234;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 16px;
-  color: #eef2ff;
-}
-
-.iframe-error-panel h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
-
-.iframe-error-panel p {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.4;
-  opacity: 0.9;
-}
-
-.iframe-error-actions {
-  display: flex;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.iframe-error-actions button {
-  border: 1px solid #8096d4;
-  background: #2d3a63;
-  color: #f4f7ff;
-  padding: 6px 10px;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.retro-performance-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 25;
-  background: rgba(6, 9, 16, 0.94);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-
-.retro-performance-card {
-  width: min(560px, 96%);
-  background: #202b46;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  padding: 18px;
-  color: #eef2ff;
-}
-
-.retro-performance-card h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-}
-
-.retro-performance-card p {
-  margin: 0;
-  font-size: 12px;
-  line-height: 1.45;
-  opacity: 0.92;
-}
-
+.iframe-error-actions,
 .retro-performance-row {
-  margin-top: 14px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.iframe-error-actions button,
+.retro-performance-row button,
+.rom-player-bar button,
+.rom-library-empty-button {
+  min-width: 84px;
+  height: 24px;
+  padding: 0 10px;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #000000 #000000 #ffffff;
+  box-shadow: inset 1px 1px 0 #dfdfdf, inset -1px -1px 0 #808080;
+  color: #000;
+  font-size: 11px;
+  cursor: pointer;
+  font-family: 'win95', sans-serif;
+}
+
+.iframe-error-actions button:active,
+.retro-performance-row button:active,
+.rom-player-bar button:active,
+.rom-library-empty-button:active,
+.rom-library-row:active {
+  border-color: #000000 #ffffff #ffffff #000000;
+  box-shadow: inset 1px 1px 0 #808080, inset -1px -1px 0 #dfdfdf;
 }
 
 .retro-performance-row label {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 12px;
-}
-
-.retro-performance-row button {
-  border: 1px solid #7ea0ec;
-  background: #30467b;
-  color: #f0f5ff;
-  padding: 6px 10px;
-  font-size: 12px;
-  cursor: pointer;
+  font-size: 11px;
 }
 
 .retro-emulator-iframe {
@@ -244,116 +308,266 @@
   height: 100%;
   border: 0;
   background: #000;
+  display: block;
 }
 
-.rom-library-state {
+.rom-player-bar {
+  min-height: 32px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+}
+
+.rom-player-label {
+  font-size: 11px;
+  color: #000;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rom-player-meta {
+  font-size: 10px;
+  color: #404040;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rom-library-shell {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: #c0c0c0;
+}
+
+.rom-library-toolbar {
+  min-height: 30px;
+  display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 8px;
-  color: #e9eeff;
-  background: radial-gradient(circle at 20% 20%, #1f2942 0%, #11182b 55%, #070b16 100%);
-  text-align: center;
-  padding: 16px;
+  padding: 4px 8px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  font-size: 11px;
 }
 
-.rom-library-state h3 {
-  margin: 0;
-  font-size: 18px;
+.rom-library-toolbar strong {
+  font-weight: 700;
 }
 
-.rom-library-state p {
-  margin: 0;
-  font-size: 12px;
-  opacity: 0.9;
-}
-
-.rom-library-grid {
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  padding: 14px;
-  background: radial-gradient(circle at 20% 20%, #1f2942 0%, #11182b 55%, #070b16 100%);
+.rom-library-browser {
+  flex: 1;
+  min-height: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-  gap: 12px;
+  grid-template-columns: 180px 1fr;
+  gap: 8px;
+  padding: 8px;
 }
 
-.rom-card {
-  border: 1px solid rgba(150, 170, 230, 0.35);
-  background: rgba(18, 25, 44, 0.9);
-  color: #e7eeff;
-  border-radius: 10px;
-  padding: 0;
-  cursor: pointer;
-  text-align: left;
+.rom-library-sidebar,
+.rom-library-main {
+  min-height: 0;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #808080 #ffffff #ffffff #808080;
+}
+
+.rom-library-sidebar {
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.rom-library-sidebar h4,
+.rom-library-sidebar p {
+  margin: 0;
+}
+
+.rom-library-sidebar h4 {
+  font-size: 11px;
+}
+
+.rom-library-sidebar .system-badge {
+  display: inline-flex;
+  width: fit-content;
+  padding: 2px 6px;
+  background: #000080;
+  color: #fff;
+  border: 1px solid #000;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.rom-library-main {
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
 }
 
-.rom-card:hover {
-  border-color: rgba(171, 191, 255, 0.8);
+.rom-library-listhead {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 82px minmax(120px, 0.9fr);
+  gap: 8px;
+  padding: 4px 8px;
+  background: #c0c0c0;
+  border-bottom: 1px solid #808080;
+  font-size: 11px;
+  font-weight: 700;
 }
 
-.rom-cover {
+.rom-library-list {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: #fff;
+}
+
+.rom-library-row {
   width: 100%;
-  height: 145px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) 82px minmax(120px, 0.9fr);
+  gap: 8px;
+  align-items: center;
+  padding: 6px 8px;
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: none;
+  text-align: left;
+  min-width: 0;
+  cursor: pointer;
+  font-family: 'win95', sans-serif;
+}
+
+.rom-library-row:hover,
+.rom-library-row:focus-visible {
+  background: #000080;
+  color: #fff;
+  outline: none;
+}
+
+.rom-library-row:hover .rom-library-file,
+.rom-library-row:hover .rom-library-system,
+.rom-library-row:hover .rom-library-subtitle,
+.rom-library-row:focus-visible .rom-library-file,
+.rom-library-row:focus-visible .rom-library-system,
+.rom-library-row:focus-visible .rom-library-subtitle {
+  color: #fff;
+}
+
+.rom-library-name {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rom-library-art {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  background: #c0c0c0;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+  overflow: hidden;
+}
+
+.rom-library-art img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.rom-cover-fallback {
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
+.rom-library-art-fallback {
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 1px;
+  color: #000;
 }
 
-.rom-card-meta {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.rom-library-titleblock {
+  min-width: 0;
 }
 
-.rom-card-meta strong {
-  font-size: 12px;
-  line-height: 1.3;
+.rom-library-title {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.rom-card-meta span {
+.rom-library-subtitle,
+.rom-library-system,
+.rom-library-file {
   font-size: 10px;
-  opacity: 0.8;
+  color: #404040;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.rom-player-bar {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 10;
+.rom-library-statusbar {
+  min-height: 22px;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  background: rgba(8, 12, 20, 0.92);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+  justify-content: space-between;
+  gap: 8px;
+  padding: 3px 8px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  font-size: 10px;
 }
 
-.rom-player-bar button {
-  border: 1px solid #7ea0ec;
-  background: #30467b;
-  color: #f0f5ff;
-  padding: 4px 8px;
-  font-size: 12px;
-  cursor: pointer;
+.rom-library-state {
+  position: relative;
+  background: #c0c0c0;
 }
 
-.rom-player-bar span {
-  color: #e8eeff;
-  font-size: 12px;
-  opacity: 0.95;
+.rom-library-empty-button {
+  margin-top: 2px;
+}
+
+@media (max-width: 760px) {
+  .rom-library-browser {
+    grid-template-columns: 1fr;
+  }
+
+  .rom-library-sidebar {
+    display: none;
+  }
+
+  .rom-library-listhead,
+  .rom-library-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rom-library-system,
+  .rom-library-file,
+  .rom-player-meta {
+    display: none;
+  }
+
+  .rom-player-bar {
+    grid-template-columns: auto 1fr;
+  }
 }
