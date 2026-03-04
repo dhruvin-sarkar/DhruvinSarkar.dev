@@ -18,9 +18,8 @@ const RetroIframeApp = ({
   defaultPosition,
   loadingVariant,
   loadingSubtitle,
-  iframeAllow = "autoplay; fullscreen; gamepad; pointer-lock",
+  iframeAllow = "autoplay; fullscreen; gamepad",
   iframeLoading = "lazy",
-  iframeAllowFullScreen = true,
   perfWarning,
   appNotice,
   awaitRuntimeSignal = false,
@@ -97,7 +96,6 @@ const RetroIframeApp = ({
             onError={handleError}
             allow={iframeAllow}
             loading={iframeLoading}
-            allowFullScreen={iframeAllowFullScreen}
           />
 
           {hasError ? (

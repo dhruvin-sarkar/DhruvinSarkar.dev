@@ -1,8 +1,18 @@
 # PlayStation 1 ROMs
 
-Place your PS1 ROM files (.bin, .iso, .img, .cue, etc.) in this directory.
+PlayStation 1 game files were too large to bundle in this repository. The emulator works, but you need to use your own PS1 ROMs.
 
-Then edit `manifest.json` to add entries like:
+The desktop library now supports browser uploads for single-file images and zipped packages. Use one of these formats:
+
+- `.chd`
+- `.iso`
+- `.img`
+- `.pbp`
+- `.zip`
+
+Raw multi-file `.cue + .bin` sets should be zipped before upload.
+
+If you want to keep PS1 files in the repo instead of uploading them through the browser, place them in this directory and edit `manifest.json` to add entries like:
 
 ```json
 {
@@ -13,7 +23,3 @@ Then edit `manifest.json` to add entries like:
 ```
 
 The PlayStation 1 emulator uses the Mednafen PSX HW core for best compatibility.
-
-## Requirements
-- ROM files (.bin, .iso, .img, .cue)
-- .cue files if your ROM is in .bin/.cue format
