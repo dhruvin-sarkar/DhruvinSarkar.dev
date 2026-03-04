@@ -39,7 +39,7 @@ function MyComputer() {
     themeDragBar,
     MyComputerExpand, setMyComputerExpand,
     lastTapTime, setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleShowMobile,
     handleShow,
@@ -250,14 +250,12 @@ function MyComputer() {
             <div onClick={ !isTouchDevice ? (e) => {
               e.stopPropagation();
               playWindowMinimize();
-              setMyComputerExpand(prev => ({ ...prev, hide: true, focusItem: false }));
-              StyleHide('MyComputer'); 
+              minimizeWindow(setMyComputerExpand);
             } : undefined}
             onTouchEnd={(e) => {
               e.stopPropagation()
               playWindowMinimize();
-              setMyComputerExpand(prev => ({...prev, hide: true, focusItem: false}))
-              StyleHide('MyComputer')
+              minimizeWindow(setMyComputerExpand)
             }}
             onTouchStart={(e) => e.stopPropagation()}
             >

@@ -18,7 +18,7 @@ function MailFolder() {
     themeDragBar,
     MailExpand, setMailExpand,
     lastTapTime, setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     clippyThanksYouFunction,
     handleSetFocusItemTrue,
@@ -133,14 +133,12 @@ const form = useRef();
               <div onClick={!isTouchDevice ? (e) => {
                 e.stopPropagation();
                 playWindowMinimize();
-                setMailExpand(prev => ({ ...prev, hide: true, focusItem: false }));
-                StyleHide('Mail');
+                minimizeWindow(setMailExpand);
               } : undefined}
                 onTouchEnd={(e) => {
                   e.stopPropagation();
                   playWindowMinimize();
-                  setMailExpand(prev => ({ ...prev, hide: true, focusItem: false }));
-                  StyleHide('Mail');
+                  minimizeWindow(setMailExpand);
                 }}
                 onTouchStart={(e) => e.stopPropagation()}
               >

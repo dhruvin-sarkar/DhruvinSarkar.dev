@@ -20,7 +20,7 @@ function TypeFolder() {
     setProjectUrl,
     TypeExpand, setTypeExpand,
     lastTapTime, setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleDoubleTapEnterMobile,
     handleDoubleClickEnterLink,
@@ -112,15 +112,13 @@ function TypeFolder() {
               <div onClick={ !isTouchDevice? (e) => {
                 e.stopPropagation()
                 playWindowMinimize();
-                setTypeExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('Typing') 
+                minimizeWindow(setTypeExpand)
               } : undefined
             }
                    onTouchEnd={(e) => {
                     e.stopPropagation()
                     playWindowMinimize();
-                    setTypeExpand(prev => ({...prev, hide: true, focusItem: false}))
-                    StyleHide('Typing')
+                    minimizeWindow(setTypeExpand)
                   }}
               >
                 <p className='dash'></p>

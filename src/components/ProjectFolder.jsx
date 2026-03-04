@@ -34,7 +34,7 @@ function ProjectFolder() {
     setProjectExpand,
     lastTapTime,
     setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleShow,
     handleShowMobile,
@@ -136,14 +136,12 @@ function ProjectFolder() {
               onClick={!isTouchDevice ? (e) => {
                 e.stopPropagation();
                 playWindowMinimize();
-                setProjectExpand((prev) => ({ ...prev, hide: true, focusItem: false }));
-                StyleHide('Project');
+                minimizeWindow(setProjectExpand);
               } : undefined}
               onTouchEnd={(e) => {
                 e.stopPropagation();
                 playWindowMinimize();
-                setProjectExpand((prev) => ({ ...prev, hide: true, focusItem: false }));
-                StyleHide('Project');
+                minimizeWindow(setProjectExpand);
               }}
               onTouchStart={(e) => e.stopPropagation()}
             >

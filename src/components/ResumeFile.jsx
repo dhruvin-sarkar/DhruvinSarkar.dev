@@ -16,7 +16,7 @@ function ResumeFile() {
     themeDragBar,
     ResumeFileExpand, setResumeFileExpand,
     lastTapTime, setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -107,15 +107,13 @@ function ResumeFile() {
               <div onClick={ !isTouchDevice? (e) => {
                 e.stopPropagation()
                 playWindowMinimize();
-                setResumeFileExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('ResumeFile') 
+                minimizeWindow(setResumeFileExpand)
               } : undefined
             }
                    onTouchEnd={(e) => {
                     e.stopPropagation()
                     playWindowMinimize();
-                    setResumeFileExpand(prev => ({...prev, hide: true, focusItem: false}))
-                    StyleHide('ResumeFile')
+                    minimizeWindow(setResumeFileExpand)
                   }}
                   onTouchStart={(e) => e.stopPropagation()}
               >

@@ -54,6 +54,7 @@ import Terminal from "./components/Terminal";
 import VSCode from "./components/VSCode";
 import {
   StyleHide,
+  minimizeWindow,
   imageMapping,
   handleDoubleClickEnterLink,
   handleDoubleTapEnterMobile,
@@ -1762,6 +1763,7 @@ function App() {
     handleShow,
     handleShowMobile,
     StyleHide,
+    minimizeWindow,
     isTouchDevice,
     setIsTouchDevice,
     ProjectExpand,

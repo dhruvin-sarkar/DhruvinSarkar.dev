@@ -78,7 +78,7 @@ function BgSetting() {
     setTileBG,
     themeDragBar, setThemeDragBar,
     BgSettingExpand ,setBgSettingExpand,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -296,14 +296,12 @@ function BgSetting() {
             <div className="bgsetting_barbtn">
               <div onClick={ !isTouchDevice ? (e) => {
                 e.stopPropagation()
-                setBgSettingExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('Settings')
+                minimizeWindow(setBgSettingExpand)
               } : undefined
               }   
                 onTouchEnd={(e) => {
                 e.stopPropagation()
-                setBgSettingExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('Settings')
+                minimizeWindow(setBgSettingExpand)
               }}
                 onTouchStart={(e) => e.stopPropagation()}
               >

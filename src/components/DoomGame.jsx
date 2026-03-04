@@ -16,7 +16,7 @@ function DoomGame() {
     setRightClickDefault,
     themeDragBar,
     DoomExpand, setDoomExpand,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -194,8 +194,7 @@ function DoomGame() {
   };
 
   const handleMinimize = () => {
-    setDoomExpand(prev => ({...prev, hide: true, focusItem: false}))
-    StyleHide('DOOM')
+    minimizeWindow(setDoomExpand)
   };
 
   const handleMaximize = () => {

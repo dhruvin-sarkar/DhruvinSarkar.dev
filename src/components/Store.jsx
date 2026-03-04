@@ -38,7 +38,7 @@ function Store() {
     themeDragBar,
     lastTapTime, 
     setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -220,8 +220,7 @@ function Store() {
   function handleMinimize(e) {
     e.stopPropagation()
     playWindowMinimize();
-    setStoreExpand(prev => ({...prev, hide: true, focusItem: false}))
-    StyleHide('Store')
+    minimizeWindow(setStoreExpand)
   }
 
   function handleClose() {

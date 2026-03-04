@@ -16,7 +16,7 @@ function TaskManager() {
     TaskManagerExpand, setTaskManagerExpand,
     themeDragBar,
     ObjectState,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -89,14 +89,12 @@ function TaskManager() {
             <div className="folder_barbtn">
               <div onClick={ !isTouchDevice? (e) => {
                 e.stopPropagation()
-                setTaskManagerExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('TaskManager') 
+                minimizeWindow(setTaskManagerExpand)
               } : undefined
             }
                    onTouchEnd={(e) => {
                     e.stopPropagation()
-                    setTaskManagerExpand(prev => ({...prev, hide: true, focusItem: false}))
-                    StyleHide('TaskManager')
+                    minimizeWindow(setTaskManagerExpand)
                   }}
                     onTouchStart={(e) => e.stopPropagation()}
               >

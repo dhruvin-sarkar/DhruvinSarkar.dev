@@ -19,7 +19,7 @@ function NoteFolder() {
     setProjectUrl,
     NoteExpand, setNoteExpand,
     lastTapTime, setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -111,15 +111,13 @@ function NoteFolder() {
               <div onClick={ !isTouchDevice? (e) => {
                 e.stopPropagation()
                 playWindowMinimize();
-                setNoteExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('Note') 
+                minimizeWindow(setNoteExpand)
               } : undefined
             }
                    onTouchEnd={(e) => {
                     e.stopPropagation()
                     playWindowMinimize();
-                    setNoteExpand(prev => ({...prev, hide: true, focusItem: false}))
-                    StyleHide('Note')
+                    minimizeWindow(setNoteExpand)
                   }}
               >
                 <span className='dash'></span>

@@ -29,7 +29,7 @@ const AppWindowShell = ({
     inlineStyleExpand,
     inlineStyle,
     deleteTap,
-    StyleHide,
+    minimizeWindow,
   } = useContext(UseContext);
 
   if (!state?.show) return null;
@@ -65,8 +65,7 @@ const AppWindowShell = ({
 
   const handleMinimize = (event) => {
     event?.stopPropagation?.();
-    setState((previous) => ({ ...previous, hide: true, focusItem: false }));
-    StyleHide(stateName);
+    minimizeWindow(setState);
   };
 
   const handleToggleExpand = (event) => {

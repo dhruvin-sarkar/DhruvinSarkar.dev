@@ -37,7 +37,7 @@ function EmptyFolder({state, setState, refState, folderName, photoMode, paintMod
     desktopIcon, 
     themeDragBar,
     lastTapTime, setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleShowMobile,
     handleShow,
@@ -185,16 +185,12 @@ function EmptyFolder({state, setState, refState, folderName, photoMode, paintMod
             <div onClick={ !isTouchDevice ? (e) => {
               e.stopPropagation();
               playWindowMinimize();
-              setState(prev => ({ ...prev, hide: true, focusItem: false }));
-              userCreatedFolderMode && setState({hide: true, focusItem: false});
-              StyleHide(folderName); 
+              minimizeWindow(setState);
             } : undefined}
             onTouchEnd={(e) => {
               e.stopPropagation()
               playWindowMinimize();
-              setState(prev => ({...prev, hide: true, focusItem: false}))
-              userCreatedFolderMode && setState({hide: true, focusItem: false});
-              StyleHide(folderName)
+              minimizeWindow(setState);
             }}
             onTouchStart={(e) => e.stopPropagation()}
             >

@@ -28,10 +28,10 @@ function ResumeFolder() {
     dropTargetFolder, setDropTargetFolder,
     imageMapping,
     desktopIcon, 
+    minimizeWindow,
     themeDragBar,
     ResumeExpand, setResumeExpand,
     lastTapTime, setLastTapTime,
-    StyleHide,
     isTouchDevice,
     handleShowMobile,
     handleShow,
@@ -133,14 +133,12 @@ function ResumeFolder() {
             <div onClick={ !isTouchDevice ? (e) => {
               e.stopPropagation();
               playWindowMinimize();
-              setResumeExpand(prev => ({ ...prev, hide: true, focusItem: false }));
-              StyleHide('Resume'); 
+              minimizeWindow(setResumeExpand);
             } : undefined}
             onTouchEnd={(e) => {
               e.stopPropagation()
               playWindowMinimize();
-              setResumeExpand(prev => ({...prev, hide: true, focusItem: false}))
-              StyleHide('Resume')
+              minimizeWindow(setResumeExpand)
             }}
             onTouchStart={(e) => e.stopPropagation()}
             >

@@ -57,7 +57,18 @@ import Windows95Icon from '../../assets/image-removebg-preview.png'
 import CommanderKeenIcon from '../../assets/image-removebg-preview (1).png'
 import SpaceCadetPinballIcon from '../../assets/pinball.png'
 
+export function minimizeWindow(setState, nextState = {}) {
+  if (typeof setState !== 'function') {
+    return;
+  }
 
+  setState((previous) => ({
+    ...(previous ?? {}),
+    hide: true,
+    focusItem: false,
+    ...nextState,
+  }));
+}
 
 // style function for bg tap
 export function StyleHide(index, tap, ObjectState) {
@@ -67,9 +78,21 @@ export function StyleHide(index, tap, ObjectState) {
   const boxshadowstyleFalse = 'inset 1px 1px #ffffffdd, 1.5px 1.5px #000';
   const bgStyleFalse = '#b3b2b2';
 
-  const setState = ObjectState();
+  if (!Array.isArray(tap) || typeof ObjectState !== 'function') {
+    return {};
+  }
 
-  const namePassed = tap[index].toLowerCase().trim().replace(/\s/g, '');
+  const currentTab = tap[index];
+  if (!currentTab) {
+    return {};
+  }
+
+  const setState = ObjectState();
+  if (!Array.isArray(setState)) {
+    return {};
+  }
+
+  const namePassed = currentTab.toLowerCase().trim().replace(/\s/g, '');
 
   const foundItem = setState.find(item => {
     const itemName = item.name.toLowerCase().trim().replace(/\s/g, '');

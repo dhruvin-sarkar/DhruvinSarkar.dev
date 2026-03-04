@@ -29,7 +29,7 @@ function MyBioFolder() {
   const { 
     themeDragBar,
     MybioExpand, setMybioExpand,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -430,14 +430,12 @@ function MyBioFolder() {
             <div className="bio_barbtn">
               <div onClick={ !isTouchDevice ? (e) => {
                 e.stopPropagation()
-                setMybioExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('About')
+                minimizeWindow(setMybioExpand)
               } : undefined
               }   
                 onTouchEnd={(e) => {
                 e.stopPropagation()
-                setMybioExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('About')
+                minimizeWindow(setMybioExpand)
               }}
               onTouchStart={(e) => e.stopPropagation()}
               >

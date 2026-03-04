@@ -19,7 +19,7 @@ function NftFolder() {
     setProjectUrl,
     NftExpand, setNftExpand,
     lastTapTime, setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -110,15 +110,13 @@ function NftFolder() {
               <div onClick={ !isTouchDevice? (e) => {
                 e.stopPropagation()
                 playWindowMinimize();
-                setNftExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('Nft') 
+                minimizeWindow(setNftExpand)
               } : undefined
             }
                    onTouchEnd={(e) => {
                     e.stopPropagation()
                     playWindowMinimize();
-                    setNftExpand(prev => ({...prev, hide: true, focusItem: false}))
-                    StyleHide('Nft')
+                    minimizeWindow(setNftExpand)
                   }}
               >
                 <span className='dash'></span>

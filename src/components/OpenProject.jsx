@@ -17,7 +17,7 @@ function OpenProject() {
     projectUrl,
     openProjectExpand, setOpenProjectExpand,
     lastTapTime, setLastTapTime,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -111,15 +111,13 @@ function OpenProject() {
               <div onClick={ !isTouchDevice? (e) => {
                 e.stopPropagation()
                 playWindowMinimize();
-                setOpenProjectExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('Internet') 
+                minimizeWindow(setOpenProjectExpand)
               } : undefined
             }
                    onTouchEnd={(e) => {
                     e.stopPropagation()
                     playWindowMinimize();
-                    setOpenProjectExpand(prev => ({...prev, hide: true, focusItem: false}))
-                    StyleHide('Internet')
+                    minimizeWindow(setOpenProjectExpand)
                   }}
                     onTouchStart={(e) => e.stopPropagation()}
               >

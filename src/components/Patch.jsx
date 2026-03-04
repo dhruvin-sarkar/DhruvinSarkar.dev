@@ -12,7 +12,7 @@ function Patch() {
   const { 
     themeDragBar,
     PatchExpand, setPatchExpand,
-    StyleHide,
+    minimizeWindow,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -72,14 +72,12 @@ function Patch() {
             <div className="folder_barbtn-resumefile">
               <div onClick={ !isTouchDevice? (e) => {
                 e.stopPropagation()
-                setPatchExpand(prev => ({...prev, hide: true, focusItem: false}))
-                StyleHide('Patch') 
+                minimizeWindow(setPatchExpand)
               } : undefined
             }
                    onTouchEnd={(e) => {
                     e.stopPropagation()
-                    setPatchExpand(prev => ({...prev, hide: true, focusItem: false}))
-                    StyleHide('Patch')
+                    minimizeWindow(setPatchExpand)
                   }}
                   onTouchStart={(e) => e.stopPropagation()}
               >
