@@ -1,12 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { resolvePublicUrl } from "../shared/resolvePublicUrl";
-
-const SYSTEM_LABELS = {
-  n64: "Nintendo 64",
-  ps1: "PlayStation",
-  gba: "Game Boy Advance",
-  nes: "Nintendo Entertainment System",
-};
+import { getSystemConfig } from "./romLibraryConfig";
+import { listUploadedRoms, saveUploadedRom } from "./romStorage";
 
 const getInitials = (title = "") =>
   title
@@ -16,7 +11,25 @@ const getInitials = (title = "") =>
     .map((part) => part[0]?.toUpperCase() || "")
     .join("");
 
-const LibraryState = ({ title, message, action }) => (
+const buildUploadedRomEntry = (record, badgeLabel) => {
+  const baseName = String(record?.fileName || "Uploaded ROM").replace(/\.[^.]+$/, "") || "Uploaded ROM";
+
+  return {
+    id: `uploaded-${record?.id || baseName}`,
+    title: baseName,
+    file: record?.fileName || "Uploaded ROM",
+    system: badgeLabel,
+    source: "uploaded",
+    storageId: record?.id,
+    uploadedAt: record?.uploadedAt,
+    blob: record?.blob,
+    mimeType: record?.mimeType,
+    size: record?.size,
+    lastModified: record?.lastModified,
+  };
+};
+
+const LibraryState = ({ title, message, notes = [], action }) => (
   <div className="rom-library-state">
     <div className="rom-library-dialog">
       <h3>{title}</h3>
@@ -24,6 +37,15 @@ const LibraryState = ({ title, message, action }) => (
         <div className="win95-panel-icon">!</div>
         <div className="win95-panel-copy">
           <p>{message}</p>
+          {notes.length ? (
+            <div className="rom-library-notices rom-library-notices-inline">
+              {notes.map((note) => (
+                <p key={note} className="rom-library-notice">
+                  {note}
+                </p>
+              ))}
+            </div>
+          ) : null}
           {action ? <div className="iframe-error-actions">{action}</div> : null}
         </div>
       </div>
@@ -32,57 +54,136 @@ const LibraryState = ({ title, message, action }) => (
 );
 
 const RomLibrary = ({ system, onSelectRom }) => {
+  const uploadInputRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
   const [roms, setRoms] = useState([]);
+  const [uploadError, setUploadError] = useState("");
+  const [isUploading, setIsUploading] = useState(false);
+
+  const systemConfig = useMemo(() => getSystemConfig(system), [system]);
+  const systemLabel = systemConfig.label;
+  const badgeLabel = systemConfig.badge;
+  const noticeLines = useMemo(
+    () =>
+      [systemConfig.legalNotice, systemConfig.uploadNotice, systemConfig.extraNotice].filter(Boolean),
+    [systemConfig.extraNotice, systemConfig.legalNotice, systemConfig.uploadNotice],
+  );
 
   useEffect(() => {
     const controller = new AbortController();
+    let isCancelled = false;
 
-    const loadManifest = async () => {
+    const loadLibrary = async () => {
       setIsLoading(true);
       setError("");
       setRoms([]);
 
       try {
-        const response = await fetch(resolvePublicUrl(`roms/${system}/manifest.json`), {
-          cache: "no-store",
-          signal: controller.signal,
-        });
+        const bundledPromise = (async () => {
+          const response = await fetch(resolvePublicUrl(`roms/${system}/manifest.json`), {
+            cache: "no-store",
+            signal: controller.signal,
+          });
 
-        if (!response.ok) {
-          if (response.status === 404) {
-            setRoms([]);
-            setIsLoading(false);
-            return;
+          if (!response.ok) {
+            if (response.status === 404) {
+              return [];
+            }
+
+            throw new Error(`Failed to load ROM manifest (${response.status}).`);
           }
 
-          throw new Error(`Failed to load ROM manifest (${response.status}).`);
-        }
+          const payload = await response.json();
+          return Array.isArray(payload?.roms) ? payload.roms : [];
+        })();
 
-        const payload = await response.json();
-        const entries = Array.isArray(payload?.roms) ? payload.roms : [];
-        setRoms(entries);
+        const [bundledRoms, uploadedRoms] = await Promise.all([
+          bundledPromise,
+          listUploadedRoms(system),
+        ]);
+
+        if (isCancelled) return;
+
+        const mergedRoms = [
+          ...bundledRoms.map((rom) => ({ ...rom, source: "bundled", system: badgeLabel })),
+          ...uploadedRoms.map((record) => buildUploadedRomEntry(record, badgeLabel)),
+        ];
+
+        setRoms(mergedRoms);
       } catch (loadError) {
         if (loadError?.name === "AbortError") return;
-        setError(loadError?.message || "Failed to load ROM library.");
+        if (!isCancelled) {
+          setError(loadError?.message || "Failed to load ROM library.");
+        }
       } finally {
-        setIsLoading(false);
+        if (!isCancelled) {
+          setIsLoading(false);
+        }
       }
     };
 
-    loadManifest();
-    return () => controller.abort();
-  }, [system]);
+    loadLibrary();
+    return () => {
+      isCancelled = true;
+      controller.abort();
+    };
+  }, [badgeLabel, system]);
 
-  const badgeLabel = useMemo(() => system.toUpperCase(), [system]);
-  const systemLabel = useMemo(() => SYSTEM_LABELS[system] || badgeLabel, [badgeLabel, system]);
+  const launchUploadPicker = () => {
+    uploadInputRef.current?.click();
+  };
+
+  const handleUpload = async (event) => {
+    const files = Array.from(event.target.files || []);
+    event.target.value = "";
+
+    if (!files.length) return;
+
+    setIsUploading(true);
+    setUploadError("");
+
+    try {
+      await Promise.all(files.map((file) => saveUploadedRom(system, file)));
+      const uploadedRoms = await listUploadedRoms(system);
+
+      setRoms((currentRoms) => {
+        const bundledRoms = currentRoms.filter((rom) => rom?.source !== "uploaded");
+        const mergedUploads = uploadedRoms.map((record) => buildUploadedRomEntry(record, badgeLabel));
+        return [...bundledRoms, ...mergedUploads];
+      });
+    } catch (uploadStorageError) {
+      setUploadError(uploadStorageError?.message || "Failed to store the selected ROM upload.");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleSelectRom = (rom) => {
+    if (rom?.source === "uploaded" && rom?.blob instanceof Blob) {
+      onSelectRom({
+        ...rom,
+        objectUrl: URL.createObjectURL(rom.blob),
+      });
+      return;
+    }
+
+    onSelectRom(rom);
+  };
 
   if (isLoading) {
     return (
       <LibraryState
         title={`${systemLabel} Library`}
-        message={`Scanning /public/roms/${system}/ for available games...`}
+        message={`Scanning bundled and uploaded ${systemLabel} games...`}
+        notes={noticeLines}
+        action={
+          systemConfig.supportsUpload ? (
+            <button type="button" className="rom-library-empty-button" onClick={launchUploadPicker}>
+              Upload ROM
+            </button>
+          ) : null
+        }
       />
     );
   }
@@ -92,10 +193,18 @@ const RomLibrary = ({ system, onSelectRom }) => {
       <LibraryState
         title="Unable to Load Library"
         message={error}
+        notes={noticeLines}
         action={
-          <button type="button" className="rom-library-empty-button" onClick={() => window.location.reload()}>
-            Refresh
-          </button>
+          <>
+            {systemConfig.supportsUpload ? (
+              <button type="button" className="rom-library-empty-button" onClick={launchUploadPicker}>
+                Upload ROM
+              </button>
+            ) : null}
+            <button type="button" className="rom-library-empty-button" onClick={() => window.location.reload()}>
+              Refresh
+            </button>
+          </>
         }
       />
     );
@@ -105,11 +214,19 @@ const RomLibrary = ({ system, onSelectRom }) => {
     return (
       <LibraryState
         title="No ROMs Found"
-        message={`Add ROM files to /public/roms/${system}/ and refresh the desktop.`}
+        message={systemConfig.emptyStateText}
+        notes={[...noticeLines, systemConfig.uploadHelpText].filter(Boolean)}
         action={
-          <button type="button" className="rom-library-empty-button" onClick={() => window.location.reload()}>
-            Refresh
-          </button>
+          <>
+            {systemConfig.supportsUpload ? (
+              <button type="button" className="rom-library-empty-button" onClick={launchUploadPicker}>
+                Upload ROM
+              </button>
+            ) : null}
+            <button type="button" className="rom-library-empty-button" onClick={() => window.location.reload()}>
+              Refresh
+            </button>
+          </>
         }
       />
     );
@@ -117,9 +234,25 @@ const RomLibrary = ({ system, onSelectRom }) => {
 
   return (
     <div className="rom-library-shell">
+      <input
+        ref={uploadInputRef}
+        className="rom-library-upload-input"
+        type="file"
+        accept={systemConfig.uploadAccept}
+        multiple
+        onChange={handleUpload}
+      />
+
       <div className="rom-library-toolbar">
         <strong>{systemLabel} Library</strong>
-        <span>{roms.length} file(s)</span>
+        <div className="rom-library-actions">
+          <span>{roms.length} file(s)</span>
+          {systemConfig.supportsUpload ? (
+            <button type="button" className="rom-library-empty-button" onClick={launchUploadPicker}>
+              {isUploading ? "Uploading..." : "Upload ROM"}
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <div className="rom-library-browser">
@@ -129,6 +262,16 @@ const RomLibrary = ({ system, onSelectRom }) => {
           <p>Select a file from the list to launch it immediately in the emulator.</p>
           <h4>Source folder</h4>
           <p>/public/roms/{system}/</p>
+          <h4>Library notes</h4>
+          <div className="rom-library-notices">
+            {noticeLines.map((note) => (
+              <p key={note} className="rom-library-notice">
+                {note}
+              </p>
+            ))}
+            <p className="rom-library-notice">{systemConfig.uploadHelpText}</p>
+            {uploadError ? <p className="rom-library-notice rom-library-notice-error">{uploadError}</p> : null}
+          </div>
         </aside>
 
         <section className="rom-library-main">
@@ -149,7 +292,7 @@ const RomLibrary = ({ system, onSelectRom }) => {
                   type="button"
                   className="rom-library-row"
                   key={rom?.id || `${rom?.file}-${title}`}
-                  onClick={() => onSelectRom(rom)}
+                  onClick={() => handleSelectRom(rom)}
                   title={`Open ${title}`}
                 >
                   <span className="rom-library-name">
@@ -176,7 +319,9 @@ const RomLibrary = ({ system, onSelectRom }) => {
                     </span>
                     <span className="rom-library-titleblock">
                       <span className="rom-library-title">{title}</span>
-                      <span className="rom-library-subtitle">Click to launch</span>
+                      <span className="rom-library-subtitle">
+                        {rom?.source === "uploaded" ? "Uploaded from this browser" : "Click to launch"}
+                      </span>
                     </span>
                   </span>
                   <span className="rom-library-system">{badgeLabel}</span>

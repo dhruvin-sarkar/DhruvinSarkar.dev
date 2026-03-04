@@ -31,9 +31,20 @@ const ManifestRomEmulator = ({
     }
   }, [state?.show]);
 
+  useEffect(() => {
+    return () => {
+      if (selectedRom?.source === "uploaded" && selectedRom?.objectUrl) {
+        URL.revokeObjectURL(selectedRom.objectUrl);
+      }
+    };
+  }, [selectedRom]);
+
   const iframeSrc = useMemo(() => {
     if (!selectedRom?.file) return "";
-    const romUrl = resolvePublicUrl(`roms/${system}/${selectedRom.file}`);
+    const romUrl =
+      selectedRom?.source === "uploaded" && selectedRom?.objectUrl
+        ? selectedRom.objectUrl
+        : resolvePublicUrl(`roms/${system}/${selectedRom.file}`);
     const loaderPath = resolvePublicUrl("emulators/ejs-loader.html");
     const query = new URLSearchParams({
       core,
@@ -112,9 +123,8 @@ const ManifestRomEmulator = ({
               className="retro-emulator-iframe"
               onLoad={handleLoad}
               onError={handleError}
-              allow="autoplay; fullscreen; gamepad; pointer-lock"
+              allow="autoplay; fullscreen; gamepad"
               loading="eager"
-              allowFullScreen
             />
 
             {hasError ? (

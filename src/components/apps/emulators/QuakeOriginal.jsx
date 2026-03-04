@@ -9,8 +9,8 @@ const QuakeOriginal = () => (
     setterKey="setQuake1Expand"
     windowName="Quake"
     icon={resolvePublicUrl("icons/quake1.png")}
-    iframeSrc={resolvePublicUrl("games/webquake/index.htm")}
-    externalUrl={resolvePublicUrl("games/webquake/index.htm")}
+    iframeSrc={resolvePublicUrl("games/webquake/launcher.html")}
+    externalUrl={resolvePublicUrl("games/webquake/launcher.html")}
     defaultWidth={960}
     defaultHeight={720}
     defaultPosition={{ x: 180, y: 110 }}
