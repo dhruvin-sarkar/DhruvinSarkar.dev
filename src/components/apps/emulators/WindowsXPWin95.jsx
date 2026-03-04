@@ -15,7 +15,7 @@ const WindowsXPWin95 = () => (
     defaultPosition={{ x: 70, y: 60 }}
     loadingVariant="warning"
     loadingSubtitle="Booting Virtual x86 (this can take a while)..."
-    appNotice="Boots the local image when present. If win95.img is missing, this window stays local and shows a compatibility dialog with an optional hosted fallback."
+    appNotice="Boots the local image when present, otherwise falls back to the hosted Windows 95 profile."
     externalUrl="https://copy.sh/v86/?profile=windows95"
     awaitRuntimeSignal
   />

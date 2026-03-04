@@ -22,12 +22,11 @@
       const appInstance = params.get("retroAppInstance") || "";
       const runtimeTitle = "Windows 95";
       const overlay = document.getElementById("overlay");
-      const base = new URL(".", window.location.href).href;
-      const localV86Path = new URL("v86/", base).href;
-      const imagePath = new URL("win95.img", base).href;
+      const localV86Path = "v86/";
+      const imagePath = "win95.img";
       const localScript = `${localV86Path}libv86.js`;
-      const hostedProfileUrl = "https://copy.sh/v86/?profile=windows95";
-      let readySent = false;
+      const remoteScript = "https://copy.sh/v86/libv86.js";
+      const remoteProfileUrl = "https://copy.sh/v86/?profile=windows95";
 
       function postToParent(type, detail = {}) {
         try {
@@ -65,21 +64,7 @@
         }
       }
 
-      function markReady(message = "") {
-        if (readySent) return;
-        readySent = true;
-        postToParent("retro-app:ready", message ? { message } : {});
-      }
-
-      function renderDialog({
-        heading,
-        message,
-        error = "",
-        status = "",
-        actions = "",
-        icon = "i",
-        showProgress = true,
-      }) {
+      function renderDialog({ heading, message, error = "", status = "", actions = "", icon = "i" }) {
         overlay.innerHTML = `
           <div class="win95-dialog">
             <div class="win95-titlebar">
@@ -94,7 +79,7 @@
                   ${error ? `<p class="win95-error">${error}</p>` : ""}
                 </div>
               </div>
-              ${showProgress ? '<div class="win95-progress"><div class="win95-progress-bar is-indeterminate"></div></div>' : ""}
+              <div class="win95-progress"><div class="win95-progress-bar is-indeterminate"></div></div>
               ${status ? `<div class="win95-status">${status}</div>` : ""}
               ${actions ? `<div class="win95-button-row">${actions}</div>` : ""}
             </div>
@@ -126,107 +111,34 @@
 
       async function ensureRuntime() {
         if (await assetExists(localScript)) {
-          return loadScriptWithGuard(localScript);
+          try {
+            return await loadScriptWithGuard(localScript);
+          } catch (err) {
+            console.warn("local v86 load failed:", err);
+          }
+        }
+
+        try {
+          return await loadScriptWithGuard(remoteScript);
+        } catch (err) {
+          console.warn("remote v86 load failed:", err);
         }
 
         renderDialog({
           heading: "v86 runtime unavailable",
-          message: "The emulator runtime could not be loaded from the bundled script.",
+          message: "The emulator runtime could not be loaded from the bundled script or the upstream fallback.",
           error: `Expected ${localScript} in public/emulators/v86/.`,
           status: "Download the browser build of libv86.js and place it beside the BIOS files.",
           icon: "!",
           actions: '<button class="win95-button" id="retry-btn">Retry</button>',
-          showProgress: false,
         });
         document.getElementById("retry-btn")?.addEventListener("click", () => window.location.reload());
         throw new Error("v86 runtime missing");
       }
 
-      function installEmbeddedGuards() {
-        try {
-          const keyboard = navigator.keyboard;
-          if (keyboard && typeof keyboard.lock === "function") {
-            const originalLock = keyboard.lock.bind(keyboard);
-            Object.defineProperty(keyboard, "lock", {
-              configurable: true,
-              value: (...args) => {
-                if (window.top !== window.self) {
-                  return Promise.resolve();
-                }
-                return originalLock(...args);
-              },
-            });
-          }
-        } catch {
-          // Ignore non-configurable Keyboard API shims.
-        }
-      }
-
-      function enhanceInjectedUi() {
-        const container = document.getElementById("screen-container");
-        if (!container) return;
-
-        container.querySelectorAll("button, input[type='button'], input[type='submit']").forEach((element) => {
-          element.classList.add("win95-v86-button");
-        });
-
-        container.querySelectorAll("input[type='text'], input[type='number']").forEach((element) => {
-          element.classList.add("win95-v86-field");
-        });
-
-        container.querySelectorAll("label, span, p, div").forEach((element) => {
-          if (element.children.length > 0) return;
-          const text = (element.textContent || "").trim();
-          if (!text) return;
-
-          element.classList.add("win95-v86-label");
-          if (/scale:|capture|boots the local image|mouse|theatre|floppy|network/i.test(text)) {
-            element.classList.add("win95-v86-toolbar-text");
-          }
-          if (/booting|hard disk|seabios|findfile|host\.init/i.test(text)) {
-            element.classList.add("win95-v86-status-text");
-          }
-        });
-      }
-
-      function watchInjectedUi() {
-        enhanceInjectedUi();
-        const container = document.getElementById("screen-container");
-        if (!container) return;
-
-        const observer = new MutationObserver(() => {
-          window.requestAnimationFrame(enhanceInjectedUi);
-        });
-
-        observer.observe(container, { childList: true, subtree: true });
-      }
-
-      function showMissingImageState() {
-        renderDialog({
-          heading: "Local Windows 95 image not found",
-          message: "The embedded emulator is staying in local compatibility mode because win95.img is missing from public/emulators/.",
-          error: "A hosted fallback is available, but it opens separately so the embedded window stays readable and same-origin.",
-          status: imagePath,
-          icon: "!",
-          showProgress: false,
-          actions: `
-            <button class="win95-button" id="retry-btn">Retry</button>
-            <button class="win95-button" id="hosted-btn">Open Hosted Version</button>
-          `,
-        });
-
-        document.getElementById("retry-btn")?.addEventListener("click", () => window.location.reload());
-        document.getElementById("hosted-btn")?.addEventListener("click", () => {
-          window.open(hostedProfileUrl, "_blank", "noopener,noreferrer");
-        });
-
-        markReady("Local image missing. Showing compatibility dialog.");
-      }
-
       async function boot() {
         postToParent("retro-app:title", { title: runtimeTitle });
         postToParent("retro-app:loading", { message: "Preparing Windows 95" });
-        installEmbeddedGuards();
 
         renderDialog({
           heading: "Preparing Windows 95",
@@ -236,7 +148,19 @@
 
         const hasImage = await assetExists(imagePath);
         if (!hasImage) {
-          showMissingImageState();
+          renderDialog({
+            heading: "Using hosted Windows 95 profile",
+            message: "The local disk image is missing, so the emulator is switching to the hosted Windows 95 profile.",
+            error: "win95.img was not found in public/emulators/.",
+            status: imagePath,
+            icon: "i",
+          });
+          window.setTimeout(() => {
+            postToParent("retro-app:ready", {
+              message: "Switching to the hosted Windows 95 profile.",
+            });
+            window.location.replace(remoteProfileUrl);
+          }, 900);
           return;
         }
 
@@ -254,15 +178,15 @@
             error: error?.message || "Unknown runtime error.",
             icon: "!",
             actions: '<button class="win95-button" id="retry-btn">Retry</button>',
-            showProgress: false,
           });
           document.getElementById("retry-btn")?.addEventListener("click", () => window.location.reload());
           return;
         }
 
-        const wasmPath = `${localV86Path}v86.wasm`;
-        const biosPath = `${localV86Path}bios/seabios.bin`;
-        const vgaBiosPath = `${localV86Path}bios/vgabios.bin`;
+        const remoteAssets = runtime.url.startsWith("https://copy.sh/v86/");
+        const wasmPath = remoteAssets ? "https://copy.sh/v86/build/v86.wasm" : `${localV86Path}v86.wasm`;
+        const biosPath = remoteAssets ? "https://copy.sh/v86/bios/seabios.bin" : `${localV86Path}bios/seabios.bin`;
+        const vgaBiosPath = remoteAssets ? "https://copy.sh/v86/bios/vgabios.bin" : `${localV86Path}bios/vgabios.bin`;
 
         window.addEventListener("error", (event) => {
           postToParent("retro-app:error", {
@@ -272,7 +196,6 @@
         });
 
         overlay.remove();
-        watchInjectedUi();
         window.emulator = new runtime.constructor({
           wasm_path: wasmPath,
           memory_size: 64 * 1024 * 1024,
@@ -291,7 +214,7 @@
           keyboard: { enabled: true },
         });
 
-        markReady();
+        postToParent("retro-app:ready");
       }
 
       boot();

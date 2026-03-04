@@ -8,7 +8,7 @@ body {
 body.win95-screen {
   overflow: hidden;
   background: #008080;
-  color: #111;
+  color: #000;
   font-family: 'win95', 'MS Sans Serif', sans-serif;
   font-size: 11px;
   line-height: 1.35;
@@ -35,13 +35,12 @@ body.win95-screen {
   left: 8px;
   z-index: 4;
   padding: 3px 8px;
-  color: #111;
-  background: rgba(226, 226, 226, 0.96);
+  color: #000;
+  background: #c0c0c0;
   border-top: 2px solid #dfdfdf;
   border-left: 2px solid #dfdfdf;
   border-right: 2px solid #404040;
   border-bottom: 2px solid #404040;
-  box-shadow: 1px 1px 0 #000;
 }
 
 .win95-overlay {
@@ -107,15 +106,10 @@ body.win95-screen {
   margin-bottom: 6px;
   font-size: 15px;
   font-weight: 700;
-  color: #111;
 }
 
-.win95-copy p + p {
+.win95-copy p+p {
   margin-top: 4px;
-}
-
-.win95-copy p {
-  color: #111;
 }
 
 .win95-icon {
@@ -166,13 +160,11 @@ body.win95-screen {
   top: 0;
   bottom: 0;
   width: 38%;
-  background: repeating-linear-gradient(
-    90deg,
-    #000080 0,
-    #000080 12px,
-    #1084d0 12px,
-    #1084d0 24px
-  );
+  background: repeating-linear-gradient(90deg,
+      #000080 0,
+      #000080 12px,
+      #1084d0 12px,
+      #1084d0 24px);
 }
 
 .win95-progress-bar.is-indeterminate::before {
@@ -184,7 +176,6 @@ body.win95-screen {
   padding-top: 6px;
   border-top: 1px solid #808080;
   color: #111;
-  font-weight: 700;
 }
 
 .win95-error {
@@ -240,61 +231,11 @@ body.win95-screen {
   color: #000080;
 }
 
-#screen-container {
-  position: relative;
-  isolation: isolate;
-}
-
-#screen-container button,
-#screen-container input[type='button'],
-#screen-container input[type='submit'] {
-  color: #111;
-  font-family: 'win95', 'MS Sans Serif', sans-serif;
-}
-
-#screen-container .win95-v86-button {
-  color: #111 !important;
-  background: #c9c9c9 !important;
-  border-top: 2px solid #fff !important;
-  border-left: 2px solid #fff !important;
-  border-right: 2px solid #404040 !important;
-  border-bottom: 2px solid #404040 !important;
-  box-shadow: none !important;
-}
-
-#screen-container .win95-v86-button:disabled {
-  color: #555 !important;
-  opacity: 1 !important;
-}
-
-#screen-container .win95-v86-field {
-  color: #111 !important;
-  background: #fff !important;
-  border: 2px solid #808080 !important;
-}
-
-#screen-container .win95-v86-label,
-#screen-container label,
-#screen-container span,
-#screen-container p,
-#screen-container div {
-  color: #111;
-  text-shadow: none !important;
-}
-
-#screen-container .win95-v86-toolbar-text {
-  color: #141414 !important;
-  font-weight: 700;
-}
-
-#screen-container .win95-v86-status-text {
-  color: #f8f8f8 !important;
-}
-
 @keyframes win95-progress {
   0% {
     transform: translateX(-120%);
   }
+
   100% {
     transform: translateX(300%);
   }
