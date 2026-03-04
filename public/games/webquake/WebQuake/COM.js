@@ -313,7 +313,7 @@ COM.LoadPackFile = function(packfile)
 		return;
 	var header = new DataView(Q.strmem(xhr.responseText));
 	if (header.getUint32(0, true) !== 0x4b434150)
-		Sys.Error(packfile + ' is not a packfile');
+		return;
 	var dirofs = header.getUint32(4, true);
 	var dirlen = header.getUint32(8, true);
 	var numpackfiles = dirlen >> 6;
