@@ -22,8 +22,9 @@
       const appInstance = params.get("retroAppInstance") || "";
       const runtimeTitle = "Windows 95";
       const overlay = document.getElementById("overlay");
-      const localV86Path = "v86/";
-      const imagePath = "win95.img";
+      const base = new URL(".", window.location.href).href;
+      const localV86Path = new URL("v86/", base).href;
+      const imagePath = new URL("win95.img", base).href;
       const localScript = `${localV86Path}libv86.js`;
       const hostedProfileUrl = "https://copy.sh/v86/?profile=windows95";
       let readySent = false;

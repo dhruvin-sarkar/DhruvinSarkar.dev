@@ -179,8 +179,9 @@ export function imageMapping (name, type) {
     case 'Windows 95':
       return Windows95Icon;
 
-    case 'Commander Keen 4':
-      return CommanderKeenIcon;
+    // Commander Keen 4 - commented out
+    // case 'Commander Keen 4':
+    //   return CommanderKeenIcon;
 
     case 'Space Cadet Pinball':
       return SpaceCadetPinballIcon;

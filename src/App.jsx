@@ -24,7 +24,7 @@ import PlayStation1 from "./components/apps/emulators/PlayStation1";
 import GameBoyAdvance from "./components/apps/emulators/GameBoyAdvance";
 import NESEmulator from "./components/apps/emulators/NESEmulator";
 import WindowsXPWin95 from "./components/apps/emulators/WindowsXPWin95";
-import CommanderKeen4 from "./components/apps/emulators/CommanderKeen4";
+// import CommanderKeen4 from "./components/apps/emulators/CommanderKeen4"; // commented out
 import SpaceCadet from "./components/apps/emulators/SpaceCadet";
 import Quake3Arena from "./components/apps/emulators/Quake3Arena";
 import QuakeOriginal from "./components/apps/emulators/QuakeOriginal";
@@ -68,6 +68,7 @@ import {
 
 const WINDOW_NAME_ALIASES = {
   msdosprompt: "Terminal",
+  "ms-dosprompt": "Terminal", // MS-DOS Prompt (hyphen preserved by normalize)
 };
 
 function normalizeWindowName(name = "") {
@@ -2034,7 +2035,7 @@ function App() {
         <PlayStation1 />
         <GameBoyAdvance />
         <NESEmulator />
-        <CommanderKeen4 />
+        {/* <CommanderKeen4 /> */}
         <SpaceCadet />
         <Quake3Arena />
         <QuakeOriginal />
@@ -2434,6 +2435,7 @@ function App() {
         color: "rgba(132, 132, 132, 0.85)",
         size: "small",
       },
+      /* Commander Keen 4 - commented out
       {
         name: "Commander Keen 4",
         setter: setKeen4Expand,
@@ -2441,6 +2443,7 @@ function App() {
         color: "rgba(205, 116, 59, 0.85)",
         size: "small",
       },
+      */
       {
         name: "Space Cadet Pinball",
         setter: setSpaceCadetExpand,

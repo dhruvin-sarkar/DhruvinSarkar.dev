@@ -279,6 +279,7 @@ export default function Footer() {
                 setProjectStartBar(false);
             },
         },
+        /* Commander Keen 4 - commented out
         {
             className: "keen4",
             imgSrc: imageMapping('Commander Keen 4'),
@@ -293,6 +294,7 @@ export default function Footer() {
                 setProjectStartBar(false);
             },
         },
+        */
         {
             className: "spacecadet",
             imgSrc: imageMapping('Space Cadet Pinball'),
