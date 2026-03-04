@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Quake</title>
+    <link rel="stylesheet" href="../../emulators/win95-ui.css" />
+  </head>
+  <body class="win95-screen">
+    <div class="win95-overlay" id="overlay"></div>
+
+    <script>
+      const RETRO_APP_SOURCE = "retro-app";
+      const overlay = document.getElementById("overlay");
+      const params = new URLSearchParams(window.location.search);
+      const appInstance = params.get("retroAppInstance") || "";
+      const runtimeTitle = "Quake";
+      const pakPath = "./id1/pak0.pak";
+
+      function postToParent(type, detail = {}) {
+        try {
+          window.parent?.postMessage(
+            {
+              source: RETRO_APP_SOURCE,
+              type,
+              appInstance,
+              title: runtimeTitle,
+              ...detail,
+            },
+            "*",
+          );
+        } catch {
+          // Ignore cross-origin messaging errors.
+        }
+      }
+
+      function renderDialog({ heading, message, error = "", status = "", actions = "", icon = "i" }) {
+        overlay.classList.remove("hidden");
+        overlay.innerHTML = `
+          <div class="win95-dialog">
+            <div class="win95-titlebar">
+              <span class="win95-titlebar-text">${runtimeTitle}</span>
+            </div>
+            <div class="win95-body">
+              <div class="win95-row">
+                <div class="win95-icon ${error ? "warning" : ""}">${icon}</div>
+                <div class="win95-copy">
+                  <h1>${heading}</h1>
+                  <p>${message}</p>
+                  ${error ? `<p class="win95-error">${error}</p>` : ""}
+                </div>
+              </div>
+              <div class="win95-progress"><div class="win95-progress-bar is-indeterminate"></div></div>
+              ${status ? `<div class="win95-status">${status}</div>` : ""}
+              ${actions ? `<div class="win95-button-row">${actions}</div>` : ""}
+            </div>
+          </div>
+        `;
+
+        overlay.querySelector("#retry-btn")?.addEventListener("click", () => window.location.reload());
+      }
+
+      async function verifyPackFile(url) {
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            cache: "no-store",
+            headers: { Range: "bytes=0-3" },
+          });
+
+          if (!(response.ok || response.status === 206)) {
+            return { ok: false, detail: `HTTP ${response.status}` };
+          }
+
+          const contentType = (response.headers.get("content-type") || "").toLowerCase();
+          if (contentType.includes("text/html")) {
+            return { ok: false, detail: "The server returned HTML instead of Quake data." };
+          }
+
+          const bytes = new Uint8Array(await response.arrayBuffer());
+          const signature = String.fromCharCode(...bytes.slice(0, 4));
+          if (signature !== "PACK") {
+            return { ok: false, detail: "The bundled Quake packfile is missing or invalid." };
+          }
+
+          return { ok: true, detail: "" };
+        } catch (error) {
+          return {
+            ok: false,
+            detail: error?.message || "The launcher could not read the bundled Quake data.",
+          };
+        }
+      }
+
+      async function boot() {
+        postToParent("retro-app:title", { title: runtimeTitle });
+        postToParent("retro-app:loading", { message: "Checking bundled Quake shareware data." });
+
+        renderDialog({
+          heading: "Checking bundled Quake shareware data",
+          message: "Validating the local shareware pack before WebQuake starts.",
+          status: pakPath,
+        });
+
+        const packCheck = await verifyPackFile(pakPath);
+        if (!packCheck.ok) {
+          const message = "The bundled Quake shareware files are not available in this build.";
+          postToParent("retro-app:error", { message, error: packCheck.detail });
+          renderDialog({
+            heading: "Bundled Quake data missing",
+            message,
+            error: packCheck.detail,
+            icon: "!",
+            status: pakPath,
+            actions: '<button class="win95-button" id="retry-btn">Retry</button>',
+          });
+          return;
+        }
+
+        const target = new URL("./index.htm", window.location.href);
+        for (const [key, value] of params.entries()) {
+          target.searchParams.set(key, value);
+        }
+        target.searchParams.set("fromLauncher", "1");
+        window.location.replace(target.toString());
+      }
+
+      boot();
+    </script>
+  </body>
+</html>
