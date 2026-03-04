@@ -112,7 +112,6 @@ export const useSounds = () => {
     const isStartup = soundName === 'startup';
     
     if (!isStartup && (muted || !userInteracted)) {
-      console.log('Sound blocked: muted or no user interaction');
       return Promise.resolve();
     }
 
@@ -133,14 +132,11 @@ export const useSounds = () => {
     audio.currentTime = 0;
     audio.volume = muted ? 0 : (fadeIn ? 0 : volume);
 
-    console.log(`Playing sound: ${soundName}, volume: ${audio.volume}, muted: ${muted}`);
-
     const playPromise = audio.play();
 
     if (playPromise !== undefined) {
       playPromise
         .then(() => {
-          console.log(`Sound ${soundName} started playing successfully`);
           currentlyPlaying.current = audio;
 
           // Fade in effect
@@ -168,9 +164,7 @@ export const useSounds = () => {
         })
         .catch(error => {
           // Handle autoplay restrictions
-          if (error.name === 'NotAllowedError') {
-            console.error('Sound playback prevented by browser autoplay policy');
-          } else {
+          if (error.name !== 'NotAllowedError') {
             console.error('Error playing sound:', error);
           }
         });

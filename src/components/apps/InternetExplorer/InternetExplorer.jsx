@@ -45,17 +45,18 @@ const DEFAULT_PROFILE_BOOKMARKS = [
   { title: "LinkedIn", url: "https://www.linkedin.com/in/dhruvin-sarkar/" },
   { title: "ComicK", url: "https://comick.dev/user/04c26b83-8bed-40db-a2e3-fcaff5a66d18" },
   { title: "Discord", url: "https://discord.com/users/860006729688154113" },
-  { title: "Itch.io", url: "https://lifelessloser.itch.io/" },
+  { title: "Itch.io", url: "https://lifelessloser.itch.io/", favicon: ieIcon },
   { title: "Email", url: "mailto:dhruvinsarkar@outlook.com" },
   { title: "Steam", url: "https://steamcommunity.com/profiles/76561199346425587/" },
   { title: "GitHub", url: "https://github.com/dhruvin-sarkar" },
   {
     title: "Portfolio",
     url: "https://dhruvin-sarkar.github.io/Win95P-DevPortfolio",
+    favicon: ieIcon,
   },
-  { title: "E-Commerce (Soon)", url: "https://comingsoon.com" },
-  { title: "Project 2 (Soon)", url: "https://comingsoon.com" },
-  { title: "Project 3 (Soon)", url: "https://comingsoon.com" },
+  { title: "E-Commerce (Soon)", url: "https://comingsoon.com", favicon: ieIcon },
+  { title: "Project 2 (Soon)", url: "https://comingsoon.com", favicon: ieIcon },
+  { title: "Project 3 (Soon)", url: "https://comingsoon.com", favicon: ieIcon },
 ];
 
 let tabCounter = 0;
@@ -100,6 +101,13 @@ const getDisplayUrlFromUrl = (url) => {
 const getFaviconUrl = (url) => {
   const host = getHostFromUrl(url);
   if (!host) return ieIcon;
+  if (
+    hostMatches(host, "comingsoon.com") ||
+    hostMatches(host, "lifelessloser.itch.io") ||
+    hostMatches(host, "dhruvin-sarkar.github.io")
+  ) {
+    return ieIcon;
+  }
   // Google s2 is a stable way to fetch small favicons from hostnames.
   return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(host)}&sz=16`;
 };
@@ -464,7 +472,6 @@ const InternetExplorer = () => {
     themeDragBar,
     IEExpand,
     setIEExpand,
-    StyleHide,
     isTouchDevice,
     handleSetFocusItemTrue,
     inlineStyleExpand,
@@ -950,7 +957,6 @@ const InternetExplorer = () => {
 
   const handleMinimize = () => {
     setIEExpand((previous) => ({ ...previous, hide: true, focusItem: false }));
-    StyleHide("InternetExplorer");
   };
 
   const handleMaximize = () => {

@@ -72,7 +72,6 @@ function BTC() {
     }
 
     socket.onclose = () => {
-      console.log("WebSocket connection closed")
     }
 
     return () => {

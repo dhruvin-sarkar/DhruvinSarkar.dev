@@ -65,6 +65,22 @@ import {
   handleDoubleClickPhotoOpen,
 } from "./components/function/AppFunctions";
 
+const WINDOW_NAME_ALIASES = {
+  msdosprompt: "Terminal",
+};
+
+function normalizeWindowName(name = "") {
+  return String(name).toLowerCase().trim().replace(/\s/g, "");
+}
+
+function shouldDebugLog() {
+  return (
+    import.meta.env.DEV &&
+    typeof window !== "undefined" &&
+    window.localStorage.getItem("win95_debug") === "true"
+  );
+}
+
 function App() {
   // Initialize sound system
   const sounds = useSounds();
@@ -209,6 +225,9 @@ function App() {
   const [time, setTime] = useState("");
   const [tap, setTap] = useState([]);
   const [lastTapTime, setLastTapTime] = useState(0);
+  const lastShowRequestRef = useRef({ name: "", time: 0 });
+  const lastUserWindowInteractionRef = useRef(0);
+  const startupWindowsTimeoutRef = useRef(null);
   const [projectUrl, setProjectUrl] = useState("");
   const [MybioExpand, setMybioExpand] = useState({
     expand: false, // fullscreen
@@ -677,11 +696,214 @@ function App() {
     ClearTOclippyUsernameFunction,
   ];
 
+  function debugLog(...args) {
+    if (shouldDebugLog()) {
+      console.log(...args);
+    }
+  }
+
+  function updateWindowProps(item, nextProps) {
+    if (item.type === "userCreatedFolder") {
+      item.setter({ ...item.usestate, ...nextProps });
+      return;
+    }
+
+    item.setter((prev) => ({ ...prev, ...nextProps }));
+  }
+
+  function resolveWindowStateName(name, allSetItems = ObjectState()) {
+    const normalizedName = normalizeWindowName(name);
+    const aliasTarget = WINDOW_NAME_ALIASES[normalizedName];
+
+    if (aliasTarget) {
+      return aliasTarget;
+    }
+
+    const matchedItem = allSetItems.find(
+      (item) => normalizeWindowName(item.name) === normalizedName,
+    );
+
+    return matchedItem?.name ?? name;
+  }
+
+  function getWindowTarget(name, allSetItems = ObjectState()) {
+    const resolvedName = resolveWindowStateName(name, allSetItems);
+    const normalizedName = normalizeWindowName(resolvedName);
+    const targetItem = allSetItems.find(
+      (item) => normalizeWindowName(item.name) === normalizedName,
+    );
+
+    return {
+      resolvedName,
+      normalizedName,
+      targetItem,
+    };
+  }
+
+  function isWindowInTapEntries(entries, name) {
+    const normalizedName = normalizeWindowName(name);
+    return entries.some(
+      (tapItem) => normalizeWindowName(tapItem) === normalizedName,
+    );
+  }
+
+  function hasVisibleFocusedWindow(allSetItems, excludedName = "") {
+    const excludedNormalizedName = normalizeWindowName(excludedName);
+
+    return allSetItems.some((item) => {
+      const itemName = normalizeWindowName(item.name);
+      return (
+        itemName !== excludedNormalizedName &&
+        item.usestate.show &&
+        !item.usestate.hide &&
+        item.usestate.focusItem
+      );
+    });
+  }
+
+  function openWindow(name, options = {}) {
+    setRightClickDefault(false);
+
+    if (!name) return;
+
+    const { preserveExistingFocus = false, source = "user" } = options;
+
+    if (source !== "system") {
+      lastUserWindowInteractionRef.current = Date.now();
+    }
+
+    const pictureMatch = allPicture.find((picture) => name.includes(picture.name));
+
+    if (pictureMatch) {
+      handleDoubleClickPhotoOpen(name, setCurrentPhoto);
+      openWindow("Photo", {
+        source: "system",
+        preserveExistingFocus,
+      });
+      return;
+    }
+
+    const allSetItems = ObjectState();
+    const { normalizedName, targetItem } = getWindowTarget(name, allSetItems);
+
+    if (!targetItem) {
+      setRegErrorPopUp(true);
+      setRegErrorPopUpVal(name);
+      return;
+    }
+
+    if (shouldIgnoreDuplicateShow(targetItem.name, targetItem.usestate)) return;
+
+    const keepCurrentFocus =
+      preserveExistingFocus && hasVisibleFocusedWindow(allSetItems, normalizedName);
+    const nextZIndex = (maxZindexRef.current || 0) + 1;
+    let linkedWindowToOpen = null;
+
+    allSetItems.forEach((item) => {
+      const itemName = normalizeWindowName(item.name);
+
+      if (itemName === normalizedName) {
+        updateWindowProps(item, {
+          show: true,
+          focusItem: !keepCurrentFocus,
+          hide: false,
+          zIndex: nextZIndex,
+        });
+
+        if (normalizedName === "mail") clippySendemailfunction();
+        if (normalizedName === "winamp") clippySongFunction();
+        if (normalizedName === "msn") clippyUsernameFunction();
+        if (normalizedName === "nft") {
+          handleDoubleClickiframe("Nft", setOpenProjectExpand, setProjectUrl);
+          linkedWindowToOpen = "Internet";
+        }
+        if (normalizedName === "note") {
+          handleDoubleClickiframe("Note", setOpenProjectExpand, setProjectUrl);
+          linkedWindowToOpen = "Internet";
+        }
+        if (normalizedName === "aiagent") {
+          handleDoubleClickiframe(
+            "AiAgent",
+            setOpenProjectExpand,
+            setProjectUrl,
+          );
+          linkedWindowToOpen = "Internet";
+        }
+        if (normalizedName === "3dobject") {
+          handleDoubleClickiframe(
+            "3dObject",
+            setOpenProjectExpand,
+            setProjectUrl,
+          );
+          linkedWindowToOpen = "Internet";
+        }
+        if (normalizedName === "fortune") {
+          handleDoubleClickiframe(
+            "Fortune",
+            setOpenProjectExpand,
+            setProjectUrl,
+          );
+          linkedWindowToOpen = "Internet";
+        }
+        if (normalizedName === "pixelpic") {
+          handleDoubleClickiframe(
+            "PixelPic",
+            setOpenProjectExpand,
+            setProjectUrl,
+          );
+          linkedWindowToOpen = "Internet";
+        }
+
+        return;
+      }
+
+      if (!keepCurrentFocus) {
+        updateWindowProps(item, { focusItem: false });
+      }
+    });
+
+    maxZindexRef.current = nextZIndex;
+
+    if (!PatchExpand) {
+      setTileScreen(false);
+    }
+
+    setStartActive(false);
+
+    const notToOpenList = new Set([
+      "run",
+      "nft",
+      "note",
+      "aiagent",
+      "3dobject",
+      "fortune",
+      "bitcoin",
+      "pixelpic",
+    ]);
+
+    if (!notToOpenList.has(normalizedName)) {
+      setTap((prevTap) =>
+        isWindowInTapEntries(prevTap, name) ? prevTap : [...prevTap, name],
+      );
+    }
+
+    setDesktopIcon((prevIcons) =>
+      prevIcons.map((icon) => ({ ...icon, focus: false })),
+    );
+
+    if (linkedWindowToOpen) {
+      openWindow(linkedWindowToOpen, { source: "system" });
+    }
+  }
+
   useEffect(() => {
     // force user to update version by clearing their local storage!
-    setTimeout(() => {
-      handleShow("Patch");
-      handleShow("About");
+    startupWindowsTimeoutRef.current = setTimeout(() => {
+      openWindow("Patch", { source: "system" });
+      openWindow("About", {
+        source: "system",
+        preserveExistingFocus: true,
+      });
       // previously we auto‑opened MyComputer at startup to highlight the ROM
       // folders.  Users complained that the computer window pops up every time,
       // so we no longer open it automatically.
@@ -760,7 +982,12 @@ function App() {
       //ocation.reload();
     }
 
-    return () => clearInterval(praiseInterval);
+    return () => {
+      clearInterval(praiseInterval);
+      if (startupWindowsTimeoutRef.current) {
+        clearTimeout(startupWindowsTimeoutRef.current);
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -900,9 +1127,6 @@ function App() {
 
   const connectWebSocket = async () => {
     try {
-      // Wake up the Render backend
-      await fetch("https://notebackend-wrqt.onrender.com/ping");
-
       // Close existing socket if still open or connecting
       if (socket.current && socket.current.readyState !== WebSocket.CLOSED) {
         // Remove old listeners
@@ -926,7 +1150,7 @@ function App() {
       socket.current = new WebSocket("wss://notebackend-wrqt.onrender.com");
 
       socket.current.onopen = () => {
-        console.log("WebSocket connected");
+        debugLog("WebSocket connected");
         getChat();
         setWebsocketConnection(true);
         setLoading(false);
@@ -962,7 +1186,7 @@ function App() {
       };
 
       socket.current.onclose = () => {
-        console.log("\uD83D\uDD0C WebSocket closed");
+        debugLog("WebSocket closed");
         setWebsocketConnection(false);
       };
     } catch (err) {
@@ -996,7 +1220,6 @@ function App() {
         // Start a 30s countdown to close socket
         invisibilityTimeout = setTimeout(() => {
           if (socket.current && socket.current.readyState === WebSocket.OPEN) {
-            console.log("User was invisible for 10s. Closing WebSocket.");
             socket.current.close();
             setWebsocketConnection(false);
           }
@@ -1826,7 +2049,7 @@ function App() {
         <BTC />
         <Dragdrop />
         <Footer />
-        <Analytics />
+        {import.meta.env.PROD ? <Analytics /> : null}
       </UserContext.Provider>
     </>
   );
@@ -1874,7 +2097,6 @@ function App() {
     if (deleteName === "Store") return;
 
     setItemIsBeingDeleted(deleteName);
-    console.log(deleteName);
     deleteTap(deleteName);
     const droppedIcon = desktopIcon.find((icon) => icon.name === deleteName);
     if (droppedIcon) {
@@ -2067,7 +2289,7 @@ function App() {
     if (socket.current) {
       // Check if socket is initialized
       socket.current.send(JSON.stringify(payload));
-      console.log(payload);
+      debugLog("Chat payload:", payload);
     } else {
       console.error("WebSocket is not initialized.");
     }
@@ -2075,7 +2297,6 @@ function App() {
     // Clear the chat input field and reset sendDisable
     setChatValue("");
     setSendDisable(false);
-    console.log("Chat message sent:", payload);
   }
 
   // Function to fetch chat data
@@ -2395,13 +2616,11 @@ function App() {
 
   function iconFocusIcon(name) {
     // if focus on one, the rest goes unfocus
-    console.log("iconFocusIcon called for:", name);
     const allSetItems = ObjectState();
-
-    const passedName = name.toLowerCase().trim().replace(/\s/g, "");
+    const passedName = normalizeWindowName(name);
 
     const updateddesktopIcon = desktopIcon.map((icon) => {
-      const iconName = icon.name.toLowerCase().trim().replace(/\s/g, "");
+      const iconName = normalizeWindowName(icon.name);
       if ("focus" in icon) {
         // check if focus is in the object
         return { ...icon, focus: iconName === passedName }; // return new focus if matched
@@ -2413,151 +2632,37 @@ function App() {
     ///need to be fixed, this logic
     allSetItems.forEach((item) => {
       // set same to folder to distinct from iconName
-      const itemName =
-        item.name.toLowerCase().trim().replace(/\s/g, "") + "folder";
+      const itemName = `${normalizeWindowName(item.name)}folder`;
       item.setter((prev) => ({ ...prev, focus: passedName === itemName }));
     });
   }
 
+  function shouldIgnoreDuplicateShow(name, targetState) {
+    if (!name) return false;
+
+    const normalizedName = normalizeWindowName(name);
+    const now = Date.now();
+    const lastRequest = lastShowRequestRef.current;
+
+    if (
+      lastRequest.name === normalizedName &&
+      now - lastRequest.time < 250
+    ) {
+      return true;
+    }
+
+    lastShowRequestRef.current = {
+      name: normalizedName,
+      time: now,
+    };
+
+    return Boolean(
+      targetState?.show && !targetState?.hide && targetState?.focusItem,
+    );
+  }
+
   function handleShow(name) {
-    console.log("handleShow called for:", name);
-    setRightClickDefault(false);
-
-    if (name === "" || !name) return;
-
-    if (name === "MS-DOS Prompt") {
-      handleShow("Terminal");
-      return;
-    }
-
-    const lowerCaseName = name.toLowerCase().trim().replace(/\s/g, "");
-    const allSetItems = ObjectState();
-
-    if (lowerCaseName === "vscode") {
-      console.log("Special case: VS Code matched");
-    }
-
-    const itemExists = allSetItems.some(
-      (item) =>
-        item.name.toLowerCase().trim().replace(/\s/g, "") === lowerCaseName,
-    );
-
-    const pictureMatch = allPicture.find((picture) =>
-      name.includes(picture.name),
-    );
-
-    if (pictureMatch) {
-      handleDoubleClickPhotoOpen(name, setCurrentPhoto);
-      handleShow("Photo");
-      return;
-    }
-
-    if (!itemExists) {
-      setRegErrorPopUp(true);
-      setRegErrorPopUpVal(name);
-      return;
-    }
-
-    const nextZIndex = (maxZindexRef.current || 0) + 1;
-
-    allSetItems.forEach((item) => {
-      const itemName = item.name.toLowerCase().trim().replace(/\s/g, "");
-
-      if (itemName === lowerCaseName) {
-        if (item.type === "userCreatedFolder") {
-          item.setter({
-            show: true,
-            focusItem: true,
-            hide: false,
-            zIndex: nextZIndex,
-          });
-        } else {
-          item.setter((prev) => ({
-            ...prev,
-            show: true,
-            focusItem: true,
-            hide: false,
-            zIndex: nextZIndex,
-          }));
-        }
-
-        // Your existing special cases...
-        if (lowerCaseName === "mail") clippySendemailfunction();
-        if (lowerCaseName === "winamp") clippySongFunction();
-        if (lowerCaseName === "msn") clippyUsernameFunction();
-        if (lowerCaseName === "nft") {
-          handleDoubleClickiframe("Nft", setOpenProjectExpand, setProjectUrl);
-          handleShow("Internet");
-        }
-        if (lowerCaseName === "note") {
-          handleDoubleClickiframe("Note", setOpenProjectExpand, setProjectUrl);
-          handleShow("Internet");
-        }
-        if (lowerCaseName === "aiagent") {
-          handleDoubleClickiframe(
-            "AiAgent",
-            setOpenProjectExpand,
-            setProjectUrl,
-          );
-          handleShow("Internet");
-        }
-        if (lowerCaseName === "3dobject") {
-          handleDoubleClickiframe(
-            "3dObject",
-            setOpenProjectExpand,
-            setProjectUrl,
-          );
-          handleShow("Internet");
-        }
-        if (lowerCaseName === "fortune") {
-          handleDoubleClickiframe(
-            "Fortune",
-            setOpenProjectExpand,
-            setProjectUrl,
-          );
-          handleShow("Internet");
-        }
-        if (lowerCaseName === "pixelpic") {
-          handleDoubleClickiframe(
-            "PixelPic",
-            setOpenProjectExpand,
-            setProjectUrl,
-          );
-          handleShow("Internet");
-        }
-      } else {
-        // Set other items to not focused
-        if (item.type === "userCreatedFolder") {
-          item.setter({ focusItem: false });
-        } else {
-          item.setter((prev) => ({ ...prev, focusItem: false }));
-        }
-      }
-    });
-
-    maxZindexRef.current = nextZIndex;
-
-    PatchExpand ? null : setTileScreen(false);
-
-    if (tap.includes(name)) return;
-    setStartActive(false);
-
-    const notToOpenList = [
-      "Run",
-      "Nft",
-      "Note",
-      "AiAgent",
-      "3dObject",
-      "Fortune",
-      "Bitcoin",
-      "PixelPic",
-    ];
-    if (notToOpenList.includes(name)) return;
-
-    setTap((prevTap) => [...prevTap, name]);
-    setDesktopIcon((prevIcons) =>
-      prevIcons.map((icon) => ({ ...icon, focus: false })),
-    );
+    openWindow(name);
   }
 
   function handleShowMobile(name) {
@@ -2566,131 +2671,7 @@ function App() {
     const now = Date.now();
 
     if (now - lastTapTime < 300) {
-      if (name === "" || !name) return;
-
-      const lowerCaseName = name.toLowerCase().trim().replace(/\s/g, "");
-
-      const allSetItems = ObjectState(); // call all usestate object
-
-      const itemExists = allSetItems.some(
-        (item) =>
-          item.name.toLowerCase().trim().replace(/\s/g, "") === lowerCaseName,
-      );
-
-      const pictureMatch = allPicture.find((picture) =>
-        name.includes(picture.name),
-      );
-
-      if (pictureMatch) {
-        handleDoubleClickPhotoOpen(name, setCurrentPhoto);
-        handleShow("Photo");
-        return;
-      }
-
-      if (!itemExists) {
-        setRegErrorPopUp(true);
-        setRegErrorPopUpVal(name);
-        return;
-      }
-
-      const nextZIndex = (maxZindexRef.current || 0) + 1;
-
-      allSetItems.forEach((item) => {
-        const itemName = item.name.toLowerCase().trim();
-
-        if (itemName === lowerCaseName) {
-          if (item.type === "userCreatedFolder") {
-            item.setter({
-              show: true,
-              focusItem: true,
-              hide: false,
-              zIndex: nextZIndex,
-            });
-          } else {
-            item.setter((prev) => ({
-              ...prev,
-              show: true,
-              focusItem: true,
-              hide: false,
-              zIndex: nextZIndex,
-            }));
-          }
-          if (lowerCaseName === "mail") clippySendemailfunction();
-          if (lowerCaseName === "winamp") clippySongFunction();
-          if (lowerCaseName === "msn") clippyUsernameFunction();
-          if (lowerCaseName === "nft") {
-            handleDoubleClickiframe("Nft", setOpenProjectExpand, setProjectUrl);
-            handleShow("Internet");
-          }
-          if (lowerCaseName === "note") {
-            handleDoubleClickiframe(
-              "Note",
-              setOpenProjectExpand,
-              setProjectUrl,
-            );
-            handleShow("Internet");
-          }
-          if (lowerCaseName === "aiagent") {
-            handleDoubleClickiframe(
-              "AiAgent",
-              setOpenProjectExpand,
-              setProjectUrl,
-            );
-            handleShow("Internet");
-          }
-          if (lowerCaseName === "3dobject") {
-            handleDoubleClickiframe(
-              "3dObject",
-              setOpenProjectExpand,
-              setProjectUrl,
-            );
-            handleShow("Internet");
-          }
-          if (lowerCaseName === "fortune") {
-            handleDoubleClickiframe(
-              "Fortune",
-              setOpenProjectExpand,
-              setProjectUrl,
-            );
-            handleShow("Internet");
-          }
-          if (lowerCaseName === "pixelpic") {
-            handleDoubleClickiframe(
-              "PixelPic",
-              setOpenProjectExpand,
-              setProjectUrl,
-            );
-            handleShow("Internet");
-          }
-        }
-        if (item.type === "userCreatedFolder") {
-          item.setter({ focusItem: false });
-        } else {
-          item.setter((prev) => ({ ...prev, focusItem: false }));
-        }
-      });
-      maxZindexRef.current = nextZIndex;
-      PatchExpand ? null : setTileScreen(false);
-
-      if (tap.includes(name)) return;
-      setStartActive(false);
-
-      const notToOpenList = [
-        "Run",
-        "Nft",
-        "Note",
-        "AiAgent",
-        "3dObject",
-        "Fortune",
-        "Bitcoin",
-        "PixelPic",
-      ];
-      if (notToOpenList.includes(name)) return;
-
-      setTap((prevTap) => [...prevTap, name]);
-      setDesktopIcon((prevIcons) =>
-        prevIcons.map((icon) => ({ ...icon, focus: false })),
-      );
+      openWindow(name);
     }
     setLastTapTime(now);
   }
@@ -2750,41 +2731,22 @@ function App() {
   }
 
   function handleSetFocusItemTrue(name) {
-    const LowerCaseName = name.toLowerCase().trim().replace(/\s/g, "");
     const setState = ObjectState();
+    const { normalizedName } = getWindowTarget(name, setState);
 
     const newZIndex = (maxZindexRef.current || 0) + 1;
 
     setState.forEach((item) => {
-      const itemName = item.name.toLowerCase();
+      const itemName = normalizeWindowName(item.name);
 
-      if (itemName === LowerCaseName) {
-        if (item.type === "userCreatedFolder") {
-          // mutate directly
-          item.setter({
-            ...item, // keep existing props
-            focusItem: true,
-            zIndex: newZIndex,
-          });
-        } else {
-          // safe spread for normal items
-          item.setter((prev) => ({
-            ...prev,
-            focusItem: true,
-            zIndex: newZIndex,
-          }));
-        }
+      if (itemName === normalizedName) {
+        updateWindowProps(item, {
+          focusItem: true,
+          zIndex: newZIndex,
+        });
         maxZindexRef.current = newZIndex;
       } else {
-        if (item.type === "userCreatedFolder") {
-          // direct mutation
-          item.setter({
-            ...item,
-            focusItem: false,
-          });
-        } else {
-          item.setter((prev) => ({ ...prev, focusItem: false }));
-        }
+        updateWindowProps(item, { focusItem: false });
       }
     });
 

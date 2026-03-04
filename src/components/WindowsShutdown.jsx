@@ -15,6 +15,3 @@ function WindowsShutdown() {
 }
 
 export default WindowsShutdown
-
-
-

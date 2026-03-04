@@ -20,7 +20,6 @@ function Login() {
         if(username === 'admin' && password === '1234'){
             // Play startup sound when login button is clicked
             if (sounds?.playStartup) {
-                console.log('Playing startup sound on login button click');
                 sounds.playStartup();
             }
             
