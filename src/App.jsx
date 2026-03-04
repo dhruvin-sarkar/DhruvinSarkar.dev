@@ -377,7 +377,7 @@ function App() {
   });
 
   const [IEExpand, setIEExpand] = useState({
-    expand: false,
+    expand: true,
     show: false,
     hide: false,
     focusItem: false,

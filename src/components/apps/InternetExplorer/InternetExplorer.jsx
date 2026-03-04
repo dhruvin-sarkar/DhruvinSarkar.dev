@@ -23,6 +23,7 @@ const GOOGLE_SEARCH = "https://www.google.com/search?igu=1&q=";
 const GOOGLE_DISPLAY = "https://www.google.com";
 const MAX_GLOBAL_HISTORY = 100;
 const MAX_TAB_TITLE = 20;
+const IE_WINDOW_MODE_LOCK_EVENT = "ie-window-mode-lock";
 
 const FRIENDLY_HOST_ALLOWLIST = [
   "google.com",
@@ -466,6 +467,39 @@ const BlockedPageOverlay = ({ blocked, onOpenExternal, onGoBack }) => (
   </div>
 );
 
+const getWindowModeLockCopy = (action) => {
+  if (action === "minimize") {
+    return {
+      title: "Compatibility Lock",
+      message:
+        "This browser session is running in a locked full-screen compatibility mode. Minimizing the live cross-origin frame can trigger browser isolation faults, so Windows has disabled that control.",
+    };
+  }
+
+  return {
+    title: "Compatibility Lock",
+    message:
+      "This browser session is pinned to full-screen compatibility mode. Restoring or resizing the live cross-origin frame can break embedded browser security boundaries, so Windows has disabled that control.",
+  };
+};
+
+const WindowModeLockedDialog = ({ copy, onDismiss }) => (
+  <div className="iex-modal-overlay">
+    <div className="iex-modal-card">
+      <div className="iex-modal-titlebar">{copy.title}</div>
+      <div className="iex-modal-body">
+        <div className="iex-modal-icon">i</div>
+        <p>{copy.message}</p>
+      </div>
+      <div className="iex-modal-actions">
+        <button type="button" onClick={onDismiss}>
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
 const InternetExplorer = () => {
   const {
     setRightClickDefault,
@@ -533,6 +567,7 @@ const InternetExplorer = () => {
     return raw === "true";
   });
 
+  const [windowModeDialog, setWindowModeDialog] = useState(null);
   const [reloadTokens, setReloadTokens] = useState({});
   const hasPersistedPosition = useMemo(
     () =>
@@ -951,22 +986,59 @@ const InternetExplorer = () => {
     }
   }, [IEExpand.show, IEExpand.focusItem]);
 
+  const openWindowModeDialog = useCallback((action) => {
+    setWindowModeDialog(getWindowModeLockCopy(action));
+  }, []);
+
+  useEffect(() => {
+    if (!IEExpand.show) return;
+
+    setIEExpand((previous) => {
+      if (
+        previous.expand === true &&
+        previous.hide === false &&
+        previous.x === 0 &&
+        previous.y === 0 &&
+        previous.hasPosition === false
+      ) {
+        return previous;
+      }
+
+      return {
+        ...previous,
+        expand: true,
+        hide: false,
+        x: 0,
+        y: 0,
+        hasPosition: false,
+      };
+    });
+  }, [IEExpand.show, setIEExpand]);
+
+  useEffect(() => {
+    const handleWindowModeLock = (event) => {
+      const action = event?.detail?.action === "minimize" ? "minimize" : "maximize";
+      openWindowModeDialog(action);
+    };
+
+    window.addEventListener(IE_WINDOW_MODE_LOCK_EVENT, handleWindowModeLock);
+
+    return () => {
+      window.removeEventListener(IE_WINDOW_MODE_LOCK_EVENT, handleWindowModeLock);
+    };
+  }, [openWindowModeDialog]);
+
   const handleClose = () => {
+    setWindowModeDialog(null);
     deleteTap("InternetExplorer");
   };
 
   const handleMinimize = () => {
-    setIEExpand((previous) => ({ ...previous, hide: true, focusItem: false }));
+    openWindowModeDialog("minimize");
   };
 
   const handleMaximize = () => {
-    // Let WindowDraggable manage pre-max snapshot and restore; keeps position sync stable.
-    setIEExpand((previous) => ({
-      ...previous,
-      expand: !previous.expand,
-      hide: false,
-      focusItem: true,
-    }));
+    openWindowModeDialog("maximize");
   };
 
   const handleDragStop = (_, data) => {
@@ -990,13 +1062,13 @@ const InternetExplorer = () => {
       handle=".folder_dragbar-InternetExplorer"
       grid={[1, 1]}
       scale={1}
-      disabled={IEExpand.expand}
+      disabled
       bounds={{ top: 0 }}
       defaultPosition={{
-        x: launchPosition.x,
-        y: launchPosition.y,
+        x: 0,
+        y: 0,
       }}
-      position={resolvedWindowPosition}
+      position={{ x: 0, y: 0 }}
       onStop={handleDragStop}
       onStart={() => handleSetFocusItemTrue("InternetExplorer")}
     >
@@ -1015,13 +1087,7 @@ const InternetExplorer = () => {
           setRightClickDefault(false);
         }}
         style={{
-          ...(IEExpand.expand
-            ? inlineStyleExpand("InternetExplorer")
-            : {
-                ...inlineStyle("InternetExplorer"),
-                width: "980px",
-                height: "720px",
-              }),
+          ...inlineStyleExpand("InternetExplorer"),
           display: "flex",
         }}
       >
@@ -1029,47 +1095,16 @@ const InternetExplorer = () => {
         <div
           className="folder_dragbar-InternetExplorer"
           style={{ background: IEExpand.focusItem ? themeDragBar : "#757579" }}
+          onDoubleClick={(event) => {
+            event.stopPropagation();
+            handleMaximize();
+          }}
         >
           <div className="folder_barname-InternetExplorer">
             <img src={ieIcon} alt="Internet Explorer" />
             <span>Internet Explorer</span>
           </div>
           <div className="folder_barbtn-InternetExplorer">
-            <div
-              onClick={
-                !isTouchDevice
-                  ? (event) => {
-                      event.stopPropagation();
-                      handleMinimize();
-                    }
-                  : undefined
-              }
-              onTouchEnd={(event) => {
-                event.stopPropagation();
-                handleMinimize();
-              }}
-              onTouchStart={(event) => event.stopPropagation()}
-            >
-              <p className="dash-InternetExplorer" />
-            </div>
-            <div
-              onClick={
-                !isTouchDevice
-                  ? (event) => {
-                      event.stopPropagation();
-                      handleMaximize();
-                    }
-                  : undefined
-              }
-              onTouchEnd={(event) => {
-                event.stopPropagation();
-                handleMaximize();
-              }}
-              onTouchStart={(event) => event.stopPropagation()}
-            >
-              <div className={`expand-InternetExplorer ${IEExpand.expand ? "full" : ""}`} />
-              {IEExpand.expand ? <div className="expand_2-InternetExplorer" /> : null}
-            </div>
             <div>
               <p
                 className="x-InternetExplorer"
@@ -1159,6 +1194,12 @@ const InternetExplorer = () => {
                       goHome();
                     }
                   }}
+                />
+              ) : null}
+              {windowModeDialog ? (
+                <WindowModeLockedDialog
+                  copy={windowModeDialog}
+                  onDismiss={() => setWindowModeDialog(null)}
                 />
               ) : null}
             </div>
@@ -1619,6 +1660,67 @@ const componentStyles = `
   border: none;
   background: transparent;
   cursor: default;
+}
+
+.iex-modal-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  background: rgba(192, 192, 192, 0.38);
+  z-index: 5;
+}
+
+.iex-modal-card {
+  width: min(420px, calc(100% - 24px));
+  background: #c0c0c0;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #404040;
+  border-bottom: 2px solid #404040;
+  box-shadow: 1px 1px 0 #000;
+}
+
+.iex-modal-titlebar {
+  padding: 2px 4px;
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(90deg, #000080 0%, #1084d0 100%);
+}
+
+.iex-modal-body {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 16px 14px 8px;
+}
+
+.iex-modal-body p {
+  margin: 0;
+  line-height: 1.45;
+}
+
+.iex-modal-icon {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  background: #ffff9c;
+  border-top: 2px solid #fff;
+  border-left: 2px solid #fff;
+  border-right: 2px solid #808080;
+  border-bottom: 2px solid #808080;
+}
+
+.iex-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 14px 14px;
 }
 
 .iex-blocked-overlay {

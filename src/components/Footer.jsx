@@ -22,6 +22,7 @@ import news from '../assets/news.png'
 import speaker from '../assets/speaker.png'
 import vscIcon from '../assets/vscode.png';
 
+const IE_WINDOW_MODE_LOCK_EVENT = "ie-window-mode-lock";
 
 export default function Footer() {
 
@@ -545,6 +546,24 @@ export default function Footer() {
 
         const lowerCaseName = tap[index].toLowerCase().trim().replace(/\s/g, '');
         const allSetItems = ObjectState(); 
+        const ieWindow = allSetItems.find(
+            (item) =>
+                item.name.toLowerCase().trim().replace(/\s/g, '') === 'internetexplorer'
+        );
+
+        if (
+            lowerCaseName === 'internetexplorer' &&
+            ieWindow?.usestate?.show &&
+            !ieWindow?.usestate?.hide &&
+            ieWindow?.usestate?.focusItem
+        ) {
+            window.dispatchEvent(
+                new CustomEvent(IE_WINDOW_MODE_LOCK_EVENT, {
+                    detail: { action: 'minimize' },
+                })
+            );
+            return;
+        }
 
 
         allSetItems.forEach((item) => {
