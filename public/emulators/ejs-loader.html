@@ -108,11 +108,21 @@
 
       async function assetExists(url) {
         try {
-          const response = await fetch(url, {
-            method: "GET",
-            cache: "no-store",
-            headers: { Range: "bytes=0-0" },
-          });
+          const isBlobUrl = String(url || "").startsWith("blob:");
+          const response = await fetch(url, isBlobUrl
+            ? {
+                method: "GET",
+                cache: "no-store",
+              }
+            : {
+                method: "GET",
+                cache: "no-store",
+                headers: { Range: "bytes=0-0" },
+              });
+
+          if (isBlobUrl) {
+            return response.ok;
+          }
 
           if (!(response.ok || response.status === 206)) {
             return false;
@@ -273,6 +283,8 @@
         window.EJS_pathtodata = dataPath;
         window.EJS_color = "#000080";
         window.EJS_backgroundColor = "#000000";
+        window.EJS_language = "en-US";
+        window.EJS_disableAutoLang = false;
         window.EJS_startOnLoaded = true;
 
         if (bios) {

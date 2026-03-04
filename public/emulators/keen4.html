@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Commander Keen 4</title>
     <link rel="stylesheet" href="./win95-ui.css" />
+    <link rel="stylesheet" href="./jsdos/js-dos.css" />
   </head>
   <body class="win95-screen">
     <div id="keen"></div>
@@ -22,8 +23,15 @@
       const marker = "/emulators/";
       const markerIndex = window.location.pathname.toLowerCase().lastIndexOf(marker);
       const basePrefix = markerIndex === -1 ? "/" : window.location.pathname.slice(0, markerIndex + 1) || "/";
-      const bundlePath = `${basePrefix}roms/dos/commanderkeen4/keen4.jsdos`;
-      const runtimeUrl = "https://v8.js-dos.com/latest/js-dos.js";
+      const bundledArchivePath = `${basePrefix}roms/dos/commanderkeen4/keen4.jsdos`;
+      const hostedBundlePath = `${basePrefix}roms/dos/commanderkeen4/keen4-hosted.jsdos`;
+      const bundlePath = hostedBundlePath;
+      const externalGameUrl = "https://dos.zone/commander-keen4/";
+      const localRuntimeUrl = `${basePrefix}emulators/jsdos/js-dos.js`;
+      const remoteRuntimeUrl = "https://v8.js-dos.com/latest/js-dos.js";
+      const runtimeAssetPrefix = `${basePrefix}emulators/jsdos/emulators/`;
+      let bootObserver = null;
+      let bootTimeout = null;
 
       function postToParent(type, detail = {}) {
         try {
@@ -45,8 +53,27 @@
       function markReady() {
         if (readySent) return;
         readySent = true;
+        if (bootObserver) {
+          bootObserver.disconnect();
+          bootObserver = null;
+        }
+        if (bootTimeout) {
+          window.clearTimeout(bootTimeout);
+          bootTimeout = null;
+        }
         overlay.classList.add("hidden");
         postToParent("retro-app:ready");
+      }
+
+      function stopBootWatch() {
+        if (bootObserver) {
+          bootObserver.disconnect();
+          bootObserver = null;
+        }
+        if (bootTimeout) {
+          window.clearTimeout(bootTimeout);
+          bootTimeout = null;
+        }
       }
 
       function renderDialog({ heading, message, error = "", status = "", actions = "", icon = "i" }) {
@@ -76,7 +103,8 @@
         overlay.querySelector("#retry-btn")?.addEventListener("click", () => window.location.reload());
       }
 
-      function renderFailure(message, detail) {
+      function renderFailure(message, detail, actions = "") {
+        stopBootWatch();
         postToParent("retro-app:error", {
           message,
           error: detail || "Unknown Commander Keen 4 startup failure.",
@@ -87,7 +115,9 @@
           error: detail || "Unknown Commander Keen 4 startup failure.",
           icon: "!",
           status: bundlePath,
-          actions: '<button class="win95-button" id="retry-btn">Retry</button>',
+          actions:
+            actions ||
+            '<button class="win95-button" id="retry-btn">Retry</button>',
         });
       }
 
@@ -110,10 +140,11 @@
         }
       }
 
-      function loadRuntime() {
+      function loadRuntime(runtimeUrl) {
         return new Promise((resolve, reject) => {
           const script = document.createElement("script");
           script.src = runtimeUrl;
+          script.async = true;
           script.onload = () => {
             if (!window.Dos) {
               reject(new Error("Legacy js-dos runtime did not expose window.Dos."));
@@ -121,27 +152,138 @@
             }
             resolve();
           };
-          script.onerror = () => reject(new Error("Failed to load remote js-dos runtime."));
+          script.onerror = () => reject(new Error("Failed to load bundled js-dos runtime."));
           document.head.appendChild(script);
         });
       }
 
-      function installErrorGuards() {
-        window.addEventListener("error", (event) => {
-          if (readySent) return;
-          renderFailure(
-            "The bundled DOS runtime crashed during boot.",
-            event?.message || event?.error?.message || "Unknown runtime crash.",
-          );
+      function installEmbeddedKeyboardGuard() {
+        if (window.top === window || !navigator.keyboard) return;
+
+        try {
+          navigator.keyboard.lock = async () => undefined;
+        } catch {
+          // Ignore read-only browser implementations.
+        }
+
+        try {
+          navigator.keyboard.unlock = () => undefined;
+        } catch {
+          // Ignore read-only browser implementations.
+        }
+      }
+
+      function makeExternalAction(url) {
+        return `<button class="win95-button" type="button" onclick="window.open('${url}', '_blank', 'noopener,noreferrer')">Open Externally</button>`;
+      }
+
+      function getRuntimeText() {
+        return (container.innerText || container.textContent || "").replace(/\s+/g, " ").trim();
+      }
+
+      function readRuntimeFailure() {
+        const runtimeText = getRuntimeText();
+        if (!runtimeText) return "";
+
+        const knownFailure =
+          /(could not start|unexpected error|did not initialize|failed to load|failed to start|runtime rejected|unable to start|cannot start|archive error|exception)/i;
+
+        return knownFailure.test(runtimeText) ? runtimeText : "";
+      }
+
+      function installBootWatch() {
+        const evaluateBootState = () => {
+          if (readySent) return true;
+
+          const canvas = container.querySelector("canvas");
+          if (canvas) {
+            markReady();
+            return true;
+          }
+
+          const failureText = readRuntimeFailure();
+          if (failureText) {
+            renderFailure(
+              "The bundled DOS runtime reported a launch error.",
+              failureText,
+            );
+            return true;
+          }
+
+          return false;
+        };
+
+        if (evaluateBootState()) return;
+
+        bootObserver = new MutationObserver(() => {
+          evaluateBootState();
+        });
+        bootObserver.observe(container, {
+          childList: true,
+          subtree: true,
+          attributes: true,
+          characterData: true,
         });
 
-        window.addEventListener("unhandledrejection", (event) => {
-          if (readySent) return;
-          const reason = event?.reason;
-          renderFailure(
-            "The bundled DOS runtime rejected a startup promise.",
-            typeof reason === "string" ? reason : reason?.message || reason?.stack || "Unknown promise rejection.",
-          );
+        bootTimeout = window.setTimeout(() => {
+          evaluateBootState();
+        }, 30000);
+      }
+
+      async function tryBootWithRuntime(runtimeUrl, { useLocalAssets }) {
+        await loadRuntime(runtimeUrl);
+        installBootWatch();
+        container.focus?.();
+
+        return new Promise((resolve, reject) => {
+          let settled = false;
+          const cleanupAttemptGuards = () => {
+            window.clearTimeout(runtimeFailureTimer);
+            window.removeEventListener("error", onRuntimeError);
+            window.removeEventListener("unhandledrejection", onRuntimeRejection);
+          };
+          const failAttempt = (message) => {
+            if (settled || readySent) return;
+            settled = true;
+            cleanupAttemptGuards();
+            reject(new Error(message));
+          };
+          const onRuntimeError = (event) => {
+            failAttempt(event?.message || event?.error?.message || `Runtime error while using ${runtimeUrl}.`);
+          };
+          const onRuntimeRejection = (event) => {
+            const reason = event?.reason;
+            failAttempt(typeof reason === "string" ? reason : reason?.message || reason?.stack || `Runtime rejection while using ${runtimeUrl}.`);
+          };
+          const runtimeFailureTimer = window.setTimeout(() => {
+            failAttempt(`Runtime bootstrap timed out while using ${runtimeUrl}.`);
+          }, 45000);
+
+          window.addEventListener("error", onRuntimeError);
+          window.addEventListener("unhandledrejection", onRuntimeRejection);
+
+          window.dosController = window.Dos(container, {
+            url: bundlePath,
+            pathPrefix: useLocalAssets ? runtimeAssetPrefix : undefined,
+            autoStart: true,
+            kiosk: true,
+            noCloud: true,
+            noNetworking: true,
+            mouseCapture: false,
+            softFullscreen: false,
+            theme: "light",
+            lang: "en",
+            onEvent: (event, commandInterface) => {
+              if (event === "ci-ready") {
+                if (settled) return;
+                settled = true;
+                cleanupAttemptGuards();
+                window.dosController = commandInterface || window.dosController;
+                markReady();
+                resolve(commandInterface || true);
+              }
+            },
+          });
         });
       }
 
@@ -159,11 +301,11 @@
         if (!bundleExists) {
           renderDialog({
             heading: "Bundled game not found",
-            message: "Place the packaged Keen 4 archive at the path below.",
-            error: "The launcher could not find keen4.jsdos.",
+            message: "The hosted compatibility bundle for Commander Keen 4 is unavailable right now.",
+            error: "The launcher could not reach the published Keen 4 package.",
             status: bundlePath,
             icon: "!",
-            actions: '<button class="win95-button" id="reload-btn">Reload</button>',
+            actions: `<button class="win95-button" id="reload-btn">Reload</button>${makeExternalAction(externalGameUrl)}`,
           });
           postToParent("retro-app:error", {
             message: "Commander Keen 4 bundle not found.",
@@ -172,30 +314,23 @@
           return;
         }
 
-        installErrorGuards();
+        installEmbeddedKeyboardGuard();
 
         try {
-          await loadRuntime();
-          container.focus?.();
-          const dosInstance = window.Dos(container);
-
-          dosInstance
-            .run(bundlePath)
-            .then((ci) => {
-              window.ci = ci;
-              markReady();
-            })
-            .catch((error) => {
-              renderFailure(
-                "The bundled DOS runtime returned an error instead of launching the game.",
-                error?.message || "Unknown js-dos startup error.",
-              );
-            });
+          await tryBootWithRuntime(remoteRuntimeUrl, { useLocalAssets: false });
         } catch (error) {
-          renderFailure(
-            "The bundled DOS runtime did not initialize correctly.",
-            error?.message || "Unknown js-dos initialization error.",
-          );
+          try {
+            await tryBootWithRuntime(localRuntimeUrl, { useLocalAssets: true });
+          } catch (fallbackError) {
+            renderFailure(
+              "The bundled DOS runtime did not initialize correctly.",
+              [
+                error?.message || "Unknown primary js-dos initialization error.",
+                fallbackError?.message || "Unknown fallback js-dos initialization error.",
+              ].join(" "),
+              `<button class="win95-button" id="retry-btn">Retry</button>${makeExternalAction(externalGameUrl)}`,
+            );
+          }
         }
       }
 
