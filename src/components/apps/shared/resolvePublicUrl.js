@@ -10,10 +10,17 @@ export const resolvePublicUrl = (relativePath = "") => {
   if (/^(?:[a-z]+:)?\/\//i.test(relativePath)) return relativePath;
   if (/^(?:data|blob):/i.test(relativePath)) return relativePath;
 
-  const base = ensureTrailingSlash(import.meta.env.BASE_URL || "/");
+  const base = import.meta.env.BASE_URL || "/";
   const target = trimLeadingSlash(relativePath);
 
-  return `${base}${target}`;
+  // If the base is relative (e.g., "./"), we need to resolve it against the current window origin
+  // to prevent relative path breakage when moving between directory levels (like in an iframe).
+  if (base === "./") {
+    return new URL(target, window.location.origin).pathname;
+  }
+
+  const cleanBase = ensureTrailingSlash(base);
+  return `${cleanBase}${target}`;
 };
 
 export default resolvePublicUrl;

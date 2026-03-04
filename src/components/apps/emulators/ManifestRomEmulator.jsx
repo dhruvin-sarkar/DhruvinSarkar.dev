@@ -44,7 +44,7 @@ const ManifestRomEmulator = ({
     const romUrl =
       selectedRom?.source === "uploaded" && selectedRom?.objectUrl
         ? selectedRom.objectUrl
-        : resolvePublicUrl(`roms/${system}/${selectedRom.file}`);
+        : new URL(resolvePublicUrl(`roms/${system}/${selectedRom.file}`), window.location.origin).toString();
     const loaderPath = resolvePublicUrl("emulators/ejs-loader.html");
     const query = new URLSearchParams({
       core,
