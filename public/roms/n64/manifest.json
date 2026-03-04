@@ -4,7 +4,8 @@
     {
       "id": "crash-bandicoot-64",
       "title": "Crash Bandicoot 64",
-      "file": "Crash Bandicoot 64.n64"
+      "file": "Crash Bandicoot 64.n64",
+      "cover": "roms/n64/images.jpg"
     },
     {
       "id": "donkey-kong-64",

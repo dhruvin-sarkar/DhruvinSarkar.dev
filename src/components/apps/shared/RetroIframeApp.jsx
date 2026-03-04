@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import UseContext from "../../../Context";
 import AppWindowShell from "./AppWindowShell";
 import EmulatorLoadingScreen from "./EmulatorLoadingScreen";
@@ -27,6 +27,9 @@ const RetroIframeApp = ({
   const context = useContext(UseContext);
   const state = context[stateKey];
   const setState = context[setterKey];
+  const iframeRef = useRef(null);
+  const [showManualDismiss, setShowManualDismiss] = useState(false);
+
 
   const isWarningActive = false;
 
@@ -52,6 +55,36 @@ const RetroIframeApp = ({
       setState((previous) => ({ ...previous, hide: false }));
     }
   }, [state?.show, state?.hide, setState]);
+
+  // Handle focus when loading finishes
+  useEffect(() => {
+    if (!isLoading && !hasError && state?.show && !state?.hide) {
+      const timer = setTimeout(() => {
+        iframeRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+    return undefined;
+  }, [isLoading, hasError, state?.show, state?.hide]);
+
+  // Show manual dismiss button after a delay
+  useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => {
+        setShowManualDismiss(true);
+      }, 6000); // 6 seconds before showing manual dismiss
+      return () => clearTimeout(timer);
+    }
+    setShowManualDismiss(false);
+    return undefined;
+  }, [isLoading]);
+
+  const forceDismissLoading = () => {
+    // We can't reach into the hook's internal state directly with a simple setter, 
+    // but the hook returns handleLoad which we can call manually to simulate "ready"
+    handleLoad();
+  };
+
 
   const openExternally = () => {
     if (!resolvedExternalUrl) return;
@@ -85,10 +118,12 @@ const RetroIframeApp = ({
               title={title}
               subtitle={loadingSubtitle}
               variant={loadingVariant}
+              onDismiss={showManualDismiss ? forceDismissLoading : undefined}
             />
           ) : null}
 
           <iframe
+            ref={iframeRef}
             title={title}
             src={iframeUrl}
             className="retro-emulator-iframe"
@@ -97,7 +132,6 @@ const RetroIframeApp = ({
             allow={iframeAllow}
             loading={iframeLoading}
           />
-
           {hasError ? (
             <div className="iframe-error-overlay">
               <div className="iframe-error-panel">

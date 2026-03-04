@@ -1,6 +1,6 @@
 import React from "react";
 
-const EmulatorLoadingScreen = ({ title, subtitle, variant = "default" }) => {
+const EmulatorLoadingScreen = ({ title, subtitle, variant = "default", onDismiss }) => {
   const icon = variant === "warning" ? "!" : variant === "quake" ? "*" : ">";
 
   return (
@@ -14,6 +14,13 @@ const EmulatorLoadingScreen = ({ title, subtitle, variant = "default" }) => {
             <div className="emulator-loading-bar">
               <div className="emulator-loading-bar-fill" />
             </div>
+            {onDismiss && (
+              <div className="retro-performance-row" style={{ marginTop: '12px', justifyContent: 'flex-end' }}>
+                <button type="button" onClick={onDismiss} style={{ minWidth: '120px' }}>
+                  Dismiss Loading
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

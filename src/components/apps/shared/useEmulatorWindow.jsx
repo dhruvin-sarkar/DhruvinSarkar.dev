@@ -5,6 +5,8 @@ const RETRO_APP_MESSAGE_SOURCE = "retro-app";
 const createInstanceSeed = () =>
   `retro-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 
+const SAFETY_TIMEOUT_MS = 20000; // 20 seconds fallback to dismiss loading overlay
+
 const useEmulatorWindow = ({
   iframeSrc,
   externalUrl,
@@ -38,6 +40,18 @@ const useEmulatorWindow = ({
     setHasError(false);
     setErrorMessage("");
     setRuntimeTitle("");
+
+    // Safety fallback: dismiss loading even if signal never arrives
+    const timer = setTimeout(() => {
+      setIsLoading((currentlyLoading) => {
+        if (currentlyLoading) {
+          console.warn(`[RetroApp] Safety timeout reached for ${appInstance}. Forcing loading=false.`);
+        }
+        return false;
+      });
+    }, SAFETY_TIMEOUT_MS);
+
+    return () => clearTimeout(timer);
   }, [iframeSrc, isEnabled, appInstance]);
 
   useEffect(() => {
@@ -45,7 +59,18 @@ const useEmulatorWindow = ({
       const payload = event?.data;
       if (!payload || typeof payload !== "object") return;
       if (payload.source !== RETRO_APP_MESSAGE_SOURCE) return;
-      if (payload.appInstance !== appInstance) return;
+
+      if (process.env.NODE_ENV === "development") {
+        console.log(`[RetroApp] Signal received:`, payload.type, payload.appInstance, payload);
+      }
+
+      if (payload.appInstance !== appInstance) {
+        // Log mismatch but don't process unless it's a global notification (if any exist)
+        if (process.env.NODE_ENV === "development") {
+          console.debug(`[RetroApp] appInstance mismatch. Expected: ${appInstance}, Got: ${payload.appInstance}`);
+        }
+        return;
+      }
 
       if (typeof payload.title === "string" && payload.title.trim()) {
         setRuntimeTitle(payload.title.trim());
