@@ -982,6 +982,7 @@ const InternetExplorer = () => {
 
   const activeUrl = activeTab?.url || GOOGLE_HOME;
   const reloadToken = activeTab ? reloadTokens[activeTab.id] || 0 : 0;
+  const shouldBlockBackgroundIframe = !IEExpand.focusItem && !IEExpand.hide;
 
   return (
     <Draggable
@@ -1111,7 +1112,11 @@ const InternetExplorer = () => {
           ) : null}
           <div className="iex-content-area">
             {activeTab?.isLoading ? <div className="iex-loading-bar" /> : null}
-            <div className="iex-frame-container">
+            <div
+              className="iex-frame-container"
+              onMouseDownCapture={() => handleSetFocusItemTrue("InternetExplorer")}
+              onTouchStartCapture={() => handleSetFocusItemTrue("InternetExplorer")}
+            >
               <iframe
                 key={`${activeTab?.id}-${reloadToken}-${activeUrl}`}
                 ref={iframeRef}
@@ -1122,6 +1127,23 @@ const InternetExplorer = () => {
                 onError={handleIframeError}
                 allow="fullscreen"
               />
+              {shouldBlockBackgroundIframe && !activeTab?.blocked ? (
+                <button
+                  type="button"
+                  className="iex-focus-shield"
+                  onClick={() => handleSetFocusItemTrue("InternetExplorer")}
+                  onMouseDown={(event) => {
+                    event.preventDefault();
+                    handleSetFocusItemTrue("InternetExplorer");
+                  }}
+                  onTouchStart={(event) => {
+                    event.preventDefault();
+                    handleSetFocusItemTrue("InternetExplorer");
+                  }}
+                  aria-label="Activate Internet Explorer"
+                  title="Activate Internet Explorer"
+                />
+              ) : null}
               {activeTab?.blocked ? (
                 <BlockedPageOverlay
                   blocked={activeTab.blocked}
@@ -1168,6 +1190,7 @@ const componentStyles = `
   color: #000;
   user-select: none;
   -webkit-user-select: none;
+  isolation: isolate;
 }
 
 .folder_dragbar-InternetExplorer {
@@ -1278,6 +1301,7 @@ const componentStyles = `
 }
 
 .iex-shell {
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -1570,6 +1594,9 @@ const componentStyles = `
   width: 100%;
   height: 100%;
   background: #fff;
+  isolation: isolate;
+  contain: layout paint;
+  clip-path: inset(0);
 }
 
 .iex-frame {
@@ -1580,6 +1607,18 @@ const componentStyles = `
   min-height: 0;
   border: none;
   background: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+.iex-focus-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: default;
 }
 
 .iex-blocked-overlay {
@@ -1590,6 +1629,7 @@ const componentStyles = `
   justify-content: center;
   padding: 18px;
   background: rgba(192, 192, 192, 0.72);
+  z-index: 3;
 }
 
 .iex-blocked-card {
