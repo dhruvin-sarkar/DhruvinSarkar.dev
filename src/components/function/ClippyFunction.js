@@ -33,7 +33,16 @@ export const clippyPhrase = {
         { phrase: "Dhruvin: Turning ideas into crafted digital experiences!", animation: clippy1 },
         { phrase: "Full-stack developer with a passion for creativity!", animation: clippy2 },
         { phrase: "Dhruvin's tech stack includes JavaScript, Python, and more!", animation: clippy3 },
-        { phrase: "Want to collaborate? Dhruvin's always open to new projects!", animation: clippy4 }
+        { phrase: "Want to collaborate? Dhruvin's always open to new projects!", animation: clippy4 },
+        { phrase: "This portfolio blends nostalgia with modern engineering decisions.", animation: clippy5 },
+        { phrase: "Dhruvin values clean architecture, but never sacrifices personality.", animation: clippy1 },
+        { phrase: "The desktop interactions are tuned for both mouse and touch devices.", animation: clippy2 },
+        { phrase: "You are looking at a portfolio that behaves like a mini operating system.", animation: clippy7 },
+        { phrase: "Dhruvin focuses on practical UX: clear feedback, fast actions, smooth flow.", animation: clippy3 },
+        { phrase: "From product thinking to implementation, Dhruvin handles the full stack.", animation: clippy4 },
+        { phrase: "The goal here is simple: prove capability through real interactive work.", animation: clippy6 },
+        { phrase: "Each folder tells a part of Dhruvin's story, skills, and building style.", animation: clippy2 },
+        { phrase: "If you like thoughtful interfaces, you are in the right place.", animation: clippy5 }
     ],
     interruption: [{ phrase: "Hey! I'm trying to help you explore Dhruvin's portfolio!", animation: clippyNo }]
 };
@@ -55,5 +64,12 @@ export const clippySuggest =
     'The attention to detail in this portfolio is just amazing.',
     'Did you know? The file system uses a recursive algorithm!',
     'This portfolio runs on a custom-built React architecture.',
-    'Optimized asset loading ensures a smooth experience.'
+    'Optimized asset loading ensures a smooth experience.',
+    'Open the About folder for Dhruvin\'s full journey and background.',
+    'Project folder is the best place to see shipping quality work.',
+    'Mail folder is open if you want to connect for opportunities.',
+    'Try moving windows around and feel how polished the interactions are.',
+    'This is not a static page - it is an interactive portfolio environment.',
+    'Dhruvin combines frontend craft with backend and systems thinking.',
+    'If you like this style, ask Dhruvin about custom portfolio builds.'
 ]

@@ -3,21 +3,31 @@ import React, { useContext, useState, useEffect } from "react";
 import login_icon from '../assets/login.png'
 import mario from '../assets/mario.gif'
 import tunnel from '../assets/tunnel.png'
-import defaultBg from '../assets/90s.jpg'
+import defaultBg from '../assets/live_grey.gif'
+import warnIcon from '../assets/warn.png'
 import '../css/Login.css'
 
 function Login() {
 
-    const [ username, setUsername ] = useState('admin')
+    const [ username, setUsername ] = useState('Admin')
     const [ password, setPassword ] = useState('1234')
     const [ sizeUp, setSizeUp ] = useState(1)
+    const [ showPasswordHint, setShowPasswordHint ] = useState(false)
+    const [ showLoginError, setShowLoginError ] = useState(false)
+    const [ highlightHintButton, setHighlightHintButton ] = useState(false)
 
     const { setLogin, themeDragBar, sounds } = useContext(UseContext);
 
     function handleLogin(e) {
         e.preventDefault()
 
-        if(username === 'admin' && password === '1234'){
+        const normalizedUsername = username.trim().toLowerCase()
+        const normalizedPassword = password.trim()
+
+        if(normalizedUsername === 'admin' && normalizedPassword === '1234'){
+            setShowLoginError(false)
+            setHighlightHintButton(false)
+
             // Play startup sound when login button is clicked
             if (sounds?.playStartup) {
                 sounds.playStartup();
@@ -27,8 +37,19 @@ function Login() {
             setTimeout(() => {
                 setLogin(false)
             }, 100);
+            return;
         }
-        return;
+
+        setShowLoginError(true)
+        setHighlightHintButton(true)
+
+        if (sounds?.playChord) {
+          sounds.playChord()
+        } else if (sounds?.playDing) {
+          sounds.playDing()
+        } else if (sounds?.playNotification) {
+          sounds.playNotification('alert')
+        }
     }
 
     function handleMarioSizeUp() {
@@ -36,6 +57,20 @@ function Login() {
             return
         }
         setSizeUp(prev => prev + 0.1)
+    }
+
+    function openPasswordHint() {
+      setShowPasswordHint(true)
+      setShowLoginError(false)
+      setHighlightHintButton(false)
+    }
+
+    function closePasswordHint() {
+      setShowPasswordHint(false)
+    }
+
+    function closeLoginError() {
+      setShowLoginError(false)
     }
 
     useEffect(() =>{
@@ -134,8 +169,11 @@ function Login() {
             <div className="tap_login" style={{backgroundColor: themeDragBar}}>
                 <p>Welcome to Windows</p>
                 <div className="tap_button">
-                    <div className="login_question"
-                        onClick={handleMarioSizeUp}
+                    <div className={`login_question ${highlightHintButton ? 'login_question--highlighted' : ''}`}
+                        onClick={() => {
+                          openPasswordHint()
+                          handleMarioSizeUp()
+                        }}
                     >
                         <p className='login_question_mark'>?</p>
                     </div>
@@ -148,13 +186,13 @@ function Login() {
                 <p className='login_des'>Type a user name and password to log on to Windows.</p>
                     <label>User name:</label>
                     <input type="text" maxLength={20} 
-                      onChange={() => null}
+                      onChange={(e) => setUsername(e.target.value)}
                       value={username} 
                     />
                     <br />
                     <label style={{marginRight: '17px'}}>Password:</label>
                     <input type="password"  maxLength={20} 
-                      onChange={() => null}
+                      onChange={(e) => setPassword(e.target.value)}
                       value={password} 
                     />
             </div>
@@ -169,6 +207,42 @@ function Login() {
                 </div>
             </div>
         </div>
+        {showLoginError && (
+          <div className="login_hint_overlay" onClick={closeLoginError}>
+            <div className="login_error_dialog" onClick={(e) => e.stopPropagation()}>
+              <div className="login_hint_titlebar" style={{backgroundColor: themeDragBar}}>
+                <p>Logon Message</p>
+              </div>
+              <div className="login_error_content">
+                <img src={warnIcon} alt="warning icon" />
+                <div className="login_error_text">
+                  <p>The user name or password is incorrect.</p>
+                  <p>Tip: Click the ? button for the password hint.</p>
+                </div>
+              </div>
+              <div className="login_hint_actions">
+                <button type="button" onClick={closeLoginError}>OK</button>
+              </div>
+            </div>
+          </div>
+        )}
+        {showPasswordHint && (
+          <div className="login_hint_overlay" onClick={closePasswordHint}>
+            <div className="login_hint_dialog" onClick={(e) => e.stopPropagation()}>
+              <div className="login_hint_titlebar" style={{backgroundColor: themeDragBar}}>
+                <p>Password Hint</p>
+              </div>
+              <div className="login_hint_content">
+                <p>Use these credentials to sign in:</p>
+                <p><strong>User name:</strong> Admin</p>
+                <p><strong>Password:</strong> 1234</p>
+              </div>
+              <div className="login_hint_actions">
+                <button type="button" onClick={closePasswordHint}>OK</button>
+              </div>
+            </div>
+          </div>
+        )}
     </section>
   )
 }

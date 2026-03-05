@@ -916,6 +916,9 @@ function App() {
       // }, 500);
     }, 2500);
 
+    const STARTUP_PRAISE_DELAY_MS = 18000;
+    const PRAISE_NOTIFICATION_INTERVAL_MS = 30000;
+
     // Startup sound praise
     setTimeout(() => {
       setNotiOn(false);
@@ -927,7 +930,7 @@ function App() {
         });
         setNotiOn(true);
       }, 100);
-    }, 12000); // 12 seconds after load
+    }, STARTUP_PRAISE_DELAY_MS);
 
     // Random praise notifications
     const praiseMessages = [
@@ -963,10 +966,54 @@ function App() {
         text1: "Modern Tech",
         text2: "Framer Motion powers these authentic animations.",
       },
+      {
+        text1: "Built by Dhruvin",
+        text2: "Designed, coded, and polished as a full-stack portfolio OS.",
+      },
+      {
+        text1: "Engineering + Design",
+        text2: "A rare mix of strong UX taste and production-grade coding.",
+      },
+      {
+        text1: "Project Depth",
+        text2: "This desktop includes apps, emulators, chat, and live widgets.",
+      },
+      {
+        text1: "Creative Direction",
+        text2: "The retro Windows feel is handcrafted, not template-based.",
+      },
+      {
+        text1: "Problem Solver",
+        text2: "Dhruvin thrives on shipping practical, user-focused features.",
+      },
+      {
+        text1: "Frontend Craft",
+        text2: "Micro-interactions and feedback are tuned for responsiveness.",
+      },
+      {
+        text1: "Real Builder",
+        text2: "From early C++ experiments to modern full-stack applications.",
+      },
+      {
+        text1: "Career Snapshot",
+        text2: "AI + Design Thinking student with a strong product mindset.",
+      },
+      {
+        text1: "Portfolio Goal",
+        text2: "Show what Dhruvin can build, not just what he can describe.",
+      },
+      {
+        text1: "Tech Playground",
+        text2: "Explore folders and apps to see the full personality of the project.",
+      },
+      {
+        text1: "Thanks for Visiting",
+        text2: "Every screen here was built to be memorable and useful.",
+      },
     ];
 
     const praiseInterval = setInterval(() => {
-      // 100% chance to show a praise notification every 15 seconds
+      // 100% chance to show a praise notification every configured interval
       const randomPraise =
         praiseMessages[Math.floor(Math.random() * praiseMessages.length)];
       setNotiOn(false);
@@ -977,7 +1024,7 @@ function App() {
         });
         setNotiOn(true);
       }, 100);
-    }, 15000);
+    }, PRAISE_NOTIFICATION_INTERVAL_MS);
 
     if (!desktopIcon.find((icon) => icon.name === "PixelPic")) {
       localStorage.clear();

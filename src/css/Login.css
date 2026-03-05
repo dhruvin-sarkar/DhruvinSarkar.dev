@@ -99,6 +99,11 @@
     border-bottom-color: white;
 }
 
+.tap_login .tap_button .login_question.login_question--highlighted {
+    animation: login_question_hint 0.95s ease-in-out infinite;
+    box-shadow: 0 0 0 1px #ffff00, 0 0 0 3px rgba(255, 255, 0, 0.45);
+}
+
     
 .login_question p {
     position: relative;
@@ -231,6 +236,18 @@
     }
 }
 
+@keyframes login_question_hint {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-1px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
 
 
 @media screen and (width <= 500px){
@@ -271,6 +288,103 @@
     .mario_div {
         width: 85%;
     }
+}
+
+.login_hint_overlay {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(0, 0, 0, 0.2);
+    z-index: 10000;
+}
+
+.login_hint_dialog {
+    width: min(320px, calc(100vw - 2rem));
+    background: #c5c4c4;
+    border: 2px solid white;
+    border-right-color: black;
+    border-bottom-color: black;
+    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login_error_dialog {
+    width: min(360px, calc(100vw - 2rem));
+    background: #c5c4c4;
+    border: 2px solid white;
+    border-right-color: black;
+    border-bottom-color: black;
+    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login_error_content {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0.9rem 0.9rem 0 0.9rem;
+}
+
+.login_error_content img {
+    width: 28px;
+    height: 28px;
+    margin-top: 1px;
+}
+
+.login_error_text {
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.login_error_text p {
+    margin-bottom: 0.45rem;
+}
+
+.login_hint_titlebar {
+    width: calc(100% - 4px);
+    height: 20px;
+    margin: 2px auto 0;
+    display: flex;
+    align-items: center;
+}
+
+.login_hint_titlebar p {
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding-left: 5px;
+}
+
+.login_hint_content {
+    padding: 0.9rem 0.9rem 0 0.9rem;
+    font-size: 12px;
+    line-height: 1.35;
+}
+
+.login_hint_content p {
+    margin-bottom: 0.45rem;
+}
+
+.login_hint_actions {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0 0.8rem;
+}
+
+.login_hint_actions button {
+    min-width: 72px;
+    height: 25px;
+    background: #c5c4c4;
+    border: 2px solid white;
+    border-right-color: black;
+    border-bottom-color: black;
+    font-size: 12px;
+    cursor: default;
+}
+
+.login_hint_actions button:active {
+    border: 2px solid black;
+    border-right-color: white;
+    border-bottom-color: white;
 }
 
 .mario {
@@ -339,4 +453,3 @@
 
     }
 } */
-

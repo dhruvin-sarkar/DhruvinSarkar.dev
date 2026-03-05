@@ -631,7 +631,11 @@ export default function Footer() {
 
     useEffect(() => { //random clippy time
         clearTimeout(SecondRandomTimeoutShowClippy.current)
-        const randomTime = Math.floor(Math.random() * (50000 - 30000 + 1)) + 30000;
+        const CLIPPY_MIN_INTERVAL_MS = 55000;
+        const CLIPPY_MAX_INTERVAL_MS = 90000;
+        const randomTime = Math.floor(
+            Math.random() * (CLIPPY_MAX_INTERVAL_MS - CLIPPY_MIN_INTERVAL_MS + 1)
+        ) + CLIPPY_MIN_INTERVAL_MS;
 
         clearTimeout(ClearTOclippySendemailfunction.current)
         clearTimeout(ClearTOclippyThanksYouFunction.current)
