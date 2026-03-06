@@ -1,0 +1,23 @@
+{
+  "system": "3ds",
+  "roms": [
+    {
+      "id": "pokemon-ultra-sun",
+      "title": "Pokemon Ultra Sun",
+      "file": "https://<worker-subdomain>.workers.dev/3ds/pokemon-ultra-sun.3ds",
+      "cover": "/icons/reference/emulator.png"
+    },
+    {
+      "id": "super-mario-3d-land",
+      "title": "Super Mario 3D Land",
+      "file": "https://<worker-subdomain>.workers.dev/3ds/super-mario-3d-land.3ds",
+      "cover": "/icons/reference/emulator.png"
+    },
+    {
+      "id": "the-legend-of-zelda-ocarina-of-time-3d",
+      "title": "The Legend of Zelda: Ocarina of Time 3D",
+      "file": "https://<worker-subdomain>.workers.dev/3ds/the-legend-of-zelda-ocarina-of-time-3d.3ds",
+      "cover": "/icons/reference/emulator.png"
+    }
+  ]
+}
