@@ -21,10 +21,11 @@ import DoomGame from "./components/DoomGame";
 import InternetExplorer from "./components/apps/InternetExplorer/InternetExplorer";
 import NintendoN64 from "./components/apps/emulators/NintendoN64";
 import PlayStation1 from "./components/apps/emulators/PlayStation1";
+import Nintendo3DS from "./components/apps/emulators/Nintendo3DS";
 import GameBoyAdvance from "./components/apps/emulators/GameBoyAdvance";
 import NESEmulator from "./components/apps/emulators/NESEmulator";
 import WindowsXPWin95 from "./components/apps/emulators/WindowsXPWin95";
-// import CommanderKeen4 from "./components/apps/emulators/CommanderKeen4"; // commented out
+import CommanderKeen4 from "./components/apps/emulators/CommanderKeen4";
 import SpaceCadet from "./components/apps/emulators/SpaceCadet";
 import Quake3Arena from "./components/apps/emulators/Quake3Arena";
 import QuakeOriginal from "./components/apps/emulators/QuakeOriginal";
@@ -60,9 +61,6 @@ import {
   handleDoubleTapEnterMobile,
   handleDoubleClickiframe,
   handleDoubleTapiframeMobile,
-  iconContainerSize,
-  iconImgSize,
-  iconTextSize,
   handleDoubleClickPhotoOpen,
 } from "./components/function/AppFunctions";
 
@@ -439,6 +437,16 @@ function App() {
   });
 
   const [Keen4Expand, setKeen4Expand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [ThreeDSExpand, setThreeDSExpand] = useState({
     expand: false,
     show: false,
     hide: false,
@@ -1340,7 +1348,7 @@ function App() {
     };
   }, []);
 
-  const handleOnDrag = (name, ref, type) => () => {
+  const handleOnDrag = (name, ref) => () => {
     setDragging(true);
     const iconRef = ref;
     if (iconRef && ResumeFolderRef.current && ProjectFolderRef.current) {
@@ -1872,6 +1880,8 @@ function App() {
     setN64Expand,
     PS1Expand,
     setPS1Expand,
+    ThreeDSExpand,
+    setThreeDSExpand,
     GBAExpand,
     setGBAExpand,
     NESExpand,
@@ -2080,9 +2090,10 @@ function App() {
         <WindowsXPWin95 />
         <NintendoN64 />
         <PlayStation1 />
+        <Nintendo3DS />
         <GameBoyAdvance />
         <NESEmulator />
-        {/* <CommanderKeen4 /> */}
+        <CommanderKeen4 />
         <SpaceCadet />
         <Quake3Arena />
         <QuakeOriginal />
@@ -2469,6 +2480,13 @@ function App() {
         size: "small",
       },
       {
+        name: "Nintendo 3DS",
+        setter: setThreeDSExpand,
+        usestate: ThreeDSExpand,
+        color: "rgba(171, 72, 140, 0.85)",
+        size: "small",
+      },
+      {
         name: "Game Boy Advance",
         setter: setGBAExpand,
         usestate: GBAExpand,
@@ -2482,7 +2500,6 @@ function App() {
         color: "rgba(132, 132, 132, 0.85)",
         size: "small",
       },
-      /* Commander Keen 4 - commented out
       {
         name: "Commander Keen 4",
         setter: setKeen4Expand,
@@ -2490,7 +2507,6 @@ function App() {
         color: "rgba(205, 116, 59, 0.85)",
         size: "small",
       },
-      */
       {
         name: "Space Cadet Pinball",
         setter: setSpaceCadetExpand,

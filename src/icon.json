@@ -42,7 +42,9 @@
         "size": 12,
         "type": ".exe",
         "x": 320,
-        "y": 20
+        "y": 20,
+        "category": "Productivity",
+        "description": "Open the retro email client and portfolio contact workflow."
     },
     {
         "name": "MineSweeper",
@@ -51,7 +53,9 @@
         "size": 250,
         "type": ".exe",
         "x": 420,
-        "y": 20
+        "y": 20,
+        "category": "Games",
+        "description": "Classic Windows MineSweeper with the original look and feel."
     },
     {
         "name": "MSN",
@@ -60,7 +64,9 @@
         "size": 1500,
         "type": ".exe",
         "x": 20,
-        "y": 220
+        "y": 220,
+        "category": "Productivity",
+        "description": "Launch the MSN-inspired chat client experience."
     },
     {
         "name": "Winamp",
@@ -69,7 +75,9 @@
         "size": 4300,
         "type": ".exe",
         "x": 120,
-        "y": 220
+        "y": 220,
+        "category": "Utilities",
+        "description": "Play music through the Winamp-style desktop player."
     },
     {
         "name": "Hard Disk (C:)",
@@ -114,7 +122,9 @@
         "size": 500,
         "type": ".exe",
         "x": 220,
-        "y": 120
+        "y": 120,
+        "category": "Utilities",
+        "description": "View the built-in Bitcoin price tracker and chart widget."
     },
     {
         "name": "001",
@@ -231,7 +241,9 @@
         "size": 10000,
         "type": ".exe",
         "x": 320,
-        "y": 120
+        "y": 120,
+        "category": "Productivity",
+        "description": "Use the built-in AI agent workspace from the desktop."
     },
     {
         "name": "Cat",
@@ -240,7 +252,9 @@
         "size": 5000,
         "type": ".exe",
         "x": 20,
-        "y": 320
+        "y": 320,
+        "category": "Utilities",
+        "description": "Open the desktop cat companion and animation window."
     },
     {
         "name": "RecycleBin",
@@ -258,7 +272,9 @@
         "size": 20,
         "type": ".exe",
         "x": 220,
-        "y": 320
+        "y": 320,
+        "category": "Utilities",
+        "description": "Clear saved local data and restore the portfolio state."
     },
     {
         "name": "Paint",
@@ -267,7 +283,9 @@
         "size": 200,
         "type": ".exe",
         "x": 320,
-        "y": 220
+        "y": 220,
+        "category": "Utilities",
+        "description": "Draw in the classic Paint-style editor."
     },
     {
         "name": "Utility",
@@ -285,7 +303,9 @@
         "size": 500,
         "type": ".exe",
         "x": 120,
-        "y": 20
+        "y": 20,
+        "category": "Utilities",
+        "description": "Open the patch notes and update log window."
     },
     {
         "name": "TaskManager",
@@ -294,7 +314,9 @@
         "size": 3500,
         "type": ".exe",
         "x": 220,
-        "y": 20
+        "y": 20,
+        "category": "Utilities",
+        "description": "Inspect running windows and desktop state."
     },
     {
         "name": "Store",
@@ -303,7 +325,9 @@
         "size": 5500,
         "type": ".exe",
         "x": 220,
-        "y": 320
+        "y": 320,
+        "category": "Utilities",
+        "description": "Browse and install desktop apps from the portfolio catalog."
     },
     {
         "name": "DOOM",
@@ -312,7 +336,9 @@
         "size": 15000,
         "type": ".exe",
         "x": 320,
-        "y": 320
+        "y": 320,
+        "category": "Games",
+        "description": "Launch DOOM in a retro DOS-style game window."
     },
     {
         "name": "Internet Explorer",
@@ -321,7 +347,9 @@
         "size": 8000,
         "type": ".exe",
         "x": 20,
-        "y": 420
+        "y": 420,
+        "category": "Productivity",
+        "description": "Browse the portfolio web shell inside Internet Explorer."
     },
     {
         "name": "MS-DOS Prompt",
@@ -330,7 +358,9 @@
         "size": 5000,
         "type": ".exe",
         "x": 120,
-        "y": 420
+        "y": 420,
+        "category": "Utilities",
+        "description": "Open the DOS-inspired command prompt experience."
     },
     {
         "name": "VS Code",
@@ -339,7 +369,9 @@
         "size": 15000,
         "type": ".exe",
         "x": 220,
-        "y": 420
+        "y": 420,
+        "category": "Productivity",
+        "description": "Open the VS Code themed editor window."
     },
     {
         "name": "Windows 95",
@@ -348,7 +380,9 @@
         "size": 220000,
         "type": ".exe",
         "x": 320,
-        "y": 420
+        "y": 420,
+        "category": "Utilities",
+        "description": "Boot a Windows 95 environment inside the desktop shell."
     },
     {
         "name": "Nintendo 64",
@@ -357,7 +391,9 @@
         "size": 128000,
         "type": ".exe",
         "x": 420,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Browse and launch Nintendo 64 ROMs from the bundled library."
     },
     {
         "name": "PlayStation 1",
@@ -366,7 +402,9 @@
         "size": 128000,
         "type": ".exe",
         "x": 520,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Launch PlayStation 1 titles through proxy-backed ROM manifests."
     },
     {
         "name": "Game Boy Advance",
@@ -375,7 +413,9 @@
         "size": 64000,
         "type": ".exe",
         "x": 620,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Browse and launch Game Boy Advance ROMs from the bundled library."
     },
     {
         "name": "NES Emulator",
@@ -384,7 +424,9 @@
         "size": 48000,
         "type": ".exe",
         "x": 720,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Browse and launch Nintendo Entertainment System ROMs."
     },
     {
         "name": "Space Cadet Pinball",
@@ -393,7 +435,9 @@
         "size": 22000,
         "type": ".exe",
         "x": 920,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Play the classic Full Tilt Space Cadet pinball table."
     },
     {
         "name": "Quake III Arena",
@@ -402,7 +446,9 @@
         "size": 180000,
         "type": ".exe",
         "x": 1020,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Launch Quake III Arena in the retro game shell."
     },
     {
         "name": "Quake",
@@ -411,7 +457,9 @@
         "size": 96000,
         "type": ".exe",
         "x": 1120,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Launch the original Quake inside the portfolio desktop."
     },
     {
         "name": "Chrome Dino",
@@ -420,7 +468,9 @@
         "size": 12000,
         "type": ".exe",
         "x": 1220,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Play the offline Chrome Dino runner clone."
     },
     {
         "name": "DX-Ball",
@@ -429,7 +479,9 @@
         "size": 20000,
         "type": ".exe",
         "x": 1320,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Play the arcade brick breaker DX-Ball."
     },
     {
         "name": "SkiFree",
@@ -438,6 +490,30 @@
         "size": 28000,
         "type": ".exe",
         "x": 1420,
-        "y": 420
+        "y": 420,
+        "category": "Games",
+        "description": "Launch the classic SkiFree slope run."
+    },
+    {
+        "name": "Nintendo 3DS",
+        "pic": "Nintendo 3DS",
+        "folderId": "Desktop",
+        "size": 196000,
+        "type": ".exe",
+        "x": 820,
+        "y": 420,
+        "category": "Games",
+        "description": "Browse Nintendo 3DS proxy-backed ROM entries wired to the Citra loader."
+    },
+    {
+        "name": "Commander Keen 4",
+        "pic": "Commander Keen 4",
+        "folderId": "Desktop",
+        "size": 36000,
+        "type": ".exe",
+        "x": 1020,
+        "y": 420,
+        "category": "Games",
+        "description": "Launch Commander Keen 4 through the DOS.Zone wrapper."
     }
 ]

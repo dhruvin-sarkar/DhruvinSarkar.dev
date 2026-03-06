@@ -17,6 +17,9 @@ const ManifestRomEmulator = ({
   defaultWidth,
   defaultHeight,
   defaultPosition,
+  launchSupport = "supported",
+  unavailableTitle = "Emulator unavailable",
+  unavailableMessage = "This emulator is not available in the current build.",
 }) => {
   const context = useContext(UseContext);
   const state = context[stateKey];
@@ -40,11 +43,13 @@ const ManifestRomEmulator = ({
   }, [selectedRom]);
 
   const iframeSrc = useMemo(() => {
-    if (!selectedRom?.file) return "";
+    if (!selectedRom?.file || launchSupport === "unavailable") return "";
     const romUrl =
       selectedRom?.source === "uploaded" && selectedRom?.objectUrl
         ? selectedRom.objectUrl
-        : new URL(resolvePublicUrl(`roms/${system}/${selectedRom.file}`), window.location.origin).toString();
+        : /^https?:\/\//i.test(selectedRom.file)
+          ? selectedRom.file
+          : new URL(resolvePublicUrl(`roms/${system}/${selectedRom.file}`), window.location.origin).toString();
     const loaderPath = resolvePublicUrl("emulators/ejs-loader.html");
     const query = new URLSearchParams({
       core,
@@ -53,7 +58,9 @@ const ManifestRomEmulator = ({
       system,
     });
     return `${loaderPath}?${query.toString()}`;
-  }, [core, selectedRom?.file, selectedRom?.title, system]);
+  }, [core, launchSupport, selectedRom?.file, selectedRom?.objectUrl, selectedRom?.source, selectedRom?.title, system]);
+
+  const isLaunchUnavailable = Boolean(selectedRom?.file) && launchSupport === "unavailable";
 
   const {
     iframeUrl,
@@ -109,7 +116,31 @@ const ManifestRomEmulator = ({
           </div>
 
           <div className="rom-player-frame">
-            {isLoading ? (
+            {isLaunchUnavailable ? (
+              <div className="iframe-error-overlay">
+                <div className="iframe-error-panel">
+                  <h3>{unavailableTitle}</h3>
+                  <div className="panel-body">
+                    <div className="win95-panel-icon">!</div>
+                    <div className="win95-panel-copy">
+                      <p>{unavailableMessage}</p>
+                      <div className="iframe-error-actions">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedRom(null);
+                          }}
+                        >
+                          Library
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : null}
+
+            {!isLaunchUnavailable && isLoading ? (
               <EmulatorLoadingScreen
                 title={title}
                 subtitle={`Launching ${runtimeTitle || selectedRom.title || selectedRom.file}...`}
@@ -117,17 +148,19 @@ const ManifestRomEmulator = ({
               />
             ) : null}
 
-            <iframe
-              title={`${title} Player`}
-              src={iframeUrl}
-              className="retro-emulator-iframe"
-              onLoad={handleLoad}
-              onError={handleError}
-              allow="autoplay; fullscreen; gamepad"
-              loading="eager"
-            />
+            {!isLaunchUnavailable ? (
+              <iframe
+                title={`${title} Player`}
+                src={iframeUrl}
+                className="retro-emulator-iframe"
+                onLoad={handleLoad}
+                onError={handleError}
+                allow="autoplay; fullscreen; gamepad"
+                loading="eager"
+              />
+            ) : null}
 
-            {hasError ? (
+            {!isLaunchUnavailable && hasError ? (
               <div className="iframe-error-overlay">
                 <div className="iframe-error-panel">
                   <h3>{title}</h3>

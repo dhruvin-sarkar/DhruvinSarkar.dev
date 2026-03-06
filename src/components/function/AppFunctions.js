@@ -54,7 +54,6 @@ import Quake3Icon from '../../assets/quake3.png'
 import ChromeDinoIcon from '../../assets/dino.png'
 import DXBallIcon from '../../assets/dxball.png'
 import Windows95Icon from '../../assets/image-removebg-preview.png'
-import CommanderKeenIcon from '../../assets/image-removebg-preview (1).png'
 import SpaceCadetPinballIcon from '../../assets/pinball.png'
 
 export function minimizeWindow(setState, nextState = {}) {
@@ -170,6 +169,9 @@ export function imageMapping (name, type) {
     case 'PlayStation 1':
       return PS1Icon;
 
+    case 'Nintendo 3DS':
+      return '/icons/reference/emulator.png';
+
     case 'Game Boy Advance':
       return GBAIcon;
 
@@ -179,9 +181,8 @@ export function imageMapping (name, type) {
     case 'Windows 95':
       return Windows95Icon;
 
-    // Commander Keen 4 - commented out
-    // case 'Commander Keen 4':
-    //   return CommanderKeenIcon;
+    case 'Commander Keen 4':
+      return '/icons/reference/jsdos.png';
 
     case 'Space Cadet Pinball':
       return SpaceCadetPinballIcon;
@@ -344,11 +345,11 @@ export function handleDoubleClickPhotoOpenMobile(name, setCurrentPhoto, lastTapT
   }
 
 // click to open links
-export function handleDoubleClickiframe(name) {
+export function handleDoubleClickiframe(_name) {
   // Projects removed - replace with your own projects
 }
 
-export function handleDoubleTapiframeMobile(name, lastTapTime, setLastTapTime) {
+export function handleDoubleTapiframeMobile(_name, lastTapTime, setLastTapTime) {
   const now = Date.now();
   if (now - lastTapTime < 300) {
     // Projects removed - replace with your own projects

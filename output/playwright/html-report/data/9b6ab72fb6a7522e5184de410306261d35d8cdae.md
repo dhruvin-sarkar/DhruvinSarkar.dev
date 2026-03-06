@@ -1,0 +1,641 @@
+# Page snapshot
+
+```yaml
+- main "Dhruvin Sarkar's Portfolio" [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "Store" [ref=e7]
+        - generic [ref=e8]: Store
+      - generic [ref=e9]:
+        - paragraph [ref=e11]
+        - paragraph [ref=e15]: ×
+    - generic [ref=e16]:
+      - paragraph [ref=e17]: File_
+      - paragraph [ref=e18]: Edit_
+      - paragraph [ref=e19]: View_
+      - paragraph [ref=e20]: Help_
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - textbox "Search...." [ref=e24]
+          - img [ref=e26]
+        - generic [ref=e28]:
+          - generic [ref=e29] [cursor=pointer]:
+            - text: Categories
+            - img [ref=e31]
+          - generic [ref=e33] [cursor=pointer]:
+            - generic [ref=e34]: .
+            - text: All (31)
+          - generic [ref=e35] [cursor=pointer]: Games (14)
+          - generic [ref=e36] [cursor=pointer]: Utilities (12)
+          - generic [ref=e37] [cursor=pointer]: Productivity (5)
+          - generic [ref=e38] [cursor=pointer]: To install (10)
+      - generic [ref=e39]:
+        - generic [ref=e40] [cursor=pointer]:
+          - img "About" [ref=e42]
+          - generic [ref=e43]:
+            - paragraph [ref=e44]: About
+            - paragraph [ref=e45]: No description available.
+        - generic [ref=e46] [cursor=pointer]:
+          - img "Mail" [ref=e48]
+          - generic [ref=e49]:
+            - paragraph [ref=e50]: Mail
+            - paragraph [ref=e51]: Open the retro email client and portfolio contact workflow.
+        - generic [ref=e52] [cursor=pointer]:
+          - img "MineSweeper" [ref=e54]
+          - generic [ref=e55]:
+            - paragraph [ref=e56]: MineSweeper
+            - paragraph [ref=e57]: Classic Windows MineSweeper with the original look and feel.
+        - generic [ref=e58] [cursor=pointer]:
+          - img "MSN" [ref=e60]
+          - generic [ref=e61]:
+            - paragraph [ref=e62]: MSN
+            - paragraph [ref=e63]: Launch the MSN-inspired chat client experience.
+        - generic [ref=e64] [cursor=pointer]:
+          - img "Winamp" [ref=e66]
+          - generic [ref=e67]:
+            - paragraph [ref=e68]: Winamp
+            - paragraph [ref=e69]: Play music through the Winamp-style desktop player.
+        - generic [ref=e70] [cursor=pointer]:
+          - img "Bitcoin" [ref=e72]
+          - generic [ref=e73]:
+            - paragraph [ref=e74]: Bitcoin
+            - paragraph [ref=e75]: View the built-in Bitcoin price tracker and chart widget.
+        - generic [ref=e76] [cursor=pointer]:
+          - img "Github" [ref=e78]
+          - generic [ref=e79]:
+            - paragraph [ref=e80]: Github
+            - paragraph [ref=e81]: No description available.
+        - generic [ref=e82] [cursor=pointer]:
+          - img "AiAgent" [ref=e84]
+          - generic [ref=e85]:
+            - paragraph [ref=e86]: AiAgent
+            - paragraph [ref=e87]: Use the built-in AI agent workspace from the desktop.
+        - generic [ref=e88] [cursor=pointer]:
+          - img "Cat" [ref=e90]
+          - generic [ref=e91]:
+            - paragraph [ref=e92]: Cat
+            - paragraph [ref=e93]: Open the desktop cat companion and animation window.
+        - generic [ref=e94] [cursor=pointer]:
+          - img "ResetStorage" [ref=e96]
+          - generic [ref=e97]:
+            - paragraph [ref=e98]: ResetStorage
+            - paragraph [ref=e99]: Clear saved local data and restore the portfolio state.
+        - generic [ref=e100] [cursor=pointer]:
+          - img "Paint" [ref=e102]
+          - generic [ref=e103]:
+            - paragraph [ref=e104]: Paint
+            - paragraph [ref=e105]: Draw in the classic Paint-style editor.
+        - generic [ref=e106] [cursor=pointer]:
+          - img "Patch" [ref=e108]
+          - generic [ref=e109]:
+            - paragraph [ref=e110]: Patch
+            - paragraph [ref=e111]: Open the patch notes and update log window.
+        - generic [ref=e112] [cursor=pointer]:
+          - img "TaskManager" [ref=e114]
+          - generic [ref=e115]:
+            - paragraph [ref=e116]: TaskManager
+            - paragraph [ref=e117]: Inspect running windows and desktop state.
+        - generic [ref=e118] [cursor=pointer]:
+          - img "Store" [ref=e120]
+          - generic [ref=e121]:
+            - paragraph [ref=e122]: Store
+            - paragraph [ref=e123]: Browse and install desktop apps from the portfolio catalog.
+        - generic [ref=e124] [cursor=pointer]:
+          - img "DOOM" [ref=e126]
+          - generic [ref=e127]:
+            - paragraph [ref=e128]: DOOM
+            - paragraph [ref=e129]: Launch DOOM in a retro DOS-style game window.
+        - generic [ref=e130] [cursor=pointer]:
+          - img "Internet Explorer" [ref=e132]
+          - generic [ref=e133]:
+            - paragraph [ref=e134]: Internet Explorer
+            - paragraph [ref=e135]: Browse the portfolio web shell inside Internet Explorer.
+        - generic [ref=e136] [cursor=pointer]:
+          - img "MS-DOS Prompt" [ref=e138]
+          - generic [ref=e139]:
+            - paragraph [ref=e140]: MS-DOS Prompt
+            - paragraph [ref=e141]: Open the DOS-inspired command prompt experience.
+        - generic [ref=e142] [cursor=pointer]:
+          - img "VS Code" [ref=e144]
+          - generic [ref=e145]:
+            - paragraph [ref=e146]: VS Code
+            - paragraph [ref=e147]: Open the VS Code themed editor window.
+        - generic [ref=e148] [cursor=pointer]:
+          - img "Windows 95" [ref=e150]
+          - generic [ref=e151]:
+            - paragraph [ref=e152]: Windows 95
+            - paragraph [ref=e153]: Boot a Windows 95 environment inside the desktop shell.
+        - generic [ref=e154] [cursor=pointer]:
+          - img "Nintendo 64" [ref=e156]
+          - generic [ref=e157]:
+            - paragraph [ref=e158]: Nintendo 64
+            - paragraph [ref=e159]: Browse and launch Nintendo 64 ROMs from the bundled library.
+        - generic [ref=e160] [cursor=pointer]:
+          - img "PlayStation 1" [ref=e162]
+          - generic [ref=e163]:
+            - paragraph [ref=e164]: PlayStation 1
+            - paragraph [ref=e165]: Launch PlayStation 1 titles through proxy-backed ROM manifests.
+        - generic [ref=e166] [cursor=pointer]:
+          - img "Game Boy Advance" [ref=e168]
+          - generic [ref=e169]:
+            - paragraph [ref=e170]: Game Boy Advance
+            - paragraph [ref=e171]: Browse and launch Game Boy Advance ROMs from the bundled library.
+        - generic [ref=e172] [cursor=pointer]:
+          - img "NES Emulator" [ref=e174]
+          - generic [ref=e175]:
+            - paragraph [ref=e176]: NES Emulator
+            - paragraph [ref=e177]: Browse and launch Nintendo Entertainment System ROMs.
+        - generic [ref=e178] [cursor=pointer]:
+          - img "Space Cadet Pinball" [ref=e180]
+          - generic [ref=e181]:
+            - paragraph [ref=e182]: Space Cadet Pinball
+            - paragraph [ref=e183]: Play the classic Full Tilt Space Cadet pinball table.
+        - generic [ref=e184] [cursor=pointer]:
+          - img "Quake III Arena" [ref=e186]
+          - generic [ref=e187]:
+            - paragraph [ref=e188]: Quake III Arena
+            - paragraph [ref=e189]: Launch Quake III Arena in the retro game shell.
+        - generic [ref=e190] [cursor=pointer]:
+          - img "Quake" [ref=e192]
+          - generic [ref=e193]:
+            - paragraph [ref=e194]: Quake
+            - paragraph [ref=e195]: Launch the original Quake inside the portfolio desktop.
+        - generic [ref=e196] [cursor=pointer]:
+          - img "Chrome Dino" [ref=e198]
+          - generic [ref=e199]:
+            - paragraph [ref=e200]: Chrome Dino
+            - paragraph [ref=e201]: Play the offline Chrome Dino runner clone.
+        - generic [ref=e202] [cursor=pointer]:
+          - img "DX-Ball" [ref=e204]
+          - generic [ref=e205]:
+            - paragraph [ref=e206]: DX-Ball
+            - paragraph [ref=e207]: Play the arcade brick breaker DX-Ball.
+        - generic [ref=e208] [cursor=pointer]:
+          - img "SkiFree" [ref=e210]
+          - generic [ref=e211]:
+            - paragraph [ref=e212]: SkiFree
+            - paragraph [ref=e213]: Launch the classic SkiFree slope run.
+        - generic [ref=e214] [cursor=pointer]:
+          - img "Nintendo 3DS" [ref=e216]
+          - generic [ref=e217]:
+            - paragraph [ref=e218]: Nintendo 3DS
+            - paragraph [ref=e219]: Browse Nintendo 3DS proxy-backed ROM entries wired to the Citra loader.
+        - generic [ref=e220] [cursor=pointer]:
+          - img "Commander Keen 4" [ref=e222]
+          - generic [ref=e223]:
+            - paragraph [ref=e224]: Commander Keen 4
+            - paragraph [ref=e225]: Launch Commander Keen 4 through the DOS.Zone wrapper.
+      - generic [ref=e226]:
+        - img "Commander Keen 4" [ref=e227]
+        - heading "Commander Keen 4" [level=3] [ref=e228]
+        - paragraph [ref=e229]: Launch Commander Keen 4 through the DOS.Zone wrapper.
+        - paragraph [ref=e230]: "Size: 36000MB"
+        - button "Install" [ref=e231] [cursor=pointer]: Install
+        - button "Uninstall" [disabled] [ref=e233] [cursor=pointer]
+  - text: _ _
+  - generic [ref=e242]:
+    - generic [ref=e243]:
+      - generic [ref=e244]:
+        - img "Patch" [ref=e245]
+        - text: Patch
+      - generic [ref=e252]: ×
+    - generic [ref=e254]:
+      - generic [ref=e255]:
+        - img "bulb" [ref=e256]
+        - heading "Patch Updates..." [level=1] [ref=e257]
+      - generic [ref=e258]:
+        - generic [ref=e259]:
+          - paragraph [ref=e260]:
+            - strong [ref=e261]: "**DOOM Game Integration**"
+            - text: — Latest
+          - paragraph [ref=e262]: "- Fully playable DOOM game with js-dos emulator integration"
+          - paragraph [ref=e263]: "- Fullscreen mode with proper 4:3 aspect ratio maintenance"
+          - paragraph [ref=e264]: "- Enhanced maximize button functionality for true fullscreen experience"
+          - paragraph [ref=e265]: "- Automatic letterboxing with black bars for authentic retro display"
+          - paragraph [ref=e266]: "- Improved canvas scaling and display optimization"
+          - paragraph [ref=e267]: "- Removed redundant fullscreen button for cleaner interface"
+        - generic [ref=e268]:
+          - paragraph [ref=e269]:
+            - strong [ref=e270]: "**Enhanced Bio Folder**"
+            - text: — Latest
+          - paragraph [ref=e271]: "- Updated technology stack with categorized sections for better organization"
+          - paragraph [ref=e272]: "- Improved tab formatting with consistent CSS classes across all sections"
+          - paragraph [ref=e273]: "- Added new 'Being Employed' section with professional experience content"
+          - paragraph [ref=e274]: "- Enhanced visual consistency and readability throughout bio sections"
+        - generic [ref=e275]:
+          - paragraph [ref=e276]:
+            - strong [ref=e277]: "**Footer**"
+            - text: —
+          - paragraph [ref=e278]: "- Now icon will be added and delete dynamically, and width will be adjusted automatically"
+          - paragraph [ref=e279]: "- New icon will be able to be added on the footer bottom right corner"
+        - generic [ref=e280]:
+          - paragraph [ref=e281]:
+            - strong [ref=e282]: "**Store**"
+            - text: —
+          - paragraph [ref=e283]: "- All apps are now able to install and uninstall in the store"
+        - generic [ref=e284]:
+          - paragraph [ref=e285]:
+            - strong [ref=e286]: "**Tile**"
+            - text: —
+          - paragraph [ref=e287]: "- All the apps that being installed or uninstalled are now being add or remove on Tile as well"
+        - generic [ref=e288]:
+          - paragraph [ref=e289]:
+            - strong [ref=e290]: "**Store**"
+            - text: —
+          - paragraph [ref=e291]: "- All the apps in Store are now free to install"
+          - paragraph [ref=e292]: "- Animation will be added when installing apps from Store"
+        - generic [ref=e293]:
+          - paragraph [ref=e294]:
+            - strong [ref=e295]: "**Bin**"
+            - text: —
+          - paragraph [ref=e296]: "- Added confirmation before permanently delete file"
+        - generic [ref=e297]:
+          - paragraph [ref=e298]:
+            - strong [ref=e299]: "**Store**"
+            - text: —
+          - paragraph [ref=e300]: "- Added Store icon"
+        - generic [ref=e301]:
+          - paragraph [ref=e302]:
+            - strong [ref=e303]: "**Google Toggable Search Bar**"
+            - text: —
+          - paragraph [ref=e304]: "- Added togglable Google Search bar"
+        - generic [ref=e305]:
+          - paragraph [ref=e306]:
+            - strong [ref=e307]: "**Right click pannel**"
+            - text: —
+          - paragraph [ref=e308]: "- Added sorting icon right click"
+          - paragraph [ref=e309]: "- Each folder's icons can be sorted by name"
+        - generic [ref=e310]:
+          - paragraph [ref=e311]:
+            - strong [ref=e312]: "**MSN APP**"
+            - text: —
+          - paragraph [ref=e313]: "- Add MSN nudge sound effect"
+          - paragraph [ref=e314]: "- Send nudge to server and broadcast to all clients"
+          - paragraph [ref=e315]: "- Nudge shakes the chat window"
+        - generic [ref=e316]:
+          - paragraph [ref=e317]:
+            - strong [ref=e318]: "**BTC Widget**"
+            - text: —
+          - paragraph [ref=e319]: "- Add bitcoin chart"
+          - paragraph [ref=e320]: "- Re-design BTC widget"
+        - generic [ref=e321]:
+          - paragraph [ref=e322]:
+            - strong [ref=e323]: "**Recycle Bin**"
+            - text: —
+          - paragraph [ref=e324]: "- User now can now permanently delete files on recycle bin"
+        - generic [ref=e325]:
+          - paragraph [ref=e326]:
+            - strong [ref=e327]: "**System**"
+            - text: —
+          - paragraph [ref=e328]: "- User now can create Folders"
+          - paragraph [ref=e329]: "- Folders and items can be dropped into created folders"
+        - generic [ref=e330]:
+          - paragraph [ref=e331]:
+            - strong [ref=e332]: "**Added Task Manager**"
+            - text: —
+          - paragraph [ref=e333]: "- Added Task Manager app."
+          - paragraph [ref=e334]: "- Can view and manage running programs."
+        - generic [ref=e335]:
+          - paragraph [ref=e336]:
+            - strong [ref=e337]: "**MSN App**"
+            - text: —
+          - paragraph [ref=e338]: "- Added Reconnect to chat"
+        - generic [ref=e339]:
+          - paragraph [ref=e340]:
+            - strong [ref=e341]: "**Tile grid App**"
+            - text: —
+          - paragraph [ref=e342]: "- Added Icons"
+        - generic [ref=e343]:
+          - paragraph [ref=e344]:
+            - strong [ref=e345]: "**Tile grid App**"
+            - text: —
+          - paragraph [ref=e346]: "- Added fetching background from tile screen mode with toggle on/off"
+        - generic [ref=e347]:
+          - paragraph [ref=e348]:
+            - strong [ref=e349]: "**Added Tile grid App**"
+            - text: —
+          - paragraph [ref=e350]: "- Added Tile grid App"
+          - paragraph [ref=e351]: "- More feature will be added later.."
+          - paragraph [ref=e352]: "- Inspred by Windows 10 and Windows phone"
+        - generic [ref=e353]:
+          - paragraph [ref=e354]:
+            - strong [ref=e355]: "**NEW FORTUNE APP**"
+            - text: —
+          - paragraph [ref=e356]: "- Added Fortune Teller app."
+          - paragraph [ref=e357]: "- Can predict your weekly fortune"
+        - generic [ref=e358]:
+          - paragraph [ref=e359]:
+            - strong [ref=e360]: "**MSN APP**"
+            - text: —
+          - paragraph [ref=e361]: "- Added AI Chat Bot to MSN app."
+          - paragraph [ref=e362]: "- Chat Bot is able to be switched on/off."
+          - paragraph [ref=e363]: "- Auto activate Chat Bot when no other users are online."
+        - generic [ref=e364]:
+          - paragraph [ref=e365]:
+            - strong [ref=e366]: "**New Project**"
+            - text: —
+          - paragraph [ref=e367]: "- Added 3D Object in Project folder."
+        - generic [ref=e368]:
+          - paragraph [ref=e369]:
+            - strong [ref=e370]: "**Clippy**"
+            - text: —
+          - paragraph [ref=e371]: "- Added Clippy's new speech."
+        - generic [ref=e372]:
+          - paragraph [ref=e373]:
+            - strong [ref=e374]: "**Setting Background**"
+            - text: —
+          - paragraph [ref=e375]: "- Added color picker to Settings for background customization."
+        - generic [ref=e376]:
+          - paragraph [ref=e377]:
+            - strong [ref=e378]: "**Weather App**"
+            - text: —
+          - paragraph [ref=e379]: "- Now weather prediction can track user's local time."
+          - paragraph [ref=e380]: "- Added Weather 🌙 sticker when its night time."
+        - generic [ref=e381]:
+          - paragraph [ref=e382]:
+            - strong [ref=e383]: "**Patch App**"
+            - text: —
+          - paragraph [ref=e384]: "- Patch App officially added to system."
+        - generic [ref=e385]:
+          - paragraph [ref=e386]:
+            - strong [ref=e387]: "**News & Weather**"
+            - text: —
+          - paragraph [ref=e388]: "- Added toggle between Celsius and Fahrenheit."
+        - generic [ref=e389]:
+          - paragraph [ref=e390]:
+            - strong [ref=e391]: "**News & Weather**"
+            - text: —
+          - paragraph [ref=e392]: "- Temperature detection now uses user's location."
+          - paragraph [ref=e393]: "- Integrated into News app."
+        - generic [ref=e394]:
+          - paragraph [ref=e395]:
+            - strong [ref=e396]: "**News & Weather**"
+            - text: —
+          - paragraph [ref=e397]: "- Added News icon to taskbar."
+          - paragraph [ref=e398]: "- Displays latest news articles fetched from backend."
+        - generic [ref=e399]:
+          - paragraph [ref=e400]:
+            - strong [ref=e401]: "**Apps**"
+            - text: —
+          - paragraph [ref=e402]: "- Started AiAgent project."
+        - generic [ref=e403]:
+          - paragraph [ref=e404]:
+            - strong [ref=e405]: "**Apps**"
+            - text: —
+          - paragraph [ref=e406]: "- Added Paint app using [jspaint](https://github.com/1j01/jspaint) library."
+        - generic [ref=e407]:
+          - paragraph [ref=e408]:
+            - strong [ref=e409]: "**System Functionality Updates**"
+            - text: —
+          - paragraph [ref=e410]: "- Right-click enabled on icons in Recycle Bin."
+          - paragraph [ref=e411]: "- Restore deleted icons to original position."
+        - generic [ref=e412]:
+          - paragraph [ref=e413]:
+            - strong [ref=e414]: "**System Functionality Updates**"
+            - text: —
+          - paragraph [ref=e415]: "- Right-click added to desktop icons."
+          - paragraph [ref=e416]: "- Mobile long-press support added for context menu."
+        - generic [ref=e417]:
+          - paragraph [ref=e418]:
+            - strong [ref=e419]: "**System Functionality Updates**"
+            - text: —
+          - paragraph [ref=e420]: "- Added 'My Computer' icon."
+          - paragraph [ref=e421]: "- Started work on file system architecture."
+        - generic [ref=e422]:
+          - paragraph [ref=e423]:
+            - strong [ref=e424]: "**Settings**"
+            - text: —
+          - paragraph [ref=e425]: "- Added effect pattern options to Settings."
+        - generic [ref=e426]:
+          - paragraph [ref=e427]:
+            - strong [ref=e428]: "**MSN Chat App**"
+            - text: —
+          - paragraph [ref=e429]: "- MSN chat now uses WebSocket for faster communication."
+          - paragraph [ref=e430]: "- Reconnects automatically after navigation or reload."
+        - generic [ref=e431]:
+          - paragraph [ref=e432]:
+            - strong [ref=e433]: "**Footer & Clock**"
+            - text: —
+          - paragraph [ref=e434]: "- Icon size is now adjustable via clock footer button."
+        - generic [ref=e435]:
+          - paragraph [ref=e436]:
+            - strong [ref=e437]: "**Bitcoin Tracker**"
+            - text: —
+          - paragraph [ref=e438]: "- Added BTC real-time tracker via Coinbase WebSocket."
+          - paragraph [ref=e439]: "- Icon celebrates $100K milestone and is toggleable on tab bar."
+        - generic [ref=e440]:
+          - paragraph [ref=e441]:
+            - strong [ref=e442]: "**Notifications**"
+            - text: —
+          - paragraph [ref=e443]: "- Added launch-time system notification and animation."
+          - paragraph [ref=e444]: "- Pop-up message now appears when new MSN message arrives (even when closed)."
+        - generic [ref=e445]:
+          - paragraph [ref=e446]:
+            - strong [ref=e447]: "**MSN Chat App**"
+            - text: —
+          - paragraph [ref=e448]: "- Live MSN chat app built with Node, Express, MongoDB."
+          - paragraph [ref=e449]: "- Session expiration key added to block spam."
+          - paragraph [ref=e450]: "- Server-side filter and auto-deletion of spam enabled."
+        - generic [ref=e451]:
+          - paragraph [ref=e452]:
+            - strong [ref=e453]: "**Drag-and-Drop Feature**"
+            - text: —
+          - paragraph [ref=e454]: "- Icons can be dragged into folders."
+          - paragraph [ref=e455]: "- Bug fixed where dragging out of folder caused layout bugs using key-based container re-mount."
+          - paragraph [ref=e456]: "- Icon state now saved to localStorage."
+        - generic [ref=e457]:
+          - paragraph [ref=e458]:
+            - strong [ref=e459]: "**Settings**"
+            - text: —
+          - paragraph [ref=e460]: "- Wallpaper selection now available in Settings."
+          - paragraph [ref=e461]: "- Theme updates automatically with wallpaper."
+        - generic [ref=e462]:
+          - paragraph [ref=e463]:
+            - strong [ref=e464]: "**System Functionality Updates**"
+            - text: —
+          - paragraph [ref=e465]: "- Start menu now supports subfolders (Windows 95 style)."
+        - generic [ref=e466]:
+          - paragraph [ref=e467]:
+            - strong [ref=e468]: "**Mini-Games**"
+            - text: —
+          - paragraph [ref=e469]: "- Minesweeper game added."
+          - paragraph [ref=e470]: "- Flags can be placed directly on desktop tiles."
+        - generic [ref=e471]:
+          - paragraph [ref=e472]:
+            - strong [ref=e473]: "**Interactive Components**"
+            - text: —
+          - paragraph [ref=e474]: "- Login page added with Mario animation."
+          - paragraph [ref=e475]: "- Clicking '?' increases Mario’s size."
+        - generic [ref=e476]:
+          - paragraph [ref=e477]:
+            - strong [ref=e478]: "**Interactive Components**"
+            - text: —
+          - paragraph [ref=e479]: "- Added shutdown button with options: Shutdown, Restart, Log Out."
+          - paragraph [ref=e480]: "- Shutdown animation integrated."
+        - generic [ref=e481]:
+          - paragraph [ref=e482]:
+            - strong [ref=e483]: "**Footer & Clock**"
+            - text: —
+          - paragraph [ref=e484]: "- Clicking on clock opens calendar widget."
+        - generic [ref=e485]:
+          - paragraph [ref=e486]:
+            - strong [ref=e487]: "**Run Command**"
+            - text: —
+          - paragraph [ref=e488]: "- Run command window added."
+          - paragraph [ref=e489]: "- Fully functional with error handling for incorrect file names."
+        - generic [ref=e490]:
+          - paragraph [ref=e491]:
+            - strong [ref=e492]: "**Clippy Assistant**"
+            - text: —
+          - paragraph [ref=e493]: "- Clippy assistant introduced with motivational speeches."
+          - paragraph [ref=e494]: "- Clippy now gives context-aware advice when interacting with components."
+        - generic [ref=e495]:
+          - paragraph [ref=e496]:
+            - strong [ref=e497]: "**UI Framework**"
+            - text: —
+          - paragraph [ref=e498]: "- Drag and Drop window support added."
+          - paragraph [ref=e499]: "- Start Menu UI created."
+          - paragraph [ref=e500]: "- Windows now resizable and support shrink/expand."
+          - paragraph [ref=e501]: "- Icons support single-click highlight and double-click open."
+          - paragraph [ref=e502]: "- Double-click also works on mobile using useState time-check logic."
+  - generic [ref=e511]:
+    - paragraph [ref=e513]: Notification
+    - paragraph [ref=e515]:
+      - text: Creative Direction
+      - text: The retro Windows feel is handcrafted, not template-based.
+  - generic [ref=e516]:
+    - generic [ref=e517]:
+      - generic [ref=e518]:
+        - img "About" [ref=e519]
+        - text: About
+      - generic [ref=e520]:
+        - paragraph [ref=e522]
+        - paragraph [ref=e524]: ×
+    - generic [ref=e525]:
+      - paragraph [ref=e526] [cursor=pointer]: Who I Am
+      - paragraph [ref=e527] [cursor=pointer]: Technology
+      - paragraph [ref=e528] [cursor=pointer]: Linux
+      - paragraph [ref=e529] [cursor=pointer]: Hobby
+      - paragraph [ref=e530] [cursor=pointer]: Being Employed
+    - generic [ref=e531]:
+      - generic [ref=e532]:
+        - img "bioPC" [ref=e533]
+        - generic [ref=e535]:
+          - generic [ref=e536]:
+            - heading "Who I Am" [level=3] [ref=e537]
+            - paragraph [ref=e538]: I'm an AI and Design Thinking student in 11th grade, driven by a deep curiosity for how ideas become real, usable digital experiences. Technology has been part of my life for as long as I can remember — with both my father and grandfather working in tech, I grew up surrounded by computers, PCBs, and experiments instead of toys. My journey into programming started early. At just 8 years old, my dad introduced me to C and C++, and that moment sparked a long-term obsession with understanding how systems work from the ground up. Since then, I've explored everything from low-level programming to modern full-stack development, always aiming to build things that are both technically sound and thoughtfully designed. I care deeply about UI/UX. For me, good software isn't just functional — it's intuitive, expressive, and memorable. Alongside building projects, I actively sharpen my problem-solving and algorithmic thinking through competitive programming and LeetCode, treating consistency and growth as non-negotiables. Outside of coding, I'm a passionate gamer — from FPS titles to roguelikes and simulators — and I experiment with game development, PCB work, PC modding, and hardware tinkering. Beyond tech, I enjoy car modding, archery, music, and diving into anime, manhwa, and manga. All of these interests feed into how I think and create, helping me approach problems with fresh perspectives and unconventional ideas.
+          - generic [ref=e539]:
+            - heading "What Drives Me" [level=3] [ref=e540]
+            - paragraph [ref=e541]: I'm driven by a balance of building products, solving complex problems, and designing meaningful experiences. I don't see these as separate paths — to me, they're deeply interconnected. Building is how ideas become real, problem-solving is how systems become robust, and design is what makes everything human. I enjoy moving fluidly between all three, letting each inform the other.
+          - generic [ref=e542]:
+            - heading "Why I Build" [level=3] [ref=e543]
+            - paragraph [ref=e544]: "What really fuels me is the process of exploration. I love pushing limits — learning new technologies, experimenting with different approaches, and stretching boundaries just to see how far something can go. A big part of this is proving things to myself: that I can adapt, that I can learn fast, and that I can create things that are genuinely useful, thoughtful, and cool. Building isn't just output for me — it's validation, growth, and self-expression rolled into one."
+          - generic [ref=e545]:
+            - heading "How I Learn" [level=3] [ref=e546]
+            - paragraph [ref=e547]: I'm unapologetically docs-first. Documentation is where I feel most at home — I like understanding tools from their foundations rather than just copying patterns. I read docs deeply, cross-reference, experiment, break things, and rebuild them. Alongside that, I rely heavily on trial and error, because nothing teaches faster than seeing what fails and why. For me, learning sticks best when it's tied directly to something I'm building.
+          - generic [ref=e548]:
+            - heading "My Approach to Work" [level=3] [ref=e549]
+            - paragraph [ref=e550]: "I'm a perfectionist, but in a constructive way. I care deeply about polish, clarity, and correctness — especially when it comes to UI/UX and system behavior. I don't like \"good enough\" if I know it can be better. That said, I balance this with iteration: I refine continuously rather than waiting for perfection to magically appear."
+          - generic [ref=e551]:
+            - heading "How I Think" [level=3] [ref=e552]
+            - paragraph [ref=e553]: I'm naturally curious. If something works, I want to know why. If something breaks, I want to know how. That curiosity often pulls me deeper into systems than expected, but it's also how I uncover better solutions and cleaner designs.
+          - generic [ref=e554]:
+            - heading "My Mindset" [level=3] [ref=e555]
+            - paragraph [ref=e556]: I'm relentless when it comes to growth. Once I commit to learning something or solving a problem, I don't let go easily. I enjoy the grind — especially the quiet, focused kind where progress compounds over time. This persistence shows up in my coding practice, my projects, and my constant push to get better than I was yesterday.
+      - generic [ref=e557]:
+        - generic [ref=e558] [cursor=pointer]: OK
+        - generic [ref=e559] [cursor=pointer]: Cancel
+  - text: 000 000 _ _ _
+  - generic [ref=e569]:
+    - generic [ref=e570]:
+      - img "About"
+      - paragraph [ref=e571]: About
+    - generic [ref=e572]:
+      - img "MyComputer"
+      - paragraph [ref=e573]: MyComputer
+    - generic [ref=e574]:
+      - img "Resume"
+      - paragraph [ref=e575]: Resume
+    - generic [ref=e576]:
+      - img "Project"
+      - paragraph [ref=e577]: Project
+    - generic [ref=e578]:
+      - img "Mail"
+      - paragraph [ref=e579]: Mail
+    - generic [ref=e580]:
+      - img "MineSweeper"
+      - paragraph [ref=e581]: MineSweeper
+    - generic [ref=e582]:
+      - img "MSN"
+      - paragraph [ref=e583]: MSN
+    - generic [ref=e584]:
+      - img "RecycleBin"
+      - paragraph [ref=e585]: RecycleBin
+    - generic [ref=e586]:
+      - img "Store"
+      - paragraph [ref=e587]: Store
+    - generic [ref=e588]:
+      - img "DOOM"
+      - paragraph [ref=e589]: DOOM
+    - generic [ref=e590]:
+      - img "Internet Explorer"
+      - paragraph [ref=e591]: Internet Explorer
+    - generic [ref=e592]:
+      - img "MS-DOS Prompt"
+      - paragraph [ref=e593]: MS-DOS Prompt
+    - generic [ref=e594]:
+      - img "VS Code"
+      - paragraph [ref=e595]: VS Code
+    - generic [ref=e596]:
+      - img "Windows 95"
+      - paragraph [ref=e597]: Windows 95
+    - generic [ref=e598]:
+      - img "Nintendo 64"
+      - paragraph [ref=e599]: Nintendo 64
+    - generic [ref=e600]:
+      - img "PlayStation 1"
+      - paragraph [ref=e601]: PlayStation 1
+    - generic [ref=e602]:
+      - img "Game Boy Advance"
+      - paragraph [ref=e603]: Game Boy Advance
+    - generic [ref=e604]:
+      - img "NES Emulator"
+      - paragraph [ref=e605]: NES Emulator
+    - generic [ref=e606]:
+      - img "Space Cadet Pinball"
+      - paragraph [ref=e607]: Space Cadet Pinball
+    - generic [ref=e608]:
+      - img "Quake III Arena"
+      - paragraph [ref=e609]: Quake III Arena
+    - generic [ref=e610]:
+      - img "Quake"
+      - paragraph [ref=e611]: Quake
+    - generic [ref=e612]:
+      - img "Chrome Dino"
+      - paragraph [ref=e613]: Chrome Dino
+    - generic [ref=e614]:
+      - img "DX-Ball"
+      - paragraph [ref=e615]: DX-Ball
+    - generic [ref=e616]:
+      - img "SkiFree"
+      - paragraph [ref=e617]: SkiFree
+    - generic [ref=e618]:
+      - img "Nintendo 3DS"
+      - paragraph [ref=e619]: Nintendo 3DS
+  - generic [ref=e620]:
+    - generic [ref=e621]:
+      - img "startIcon" [ref=e622]
+      - heading "Start" [level=4] [ref=e623]
+    - generic [ref=e624]:
+      - paragraph [ref=e626]: Store
+      - paragraph [ref=e628]: Patch
+      - paragraph [ref=e630]: About
+    - generic [ref=e631]:
+      - generic [ref=e632]:
+        - img "news" [ref=e633] [cursor=pointer]
+        - img "speaker" [ref=e634] [cursor=pointer]
+        - img "display" [ref=e635] [cursor=pointer]
+      - paragraph [ref=e637]: 05:44 PM
+```

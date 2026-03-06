@@ -100,7 +100,7 @@ const RomLibrary = ({ system, onSelectRom }) => {
 
         const [bundledRoms, uploadedRoms] = await Promise.all([
           bundledPromise,
-          listUploadedRoms(system),
+          systemConfig.supportsUpload ? listUploadedRoms(system) : Promise.resolve([]),
         ]);
 
         if (isCancelled) return;
@@ -135,6 +135,11 @@ const RomLibrary = ({ system, onSelectRom }) => {
   };
 
   const handleUpload = async (event) => {
+    if (!systemConfig.supportsUpload) {
+      event.target.value = "";
+      return;
+    }
+
     const files = Array.from(event.target.files || []);
     event.target.value = "";
 
@@ -175,7 +180,11 @@ const RomLibrary = ({ system, onSelectRom }) => {
     return (
       <LibraryState
         title={`${systemLabel} Library`}
-        message={`Scanning bundled and uploaded ${systemLabel} games...`}
+        message={
+          systemConfig.supportsUpload
+            ? `Scanning bundled and uploaded ${systemLabel} games...`
+            : `Scanning bundled ${systemLabel} manifest entries...`
+        }
         notes={noticeLines}
         action={
           systemConfig.supportsUpload ? (
@@ -260,8 +269,8 @@ const RomLibrary = ({ system, onSelectRom }) => {
           <span className="system-badge">{badgeLabel}</span>
           <h4>Open a game</h4>
           <p>Select a file from the list to launch it immediately in the emulator.</p>
-          <h4>Source folder</h4>
-          <p>/public/roms/{system}/</p>
+          <h4>Library source</h4>
+          <p>{systemConfig.supportsUpload ? `/public/roms/${system}/` : `/public/roms/${system}/manifest.json`}</p>
           <h4>Library notes</h4>
           <div className="rom-library-notices">
             {noticeLines.map((note) => (

@@ -1,5 +1,5 @@
 import UseContext from '../Context'
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import Draggable from './system/WindowDraggable';
 import { motion } from 'framer-motion';
 import '../css/Store.css'
@@ -24,7 +24,7 @@ function Store() {
   
 
   const { 
-    itemIsBeingDeleted, setItemIsBeingDeleted,
+    setItemIsBeingDeleted,
     setDeleteIcon,
     clearNotiTimeOut,
     setNewMessage,
@@ -45,8 +45,19 @@ function Store() {
     inlineStyle,
     iconFocusIcon,
     deleteTap,
-    sounds,
   } = useContext(UseContext);
+
+  const storeCatalog = useMemo(
+    () =>
+      iconInfo
+        .filter(item => item.type === '.exe')
+        .map(item => ({
+          ...item,
+          category: item.category || 'Utilities',
+          description: item.description || 'No description available.',
+        })),
+    [],
+  );
 
 
     // install app logic
@@ -60,7 +71,7 @@ function Store() {
 
     if (installIcon > 0) {
 
-      const findApp = iconInfo.find(icon => icon.name === itemBeingSelected.name)
+      const findApp = storeCatalog.find(icon => icon.name === itemBeingSelected.name)
       if (!findApp) return;
 
         clearTimeout(clearNotiTimeOut); // clear any previous timeout
@@ -111,8 +122,7 @@ function Store() {
     : false;
 
   // Filter items based on search and category
-  const itemsInStore = iconInfo
-    .filter(item => item.category)
+  const itemsInStore = storeCatalog
     .filter(item => {
       // Search filter
       if (storeSearchValue.trim() !== '') {
@@ -123,7 +133,7 @@ function Store() {
 
       // Category filter
       if (!selectedCategory) {
-        return; 
+        return false; 
       }
       
       switch (selectedCategory) {
@@ -146,7 +156,7 @@ function Store() {
       if (!cat) return;
 
     
-      const allStoreItems = iconInfo.filter(item => item.category);
+      const allStoreItems = storeCatalog;
 
       switch (cat) {
         case '1':

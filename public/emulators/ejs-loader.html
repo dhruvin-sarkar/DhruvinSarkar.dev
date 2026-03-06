@@ -16,6 +16,8 @@
         n64: "n64",
         ps1: "mednafen_psx_hw",
         mednafen_psx_hw: "mednafen_psx_hw",
+        "3ds": "citra",
+        citra: "citra",
         gba: "mgba",
         mgba: "mgba",
         nes: "fceumm",
@@ -25,6 +27,7 @@
       const CORE_LABELS = {
         n64: "Nintendo 64",
         mednafen_psx_hw: "PlayStation",
+        citra: "Nintendo 3DS",
         mgba: "Game Boy Advance",
         fceumm: "Nintendo Entertainment System",
       };
@@ -32,6 +35,7 @@
       const CORE_PROBE_FILES = {
         n64: "cores/mupen64plus_next-wasm.data",
         mednafen_psx_hw: "cores/mednafen_psx_hw-wasm.data",
+        citra: "cores/citra-wasm.data",
         mgba: "cores/mgba-wasm.data",
         fceumm: "cores/fceumm-wasm.data",
       };
@@ -180,6 +184,9 @@
         if (!probe) return CDN_DATA_PATH;
         const localProbe = `${LOCAL_DATA_PATH}${probe}`;
         const hasLocalCore = await assetExists(localProbe);
+        if (core === "citra") {
+          return hasLocalCore ? LOCAL_DATA_PATH : null;
+        }
         return hasLocalCore ? LOCAL_DATA_PATH : CDN_DATA_PATH;
       }
 
@@ -264,13 +271,23 @@
         }
 
         const romUrl = toAbsoluteUrl(rom);
-        const romExists = await assetExists(romUrl);
-        if (!romExists) {
-          renderError("The selected ROM could not be found.", romUrl);
-          return;
+        const romOrigin = new URL(romUrl, window.location.origin).origin;
+        if (romOrigin === window.location.origin) {
+          const romExists = await assetExists(romUrl);
+          if (!romExists) {
+            renderError("The selected ROM could not be found.", romUrl);
+            return;
+          }
         }
 
         const dataPath = await resolveDataPath();
+        if (!dataPath && core === "citra") {
+          renderError(
+            "The Nintendo 3DS web core is not installed on this deployment.",
+            "Add the self-hosted Citra core files under /public/emulators/emulatorjs/data/cores/ to launch Nintendo 3DS titles.",
+          );
+          return;
+        }
         renderDialog({
           heading: "Preparing emulator",
           message: "Loading runtime and selected cartridge.",

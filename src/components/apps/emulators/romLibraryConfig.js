@@ -1,5 +1,6 @@
 const LEGAL_NOTICE = "All ROMs were legally sourced.";
 const UPLOAD_NOTICE = "You can also upload and run your own ROMs from this browser.";
+const PROXY_NOTICE = "This library streams games through the portfolio's Cloudflare ROM proxy.";
 
 const SYSTEM_CONFIG = {
   n64: {
@@ -16,14 +17,27 @@ const SYSTEM_CONFIG = {
     label: "PlayStation 1",
     badge: "PS1",
     legalNotice: LEGAL_NOTICE,
-    uploadNotice: UPLOAD_NOTICE,
+    uploadNotice: PROXY_NOTICE,
     extraNotice:
-      "PlayStation 1 game files were too large to bundle in this repository. The emulator works, but you need to use your own PS1 ROMs.",
-    supportsUpload: true,
-    uploadAccept: ".chd,.iso,.img,.pbp,.zip",
+      "PlayStation 1 disc images stay in private R2 storage and are exposed only through Worker-backed manifest entries.",
+    supportsUpload: false,
+    uploadAccept: "",
     uploadHelpText:
-      "Upload a single-file disc image or a zipped package. Raw multi-file .cue + .bin sets should be zipped first.",
-    emptyStateText: "No bundled PlayStation 1 ROMs are stored in this repository.",
+      "Manifest entries point at Worker proxy URLs. Local browser uploads are disabled for PlayStation 1 in this build.",
+    emptyStateText: "No PlayStation 1 proxy entries were found in /public/roms/ps1/manifest.json.",
+  },
+  "3ds": {
+    label: "Nintendo 3DS",
+    badge: "3DS",
+    legalNotice: LEGAL_NOTICE,
+    uploadNotice: PROXY_NOTICE,
+    extraNotice:
+      "Nintendo 3DS titles use Worker-backed .3ds or .cia URLs from the manifest. The Citra web core must be self-hosted with this deployment.",
+    supportsUpload: false,
+    uploadAccept: "",
+    uploadHelpText:
+      "Add Worker proxy URLs to /public/roms/3ds/manifest.json. Local browser uploads are disabled for Nintendo 3DS.",
+    emptyStateText: "No Nintendo 3DS proxy entries were found in /public/roms/3ds/manifest.json.",
   },
   gba: {
     label: "Game Boy Advance",

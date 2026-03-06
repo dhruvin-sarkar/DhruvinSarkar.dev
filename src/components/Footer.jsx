@@ -7,8 +7,6 @@ import github from '../assets/github.png';
 import tile from '../assets/tile.png';
 import sidebar from '../assets/sidebar95.png';
 import display from '../assets/display.png';
-import project from '../assets/regFolder.png';
-import resume from '../assets/folder.png';
 import shutdownicon from '../assets/shutdownicon.png';
 import settings from '../assets/setting.png';
 import btc_icon from '../assets/btc_icon.webp'
@@ -38,19 +36,18 @@ export default function Footer() {
     const closeMenuTimeoutRef = useRef(null)
     const [calValue, calOnChange] = useState(new Date());
     const [width, setWidth] = useState(0);
-    const [reRenderFooter, setRerenderFooter] = useState(0)
     const [volumePopup, setVolumePopup] = useState(false)
 
     const {
         deleteTap,
-        tileScreen, setTileScreen,
+        setTileScreen,
         onlineUser,
         newsPopup, setNewsPopup,
-        btcShow, setBtcShow,
+        btcShow,
         isTouchDevice,
         desktopIcon,
-        projectStartBar, setProjectStartBar,
-        resumeStartBar, setResumejectStartBar,
+        setProjectStartBar,
+        setResumejectStartBar,
         calenderToggle, setCalenderToggle,
         iconTextSize,
         iconScreenSize, setIconScreenSize,
@@ -252,6 +249,20 @@ export default function Footer() {
             },
         },
         {
+            className: "threeds",
+            imgSrc: imageMapping('Nintendo 3DS'),
+            imgAlt: "Nintendo 3DS",
+            spanText: "Nintendo 3DS",
+            onClick: () => {
+                handleShow('Nintendo 3DS');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
             className: "gba",
             imgSrc: imageMapping('Game Boy Advance'),
             imgAlt: "Game Boy Advance",
@@ -279,7 +290,6 @@ export default function Footer() {
                 setProjectStartBar(false);
             },
         },
-        /* Commander Keen 4 - commented out
         {
             className: "keen4",
             imgSrc: imageMapping('Commander Keen 4'),
@@ -294,7 +304,6 @@ export default function Footer() {
                 setProjectStartBar(false);
             },
         },
-        */
         {
             className: "spacecadet",
             imgSrc: imageMapping('Space Cadet Pinball'),
@@ -702,9 +711,6 @@ export default function Footer() {
         { label: '2560x1440', value: 4 },
         { label: '3480x2160', value: 5 }
     ];
-
-    const projectFolderItem = desktopIcon.filter(icon => icon.folderId === 'Project').length
-    const resumeFolderItem = desktopIcon.filter(icon => icon.folderId === 'Resume').length
 
     const recycleBin = desktopIcon.filter(icon => icon.folderId === 'RecycleBin');
     const recycleBinLength = recycleBin.length;
