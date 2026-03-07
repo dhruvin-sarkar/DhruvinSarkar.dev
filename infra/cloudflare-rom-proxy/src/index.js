@@ -1,9 +1,7 @@
 /**
  * Cloudflare ROM Proxy Worker
  * 
- * IMPORTANT: This worker handles CORS for multiple origins and supports
- * HEAD and OPTIONS requests, which are required by the emulator's
- * range-based loading (XMLHttpRequest) on both local and production sites.
+ * Optimized for EmulatorJS CORS & Range loading.
  */
 
 const ALLOWED_ORIGINS = [
@@ -14,107 +12,119 @@ const ALLOWED_ORIGINS = [
 ];
 
 const ALLOWED_METHODS = "GET, HEAD, OPTIONS";
-const ALLOWED_HEADERS = "Range, If-Modified-Since, If-None-Match, Origin, X-Requested-With, Content-Type, Accept";
+const ALLOWED_HEADERS = "Range, If-Modified-Since, If-None-Match, Origin, X-Requested-With, Content-Type, Accept, Referer";
 
 const buildCorsHeaders = (request) => {
   const headers = new Headers();
-  const origin = request.headers.get("Origin") || "";
+  const origin = request.headers.get("Origin");
   const referer = request.headers.get("Referer") || "";
   
-  // Find match in either Origin (standard for XHR/Fetch) or Referer
-  const match = ALLOWED_ORIGINS.find(o => origin === o || referer.startsWith(o));
+  // Try to find a match in ALLOWED_ORIGINS
+  let match = ALLOWED_ORIGINS.find(o => origin === o || referer.startsWith(o));
   
   if (match) {
     headers.set("Access-Control-Allow-Origin", match);
-  } else {
-    // Fallback to first origin to satisfy browser CORS checks
+  } else if (origin) {
+    // If there's an origin but no exact match, we still need to respond
+    // Browsers often prefer the exact origin being echoed back if it's allowed
+    // But for security we only echo if it matches our pattern.
+    // For now, let's just use the first allowed one if stuck.
     headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGINS[0]);
+  } else {
+    headers.set("Access-Control-Allow-Origin", "*");
   }
   
   headers.set("Access-Control-Allow-Methods", ALLOWED_METHODS);
   headers.set("Access-Control-Allow-Headers", ALLOWED_HEADERS);
-  headers.set("Access-Control-Expose-Headers", "Content-Range, Content-Length, Accept-Ranges");
+  headers.set("Access-Control-Expose-Headers", "Content-Range, Content-Length, Accept-Ranges, ETag");
+  headers.set("Access-Control-Allow-Credentials", "true");
   headers.set("Vary", "Origin, Referer");
   return headers;
 };
 
 export default {
   async fetch(request, env) {
-    // 1. Handle Preflight (mandatory for emulators using Range headers)
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        status: 204,
-        headers: buildCorsHeaders(request),
+    try {
+      const corsHeaders = buildCorsHeaders(request);
+
+      // 1. Handle Preflight
+      if (request.method === "OPTIONS") {
+        return new Response(null, {
+          status: 204,
+          headers: corsHeaders,
+        });
+      }
+
+      // 2. Methods
+      if (request.method !== "GET" && request.method !== "HEAD") {
+        return new Response("Method Not Allowed", {
+          status: 405,
+          headers: corsHeaders,
+        });
+      }
+
+      // 3. Security Check (Relaxed for debugging if needed, but keeping it for now)
+      const origin = request.headers.get("Origin");
+      const referer = request.headers.get("Referer") || "";
+      const isAllowed = !origin || ALLOWED_ORIGINS.some(o => origin === o || referer.startsWith(o));
+
+      if (!isAllowed) {
+        return new Response("Forbidden: Origin not allowed", {
+          status: 403,
+          headers: corsHeaders,
+        });
+      }
+
+      // 4. Path Analysis
+      const url = new URL(request.url);
+      const key = url.pathname.replace(/^\/+/, "");
+
+      if (!key) {
+        return new Response("Not Found", {
+          status: 404,
+          headers: corsHeaders,
+        });
+      }
+
+      // 5. Bucket Access
+      const object = await env.ROM_BUCKET.get(key, {
+        range: request.headers,
       });
-    }
 
-    // 2. Methods
-    if (request.method !== "GET" && request.method !== "HEAD") {
-      return new Response("Method Not Allowed", {
-        status: 405,
-        headers: buildCorsHeaders(request),
+      if (!object) {
+        return new Response("Not Found: " + key, {
+          status: 404,
+          headers: corsHeaders,
+        });
+      }
+
+      // 6. Response Construction
+      const headers = new Headers(corsHeaders);
+      object.writeHttpMetadata(headers);
+      headers.set("Content-Type", headers.get("Content-Type") || "application/octet-stream");
+      headers.set("Accept-Ranges", "bytes");
+
+      if (object.httpEtag) {
+        headers.set("ETag", object.httpEtag);
+      }
+
+      // Handle range headers
+      const requestedRange = request.headers.get("Range");
+      if (requestedRange && object.range && typeof object.range.offset === 'number' && typeof object.range.length === 'number') {
+        const rangeStart = object.range.offset;
+        const rangeEnd = rangeStart + object.range.length - 1;
+        headers.set("Content-Range", `bytes ${rangeStart}-${rangeEnd}/${object.size}`);
+        headers.set("Content-Length", String(object.range.length));
+      } else {
+        headers.set("Content-Length", String(object.size));
+      }
+
+      return new Response(request.method === "HEAD" ? null : object.body, {
+        status: requestedRange ? 206 : 200,
+        headers,
       });
+    } catch (e) {
+      return new Response("Internal Server Error: " + e.message, { status: 500 });
     }
-
-    // 3. Security Check
-    const origin = request.headers.get("Origin") || "";
-    const referer = request.headers.get("Referer") || "";
-    const isAllowed = ALLOWED_ORIGINS.some(o => origin === o || referer.startsWith(o));
-
-    if (!isAllowed) {
-      return new Response("Forbidden: Origin not allowed", {
-        status: 403,
-        headers: buildCorsHeaders(request),
-      });
-    }
-
-    // 4. Path Analysis
-    const url = new URL(request.url);
-    const key = url.pathname.replace(/^\/+/, "");
-
-    if (!key) {
-      return new Response("Not Found", {
-        status: 404,
-        headers: buildCorsHeaders(request),
-      });
-    }
-
-    // 5. Bucket Access
-    const object = await env.ROM_BUCKET.get(key, {
-      range: request.headers,
-    });
-
-    if (!object) {
-      return new Response("Not Found", {
-        status: 404,
-        headers: buildCorsHeaders(request),
-      });
-    }
-
-    // 6. Response Construction
-    const headers = buildCorsHeaders(request);
-    object.writeHttpMetadata(headers);
-    headers.set("Content-Type", headers.get("Content-Type") || "application/octet-stream");
-    headers.set("Accept-Ranges", "bytes");
-
-    if (object.httpEtag) {
-      headers.set("ETag", object.httpEtag);
-    }
-
-    // Handle range headers
-    const requestedRange = request.headers.get("Range");
-    if (requestedRange && object.range && Number.isFinite(object.range.offset) && Number.isFinite(object.range.length)) {
-      const rangeStart = object.range.offset;
-      const rangeEnd = rangeStart + object.range.length - 1;
-      headers.set("Content-Range", `bytes ${rangeStart}-${rangeEnd}/${object.size}`);
-      headers.set("Content-Length", String(object.range.length));
-    } else {
-      headers.set("Content-Length", String(object.size));
-    }
-
-    return new Response(request.method === "HEAD" ? null : object.body, {
-      status: requestedRange ? 206 : 200,
-      headers,
-    });
   },
 };
