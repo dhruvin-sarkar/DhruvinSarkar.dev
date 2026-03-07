@@ -65,7 +65,7 @@ test("login reaches the desktop and taskbar", async ({ page }) => {
   await expect(page.locator(".start_popup")).toContainText("Commander Keen 4");
 });
 
-test("Commander Keen 4 launches through the bundled local DOS package", async ({ page }) => {
+test("Commander Keen 4 launches through the stable JS-DOS compatibility page", async ({ page }) => {
   await login(page);
   await launchFromStart(page, "keen4");
 
@@ -73,11 +73,13 @@ test("Commander Keen 4 launches through the bundled local DOS package", async ({
   const iframe = firstIframe(window);
 
   await expect(window).toBeVisible();
-  await expect(iframe).toHaveAttribute("src", /keen4\.html/);
+  await expect(iframe).toHaveAttribute("src", /js-dos\.com\/games\/ke\.exe\.html/);
 
   const frame = page.frameLocator(".retro-emulator-iframe");
-  await expect(frame.locator("#keen canvas")).toBeVisible();
-  await expect(frame.locator("body")).not.toContainText("Commander Keen 4 could not start");
+  await expect(frame.locator("#canvas")).toBeVisible();
+  await page.waitForTimeout(8_000);
+  await expect(frame.locator("body")).not.toContainText("Exception thrown");
+  await expect(frame.locator("body")).not.toContainText("Downloading data...");
   await expect(window.locator(".iframe-error-overlay")).toHaveCount(0);
 });
 

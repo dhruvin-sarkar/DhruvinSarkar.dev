@@ -9,13 +9,12 @@ const CommanderKeen4 = () => (
     setterKey="setKeen4Expand"
     windowName="Commander Keen 4"
     icon={resolvePublicUrl("icons/commanderkeen.ico")}
-    iframeSrc={resolvePublicUrl("emulators/keen4.html")}
+    iframeSrc="https://js-dos.com/games/ke.exe.html"
     defaultWidth={800}
     defaultHeight={600}
     defaultPosition={{ x: 100, y: 80 }}
     loadingSubtitle="Loading Commander Keen 4..."
-    appNotice="Launching Commander Keen 4 through the bundled local DOS package."
-    awaitRuntimeSignal
+    appNotice="Launching Commander Keen 4 through the stable JS-DOS compatibility page."
   />
 );
 
