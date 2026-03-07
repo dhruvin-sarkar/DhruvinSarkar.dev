@@ -14,8 +14,9 @@
       const RETRO_APP_SOURCE = "retro-app";
       const CORE_MAP = {
         n64: "n64",
-        ps1: "mednafen_psx_hw",
+        ps1: "pcsx_rearmed",
         mednafen_psx_hw: "mednafen_psx_hw",
+        pcsx_rearmed: "pcsx_rearmed",
         "3ds": "citra",
         citra: "citra",
         gba: "mgba",
@@ -27,6 +28,7 @@
       const CORE_LABELS = {
         n64: "Nintendo 64",
         mednafen_psx_hw: "PlayStation",
+        pcsx_rearmed: "PlayStation",
         citra: "Nintendo 3DS",
         mgba: "Game Boy Advance",
         fceumm: "Nintendo Entertainment System",
@@ -35,6 +37,7 @@
       const CORE_PROBE_FILES = {
         n64: "cores/mupen64plus_next-wasm.data",
         mednafen_psx_hw: "cores/mednafen_psx_hw-wasm.data",
+        pcsx_rearmed: "cores/pcsx_rearmed-wasm.data",
         citra: "cores/citra-wasm.data",
         mgba: "cores/mgba-wasm.data",
         fceumm: "cores/fceumm-wasm.data",
@@ -282,8 +285,8 @@
 
         if (core === "mednafen_psx_hw" && !bios) {
           renderError(
-            "The PlayStation 1 BIOS URL is not configured for this launch.",
-            "Configure a Worker-backed SCPH-5501 BIOS URL before launching USA PlayStation 1 titles.",
+            "The Hardware Accurate PlayStation 1 BIOS URL is not configured.",
+            "This specific core requires an SCPH-5501 BIOS. PCSX Rearmed (Standard) does not.",
           );
           return;
         }

@@ -10,7 +10,7 @@ const PlayStation1 = () => (
     windowName="PlayStation 1"
     icon={resolvePublicUrl("icons/ps1.png")}
     system="ps1"
-    core="mednafen_psx_hw"
+    core="pcsx_rearmed"
     defaultWidth={800}
     defaultHeight={600}
     defaultPosition={{ x: 110, y: 90 }}
