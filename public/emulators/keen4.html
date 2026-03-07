@@ -23,9 +23,8 @@
       const marker = "/emulators/";
       const markerIndex = window.location.pathname.toLowerCase().lastIndexOf(marker);
       const basePrefix = markerIndex === -1 ? "/" : window.location.pathname.slice(0, markerIndex + 1) || "/";
-      const hostedBundlePath = `${basePrefix}roms/dos/commanderkeen4/keen4-hosted.jsdos`;
-      const bundlePath = hostedBundlePath;
-      const externalGameUrl = "https://dos.zone/commander-keen4/";
+      const localBundlePath = `${basePrefix}roms/dos/commanderkeen4/keen4.jsdos`;
+      const bundlePath = localBundlePath;
       const localRuntimeUrl = `${basePrefix}emulators/jsdos/js-dos.js`;
       const remoteRuntimeUrl = "https://v8.js-dos.com/latest/js-dos.js";
       const runtimeAssetPrefix = `${basePrefix}emulators/jsdos/emulators/`;
@@ -172,10 +171,6 @@
         }
       }
 
-      function makeExternalAction(url) {
-        return `<button class="win95-button" type="button" onclick="window.open('${url}', '_blank', 'noopener,noreferrer')">Open Externally</button>`;
-      }
-
       function getRuntimeText() {
         return (container.innerText || container.textContent || "").replace(/\s+/g, " ").trim();
       }
@@ -292,7 +287,7 @@
 
         renderDialog({
           heading: "Loading bundled DOS package",
-          message: "Starting Commander Keen 4 from the published DOS package.",
+          message: "Starting Commander Keen 4 from the bundled local DOS package.",
           status: bundlePath,
         });
 
@@ -300,11 +295,11 @@
         if (!bundleExists) {
           renderDialog({
             heading: "Bundled game not found",
-            message: "The hosted compatibility bundle for Commander Keen 4 is unavailable right now.",
-            error: "The launcher could not reach the published Keen 4 package.",
+            message: "The local Commander Keen 4 DOS package is unavailable right now.",
+            error: "The launcher could not reach the bundled Keen 4 archive.",
             status: bundlePath,
             icon: "!",
-            actions: `<button class="win95-button" id="reload-btn">Reload</button>${makeExternalAction(externalGameUrl)}`,
+            actions: '<button class="win95-button" id="reload-btn">Reload</button>',
           });
           postToParent("retro-app:error", {
             message: "Commander Keen 4 bundle not found.",
@@ -327,7 +322,7 @@
                 error?.message || "Unknown primary js-dos initialization error.",
                 fallbackError?.message || "Unknown fallback js-dos initialization error.",
               ].join(" "),
-              `<button class="win95-button" id="retry-btn">Retry</button>${makeExternalAction(externalGameUrl)}`,
+              '<button class="win95-button" id="retry-btn">Retry</button>',
             );
           }
         }

@@ -65,7 +65,7 @@ test("login reaches the desktop and taskbar", async ({ page }) => {
   await expect(page.locator(".start_popup")).toContainText("Commander Keen 4");
 });
 
-test("Commander Keen 4 launches through the local js-dos wrapper", async ({ page }) => {
+test("Commander Keen 4 launches through the bundled local DOS package", async ({ page }) => {
   await login(page);
   await launchFromStart(page, "keen4");
 
@@ -76,7 +76,7 @@ test("Commander Keen 4 launches through the local js-dos wrapper", async ({ page
   await expect(iframe).toHaveAttribute("src", /keen4\.html/);
 
   const frame = page.frameLocator(".retro-emulator-iframe");
-  await expect(frame.locator("#keen")).toBeVisible();
+  await expect(frame.locator("#keen canvas")).toBeVisible();
   await expect(frame.locator("body")).not.toContainText("Commander Keen 4 could not start");
   await expect(window.locator(".iframe-error-overlay")).toHaveCount(0);
 });

@@ -514,6 +514,6 @@
         "x": 20,
         "y": 520,
         "category": "Games",
-        "description": "Launch Commander Keen 4 through the local js-dos runtime."
+        "description": "Launch Commander Keen 4 through the bundled local DOS package."
     }
 ]

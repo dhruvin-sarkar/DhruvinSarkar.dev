@@ -182,7 +182,7 @@ export function imageMapping (name, type) {
       return Windows95Icon;
 
     case 'Commander Keen 4':
-      return '/icons/reference/jsdos.png';
+      return '/icons/commanderkeen.ico';
 
     case 'Space Cadet Pinball':
       return SpaceCadetPinballIcon;

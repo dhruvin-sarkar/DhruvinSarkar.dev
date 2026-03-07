@@ -8,7 +8,7 @@ const ChromeDino = () => (
     stateKey="DinoExpand"
     setterKey="setDinoExpand"
     windowName="Chrome Dino"
-    icon={resolvePublicUrl("icons/chromedino.svg")}
+    icon={resolvePublicUrl("icons/chromedino.png")}
     iframeSrc={resolvePublicUrl("games/dino/index.html")}
     externalUrl="https://github.com/wayou/t-rex-runner"
     defaultWidth={800}
