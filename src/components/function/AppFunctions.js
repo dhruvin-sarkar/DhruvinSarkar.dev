@@ -170,7 +170,7 @@ export function imageMapping (name, type) {
       return PS1Icon;
 
     case 'Nintendo 3DS':
-      return '/icons/reference/emulator.png';
+      return '/icons/3ds.png';
 
     case 'Game Boy Advance':
       return GBAIcon;

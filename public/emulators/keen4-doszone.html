@@ -149,8 +149,13 @@
 
       const observer = new MutationObserver(() => {
         const canvas = player.querySelector("canvas");
+        const runtimeContent = player.querySelector("*");
         const text = (document.body.innerText || "").replace(/\s+/g, " ").trim();
         if (canvas) {
+          markReady();
+          return;
+        }
+        if (runtimeContent) {
           markReady();
           return;
         }

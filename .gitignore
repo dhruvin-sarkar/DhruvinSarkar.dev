@@ -43,3 +43,4 @@ tmp/
 /public/roms/ps1/*.chd
 /public/roms/ps1/*.zip
 /public/roms/ps1/*.7z
+/local-rom-staging/

@@ -5,7 +5,7 @@ import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 const Nintendo3DS = () => (
   <ManifestRomEmulator
     title="Nintendo 3DS"
-    icon={resolvePublicUrl("icons/reference/emulator.png")}
+    icon={resolvePublicUrl("icons/3ds.png")}
     system="3ds"
     core="citra"
     stateKey="ThreeDSExpand"

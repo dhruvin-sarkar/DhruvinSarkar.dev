@@ -1323,8 +1323,11 @@ function App() {
     const htmlElement = document.documentElement; //check if user is in frontend
     htmlElement.addEventListener("mouseenter", handleMouseSeen);
 
-    const onTouchStartSupported = "ontouchstart" in document.documentElement;
-    setIsTouchDevice(onTouchStartSupported);
+    const hasTouchPoints = (navigator.maxTouchPoints || 0) > 0;
+    const hasCoarsePointer =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(pointer: coarse)").matches;
+    setIsTouchDevice(hasTouchPoints || hasCoarsePointer);
 
     document.addEventListener("gesturestart", function (e) {
       // prevent zooming on mobile

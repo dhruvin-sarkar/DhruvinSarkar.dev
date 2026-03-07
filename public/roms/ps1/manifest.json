@@ -1,4 +1,29 @@
 {
   "system": "ps1",
-  "roms": []
+  "roms": [
+    {
+      "id": "mortal-kombat-trilogy",
+      "title": "Mortal Kombat Trilogy",
+      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Mortal%20Kombat%20Trilogy%20%28USA%29.zip",
+      "cover": "/icons/ps1.png"
+    },
+    {
+      "id": "spyro-year-of-the-dragon",
+      "title": "Spyro: Year of the Dragon",
+      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Spyro%20-%20Year%20of%20the%20Dragon%20%28USA%29.zip",
+      "cover": "/icons/ps1.png"
+    },
+    {
+      "id": "tekken-3",
+      "title": "Tekken 3",
+      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Tekken%203%20%28USA%29.zip",
+      "cover": "/icons/ps1.png"
+    },
+    {
+      "id": "tomb-raider",
+      "title": "Tomb Raider",
+      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Tomb%20Raider%20%28USA%29.zip",
+      "cover": "/icons/ps1.png"
+    }
+  ]
 }

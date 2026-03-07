@@ -511,9 +511,9 @@
         "folderId": "Desktop",
         "size": 36000,
         "type": ".exe",
-        "x": 1020,
-        "y": 420,
+        "x": 20,
+        "y": 520,
         "category": "Games",
-        "description": "Launch Commander Keen 4 through the DOS.Zone wrapper."
+        "description": "Launch Commander Keen 4 through the local js-dos runtime."
     }
 ]

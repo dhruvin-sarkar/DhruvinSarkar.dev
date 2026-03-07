@@ -23,7 +23,6 @@
       const marker = "/emulators/";
       const markerIndex = window.location.pathname.toLowerCase().lastIndexOf(marker);
       const basePrefix = markerIndex === -1 ? "/" : window.location.pathname.slice(0, markerIndex + 1) || "/";
-      const bundledArchivePath = `${basePrefix}roms/dos/commanderkeen4/keen4.jsdos`;
       const hostedBundlePath = `${basePrefix}roms/dos/commanderkeen4/keen4-hosted.jsdos`;
       const bundlePath = hostedBundlePath;
       const externalGameUrl = "https://dos.zone/commander-keen4/";
@@ -293,7 +292,7 @@
 
         renderDialog({
           heading: "Loading bundled DOS package",
-          message: "Starting Commander Keen 4 from the preconfigured archive.",
+          message: "Starting Commander Keen 4 from the published DOS package.",
           status: bundlePath,
         });
 
@@ -317,10 +316,10 @@
         installEmbeddedKeyboardGuard();
 
         try {
-          await tryBootWithRuntime(remoteRuntimeUrl, { useLocalAssets: false });
+          await tryBootWithRuntime(localRuntimeUrl, { useLocalAssets: true });
         } catch (error) {
           try {
-            await tryBootWithRuntime(localRuntimeUrl, { useLocalAssets: true });
+            await tryBootWithRuntime(remoteRuntimeUrl, { useLocalAssets: false });
           } catch (fallbackError) {
             renderFailure(
               "The bundled DOS runtime did not initialize correctly.",

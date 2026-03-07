@@ -43,16 +43,16 @@ async function dismissStartupWindows(page: Page) {
   // The desktop intentionally auto-opens Patch and About after login.
   await page.waitForTimeout(2800);
 
-  const patchWindow = page.locator(".folder_folder-resumefile").first();
-  if (await patchWindow.isVisible().catch(() => false)) {
-    await patchWindow.locator(".folder_barbtn-resumefile .x").click({ force: true });
-    await expect(patchWindow).toBeHidden();
-  }
-
   const aboutWindow = page.locator(".bio_folder").first();
   if (await aboutWindow.isVisible().catch(() => false)) {
     await aboutWindow.locator(".bio_barbtn .x").click({ force: true });
-    await expect(aboutWindow).toBeHidden();
+    await expect(aboutWindow).toHaveCSS("display", "none");
+  }
+
+  const patchWindow = page.locator(".folder_folder-resumefile").first();
+  if (await patchWindow.isVisible().catch(() => false)) {
+    await patchWindow.locator(".folder_barbtn-resumefile > div").last().click({ force: true });
+    await expect(patchWindow).toHaveCSS("display", "none");
   }
 }
 
@@ -65,7 +65,7 @@ test("login reaches the desktop and taskbar", async ({ page }) => {
   await expect(page.locator(".start_popup")).toContainText("Commander Keen 4");
 });
 
-test("Commander Keen 4 launches through the DOS.Zone wrapper", async ({ page }) => {
+test("Commander Keen 4 launches through the local js-dos wrapper", async ({ page }) => {
   await login(page);
   await launchFromStart(page, "keen4");
 
@@ -73,13 +73,11 @@ test("Commander Keen 4 launches through the DOS.Zone wrapper", async ({ page }) 
   const iframe = firstIframe(window);
 
   await expect(window).toBeVisible();
-  await expect(iframe).toHaveAttribute("src", /keen4-doszone\.html/);
+  await expect(iframe).toHaveAttribute("src", /keen4\.html/);
 
   const frame = page.frameLocator(".retro-emulator-iframe");
-  await expect(frame.locator("#keen-player")).toBeVisible();
-  await expect(frame.locator("#overlay")).toHaveClass(/hidden/, {
-    timeout: 40_000,
-  });
+  await expect(frame.locator("#keen")).toBeVisible();
+  await expect(frame.locator("body")).not.toContainText("Commander Keen 4 could not start");
   await expect(window.locator(".iframe-error-overlay")).toHaveCount(0);
 });
 
@@ -100,6 +98,22 @@ test("Nintendo 3DS library uses proxy URLs and shows the Citra-core deployment e
   await expect(
     firstWindow(page).locator(".iframe-error-overlay"),
   ).toContainText("The Nintendo 3DS web core is not installed on this deployment.");
+
+  await firstWindow(page).getByRole("button", { name: "Back" }).click();
+  await expect(rows.first()).toBeVisible();
+});
+
+test("PlayStation 1 library uses proxy URLs with the PS1 core mapping", async ({ page }) => {
+  await login(page);
+  await launchFromStart(page, "ps1");
+
+  const rows = page.locator(".rom-library-row");
+  await expect(rows.first()).toBeVisible();
+  await rows.first().click();
+
+  const iframe = firstIframe(firstWindow(page));
+  await expect(iframe).toHaveAttribute("src", /core=mednafen_psx_hw/);
+  await expect(iframe).toHaveAttribute("src", /workers\.dev/);
 
   await firstWindow(page).getByRole("button", { name: "Back" }).click();
   await expect(rows.first()).toBeVisible();
