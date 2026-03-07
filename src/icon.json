@@ -426,7 +426,8 @@
         "x": 720,
         "y": 420,
         "category": "Games",
-        "description": "Browse and launch Nintendo Entertainment System ROMs."
+        "description": "Browse and launch Nintendo Entertainment System ROMs.",
+        "store": true
     },
     {
         "name": "Space Cadet Pinball",

@@ -18,7 +18,7 @@ const SYSTEM_CONFIG = {
     badge: "PS1",
     legalNotice: LEGAL_NOTICE,
     uploadNotice: PROXY_NOTICE,
-    biosUrl: "https://portfolio-rom-proxy.workers.dev/bios/scph5501.bin",
+    biosUrl: "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/bios/scph5501.bin",
     extraNotice:
       "PlayStation 1 disc images stay in private R2 storage and are exposed only through Worker-backed manifest entries and a Worker-backed BIOS URL.",
     supportsUpload: false,
