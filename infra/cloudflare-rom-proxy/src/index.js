@@ -1,7 +1,7 @@
 /**
  * Cloudflare ROM Proxy Worker
  * 
- * Optimized for EmulatorJS CORS & Range loading.
+ * Bulletproof CORS & Range loading for EmulatorJS.
  */
 
 const ALLOWED_ORIGINS = [
@@ -11,31 +11,28 @@ const ALLOWED_ORIGINS = [
   "http://127.0.0.1:5173"
 ];
 
-const ALLOWED_METHODS = "GET, HEAD, OPTIONS";
-const ALLOWED_HEADERS = "Range, If-Modified-Since, If-None-Match, Origin, X-Requested-With, Content-Type, Accept, Referer";
-
 const buildCorsHeaders = (request) => {
   const headers = new Headers();
   const origin = request.headers.get("Origin");
-  const referer = request.headers.get("Referer") || "";
+  const referer = request.headers.get("Referer");
   
-  // Try to find a match in ALLOWED_ORIGINS
-  let match = ALLOWED_ORIGINS.find(o => origin === o || referer.startsWith(o));
-  
-  if (match) {
-    headers.set("Access-Control-Allow-Origin", match);
-  } else if (origin) {
-    // If there's an origin but no exact match, we still need to respond
-    // Browsers often prefer the exact origin being echoed back if it's allowed
-    // But for security we only echo if it matches our pattern.
-    // For now, let's just use the first allowed one if stuck.
-    headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGINS[0]);
-  } else {
-    headers.set("Access-Control-Allow-Origin", "*");
+  // Decide which origin to allow. Mirror the request Origin if it's in our safe list.
+  let allowedOrigin = ALLOWED_ORIGINS[0];
+  if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    allowedOrigin = origin;
+  } else if (referer) {
+    try {
+      const refUrl = new URL(referer);
+      if (ALLOWED_ORIGINS.includes(refUrl.origin)) {
+        allowedOrigin = refUrl.origin;
+      }
+    } catch (e) {}
   }
-  
-  headers.set("Access-Control-Allow-Methods", ALLOWED_METHODS);
-  headers.set("Access-Control-Allow-Headers", ALLOWED_HEADERS);
+
+  // Mandatory CORS headers for EmulatorJS range loading (XMLHttpRequest + Fetch)
+  headers.set("Access-Control-Allow-Origin", allowedOrigin);
+  headers.set("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS");
+  headers.set("Access-Control-Allow-Headers", "Range, If-Modified-Since, If-None-Match, Origin, X-Requested-With, Content-Type, Accept, Referer");
   headers.set("Access-Control-Expose-Headers", "Content-Range, Content-Length, Accept-Ranges, ETag");
   headers.set("Access-Control-Allow-Credentials", "true");
   headers.set("Vary", "Origin, Referer");
@@ -47,7 +44,7 @@ export default {
     try {
       const corsHeaders = buildCorsHeaders(request);
 
-      // 1. Handle Preflight
+      // 1. Handle Preflight OPTIONS (Mandatory for range requests)
       if (request.method === "OPTIONS") {
         return new Response(null, {
           status: 204,
@@ -55,7 +52,7 @@ export default {
         });
       }
 
-      // 2. Methods
+      // 2. Validate Methods
       if (request.method !== "GET" && request.method !== "HEAD") {
         return new Response("Method Not Allowed", {
           status: 405,
@@ -63,10 +60,10 @@ export default {
         });
       }
 
-      // 3. Security Check (Relaxed for debugging if needed, but keeping it for now)
+      // 3. Security Filter
       const origin = request.headers.get("Origin");
-      const referer = request.headers.get("Referer") || "";
-      const isAllowed = !origin || ALLOWED_ORIGINS.some(o => origin === o || referer.startsWith(o));
+      const referer = request.headers.get("Referer");
+      const isAllowed = !origin || ALLOWED_ORIGINS.includes(origin) || (referer && ALLOWED_ORIGINS.some(o => referer.startsWith(o)));
 
       if (!isAllowed) {
         return new Response("Forbidden: Origin not allowed", {
@@ -75,7 +72,7 @@ export default {
         });
       }
 
-      // 4. Path Analysis
+      // 4. Object Key Analysis
       const url = new URL(request.url);
       const key = url.pathname.replace(/^\/+/, "");
 
@@ -86,7 +83,7 @@ export default {
         });
       }
 
-      // 5. Bucket Access
+      // 5. R2 Bucket Fetch
       const object = await env.ROM_BUCKET.get(key, {
         range: request.headers,
       });
@@ -98,9 +95,11 @@ export default {
         });
       }
 
-      // 6. Response Construction
+      // 6. Final Header Assembly
       const headers = new Headers(corsHeaders);
       object.writeHttpMetadata(headers);
+      
+      // Force headers that EmulatorJS expects for binary streaming
       headers.set("Content-Type", headers.get("Content-Type") || "application/octet-stream");
       headers.set("Accept-Ranges", "bytes");
 
@@ -108,7 +107,7 @@ export default {
         headers.set("ETag", object.httpEtag);
       }
 
-      // Handle range headers
+      // 7. Manual Range Calculations (Cloudflare R2 range handling)
       const requestedRange = request.headers.get("Range");
       if (requestedRange && object.range && typeof object.range.offset === 'number' && typeof object.range.length === 'number') {
         const rangeStart = object.range.offset;
@@ -124,7 +123,7 @@ export default {
         headers,
       });
     } catch (e) {
-      return new Response("Internal Server Error: " + e.message, { status: 500 });
+      return new Response("Worker Error: " + e.message, { status: 500 });
     }
   },
 };
