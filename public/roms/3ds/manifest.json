@@ -1,35 +1,4 @@
 {
   "system": "3ds",
-  "roms": [
-    {
-      "id": "pokemon-ultra-sun",
-      "title": "Pokemon Ultra Sun",
-      "file": "https://portfolio-rom-proxy.workers.dev/3ds/Pokemon%20Ultra%20Sun%20%28USA%29%20%28En%2CJa%2CFr%2CDe%2CEs%2CIt%2CZh%2CKo%29.3ds",
-      "cover": "/roms/3ds/pokemon-ultra-sun-300x267.png"
-    },
-    {
-      "id": "pokemon-omega-ruby",
-      "title": "Pokemon Omega Ruby",
-      "file": "https://portfolio-rom-proxy.workers.dev/3ds/Pokemon%20Omega%20Ruby%20%28USA%29.3ds",
-      "cover": "/roms/3ds/pokemon-omega-ruby-300x266.jpg"
-    },
-    {
-      "id": "pokemon-y",
-      "title": "Pokemon Y",
-      "file": "https://portfolio-rom-proxy.workers.dev/3ds/Pokemon%20Y%20%28USA%29.3ds",
-      "cover": "/roms/3ds/pokemon-y-300x268.jpg"
-    },
-    {
-      "id": "super-mario-3d-land",
-      "title": "Super Mario 3D Land",
-      "file": "https://portfolio-rom-proxy.workers.dev/3ds/Super%20Mario%203D%20Land%20%28USA%29%20%28En%2CFr%2CEs%29%20%28Rev%201%29.3ds",
-      "cover": "/roms/3ds/super-mario-3d-land-300x268.jpg"
-    },
-    {
-      "id": "the-legend-of-zelda-ocarina-of-time-3d",
-      "title": "The Legend of Zelda: Ocarina of Time 3D",
-      "file": "https://portfolio-rom-proxy.workers.dev/3ds/Legend%20of%20Zelda%2C%20The%20-%20Ocarina%20of%20Time%203D%20%28USA%29%20%28En%2CFr%2CEs%29%20%28Rev%201%29.3ds",
-      "cover": "/roms/3ds/the-legend-of-zelda-ocarina-of-time-3d-300x267.jpg"
-    }
-  ]
+  "roms": []
 }
