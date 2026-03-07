@@ -311,11 +311,18 @@
         window.EJS_language = "en-US";
         window.EJS_disableAutoLang = false;
         window.EJS_startOnLoaded = true;
+        window.EJS_autostart = true;
+        window.EJS_Settings = {
+          "save-state-location": "keep",
+        };
 
         if (bios) {
           console.log('[DEBUG] biosUrl being set:', bios);
           window.EJS_biosUrl = toAbsoluteUrl(bios);
         }
+
+        console.log('[DEBUG] biosUrl:', window.EJS_biosUrl);
+        console.log('[DEBUG] romUrl:', window.EJS_gameUrl);
 
         installErrorGuards();
         startMonitoring();
