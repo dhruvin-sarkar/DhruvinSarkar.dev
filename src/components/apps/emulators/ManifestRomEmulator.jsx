@@ -133,7 +133,7 @@ const ManifestRomEmulator = ({
               Back
             </button>
             <span className="rom-player-label">{runtimeTitle || selectedRom.title || selectedRom.file}</span>
-            <span className="rom-player-meta">{selectedRom.file}</span>
+
           </div>
 
           <div className="rom-player-frame">
