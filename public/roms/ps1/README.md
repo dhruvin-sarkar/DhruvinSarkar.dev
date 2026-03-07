@@ -10,6 +10,10 @@ This folder should only contain lightweight metadata such as:
 Actual PS1 game files must be stored in the private Cloudflare R2 bucket and
 served through the ROM proxy Worker.
 
+USA PlayStation 1 launches in this project also require a Worker-backed BIOS
+URL for `SCPH-5501`, configured in
+`src/components/apps/emulators/romLibraryConfig.js`.
+
 ## Manifest shape
 
 ```json
@@ -28,3 +32,7 @@ served through the ROM proxy Worker.
 
 `file` must always point at the Cloudflare Worker proxy URL, never a direct R2
 URL and never a local repository path.
+
+The BIOS object should also live behind the Worker, for example:
+
+`https://<worker-subdomain>.workers.dev/bios/scph5501.bin`

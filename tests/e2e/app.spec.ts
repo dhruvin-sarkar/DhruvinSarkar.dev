@@ -81,7 +81,7 @@ test("Commander Keen 4 launches through the local js-dos wrapper", async ({ page
   await expect(window.locator(".iframe-error-overlay")).toHaveCount(0);
 });
 
-test("Nintendo 3DS library uses proxy URLs and shows the Citra-core deployment error cleanly", async ({
+test("Nintendo 3DS library keeps the proxy-backed manifest flow and reports the unavailable web runtime cleanly", async ({
   page,
 }) => {
   await login(page);
@@ -91,13 +91,15 @@ test("Nintendo 3DS library uses proxy URLs and shows the Citra-core deployment e
   await expect(rows.first()).toBeVisible();
   await rows.first().click();
 
-  const iframe = firstIframe(firstWindow(page));
-  await expect(iframe).toHaveAttribute("src", /core=citra/);
-  await expect(iframe).toHaveAttribute("src", /workers\.dev/);
+  await expect(firstWindow(page).locator(".rom-player-meta")).toContainText("workers.dev");
+  await expect(firstWindow(page).locator(".retro-emulator-iframe")).toHaveCount(0);
 
   await expect(
     firstWindow(page).locator(".iframe-error-overlay"),
-  ).toContainText("The Nintendo 3DS web core is not installed on this deployment.");
+  ).toContainText("Nintendo 3DS runtime unavailable");
+  await expect(
+    firstWindow(page).locator(".iframe-error-overlay"),
+  ).toContainText("EmulatorJS does not currently provide a usable Nintendo 3DS Citra core");
 
   await firstWindow(page).getByRole("button", { name: "Back" }).click();
   await expect(rows.first()).toBeVisible();
@@ -114,6 +116,8 @@ test("PlayStation 1 library uses proxy URLs with the PS1 core mapping", async ({
   const iframe = firstIframe(firstWindow(page));
   await expect(iframe).toHaveAttribute("src", /core=mednafen_psx_hw/);
   await expect(iframe).toHaveAttribute("src", /workers\.dev/);
+  await expect(iframe).toHaveAttribute("src", /bios=/);
+  await expect(iframe).toHaveAttribute("src", /scph5501\.bin/);
 
   await firstWindow(page).getByRole("button", { name: "Back" }).click();
   await expect(rows.first()).toBeVisible();

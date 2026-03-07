@@ -182,11 +182,11 @@
       async function resolveDataPath() {
         const probe = CORE_PROBE_FILES[core];
         if (!probe) return CDN_DATA_PATH;
+        if (core === "citra") {
+          return null;
+        }
         const localProbe = `${LOCAL_DATA_PATH}${probe}`;
         const hasLocalCore = await assetExists(localProbe);
-        if (core === "citra") {
-          return hasLocalCore ? LOCAL_DATA_PATH : null;
-        }
         return hasLocalCore ? LOCAL_DATA_PATH : CDN_DATA_PATH;
       }
 
@@ -280,11 +280,19 @@
           }
         }
 
+        if (core === "mednafen_psx_hw" && !bios) {
+          renderError(
+            "The PlayStation 1 BIOS URL is not configured for this launch.",
+            "Configure a Worker-backed SCPH-5501 BIOS URL before launching USA PlayStation 1 titles.",
+          );
+          return;
+        }
+
         const dataPath = await resolveDataPath();
         if (!dataPath && core === "citra") {
           renderError(
-            "The Nintendo 3DS web core is not installed on this deployment.",
-            "Add the self-hosted Citra core files under /public/emulators/emulatorjs/data/cores/ to launch Nintendo 3DS titles.",
+            "Nintendo 3DS is not currently available in the EmulatorJS web build.",
+            "The library and proxy manifest can stay in place, but EmulatorJS currently lists the Citra core as unavailable for browser deployments.",
           );
           return;
         }

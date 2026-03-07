@@ -43,3 +43,6 @@ npx wrangler deploy
 - Direct bucket URLs are never exposed to the client.
 - Requests without the allowed portfolio `Referer` return `403`.
 - Missing objects return `404`.
+- `GET`, `HEAD`, and `OPTIONS` are supported.
+- `Range` headers are forwarded to R2 so large PS1 and 3DS assets can be streamed progressively.
+- BIOS assets can live behind the same Worker, for example `bios/scph5501.bin`.

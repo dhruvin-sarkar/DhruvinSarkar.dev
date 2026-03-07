@@ -4,6 +4,7 @@ import AppWindowShell from "../shared/AppWindowShell";
 import EmulatorLoadingScreen from "../shared/EmulatorLoadingScreen";
 import useEmulatorWindow from "../shared/useEmulatorWindow";
 import RomLibrary from "./RomLibrary";
+import { getSystemConfig } from "./romLibraryConfig";
 import { resolvePublicUrl } from "../shared/resolvePublicUrl";
 
 const ManifestRomEmulator = ({
@@ -24,8 +25,14 @@ const ManifestRomEmulator = ({
   const context = useContext(UseContext);
   const state = context[stateKey];
   const setState = context[setterKey];
+  const systemConfig = useMemo(() => getSystemConfig(system), [system]);
   const [selectedRom, setSelectedRom] = useState(null);
   const [libraryRefreshKey, setLibraryRefreshKey] = useState(0);
+
+  const resolvedLaunchSupport = systemConfig.launchSupport || launchSupport;
+  const resolvedUnavailableTitle = systemConfig.unavailableTitle || unavailableTitle;
+  const resolvedUnavailableMessage = systemConfig.unavailableMessage || unavailableMessage;
+  const configuredBiosUrl = systemConfig.biosUrl || "";
 
   useEffect(() => {
     if (!state?.show) {
@@ -43,13 +50,14 @@ const ManifestRomEmulator = ({
   }, [selectedRom]);
 
   const iframeSrc = useMemo(() => {
-    if (!selectedRom?.file || launchSupport === "unavailable") return "";
+    if (!selectedRom?.file || resolvedLaunchSupport === "unavailable") return "";
     const romUrl =
       selectedRom?.source === "uploaded" && selectedRom?.objectUrl
         ? selectedRom.objectUrl
         : /^https?:\/\//i.test(selectedRom.file)
           ? selectedRom.file
           : new URL(resolvePublicUrl(`roms/${system}/${selectedRom.file}`), window.location.origin).toString();
+    const biosUrl = selectedRom?.bios || configuredBiosUrl;
     const loaderPath = resolvePublicUrl("emulators/ejs-loader.html");
     const query = new URLSearchParams({
       core,
@@ -57,10 +65,23 @@ const ManifestRomEmulator = ({
       title: selectedRom.title || selectedRom.file,
       system,
     });
+    if (biosUrl) {
+      query.set("bios", biosUrl);
+    }
     return `${loaderPath}?${query.toString()}`;
-  }, [core, launchSupport, selectedRom?.file, selectedRom?.objectUrl, selectedRom?.source, selectedRom?.title, system]);
+  }, [
+    configuredBiosUrl,
+    core,
+    resolvedLaunchSupport,
+    selectedRom?.bios,
+    selectedRom?.file,
+    selectedRom?.objectUrl,
+    selectedRom?.source,
+    selectedRom?.title,
+    system,
+  ]);
 
-  const isLaunchUnavailable = Boolean(selectedRom?.file) && launchSupport === "unavailable";
+  const isLaunchUnavailable = Boolean(selectedRom?.file) && resolvedLaunchSupport === "unavailable";
 
   const {
     iframeUrl,
@@ -119,11 +140,11 @@ const ManifestRomEmulator = ({
             {isLaunchUnavailable ? (
               <div className="iframe-error-overlay">
                 <div className="iframe-error-panel">
-                  <h3>{unavailableTitle}</h3>
+                  <h3>{resolvedUnavailableTitle}</h3>
                   <div className="panel-body">
                     <div className="win95-panel-icon">!</div>
                     <div className="win95-panel-copy">
-                      <p>{unavailableMessage}</p>
+                      <p>{resolvedUnavailableMessage}</p>
                       <div className="iframe-error-actions">
                         <button
                           type="button"

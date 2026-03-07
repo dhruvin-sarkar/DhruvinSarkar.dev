@@ -404,7 +404,7 @@
         "x": 520,
         "y": 420,
         "category": "Games",
-        "description": "Launch PlayStation 1 titles through proxy-backed ROM manifests."
+        "description": "Launch PlayStation 1 titles through proxy-backed ROM manifests and a Worker-backed BIOS path."
     },
     {
         "name": "Game Boy Advance",
@@ -503,7 +503,7 @@
         "x": 820,
         "y": 420,
         "category": "Games",
-        "description": "Browse Nintendo 3DS proxy-backed ROM entries wired to the Citra loader."
+        "description": "Browse Nintendo 3DS proxy-backed ROM entries staged for a future supported web runtime."
     },
     {
         "name": "Commander Keen 4",

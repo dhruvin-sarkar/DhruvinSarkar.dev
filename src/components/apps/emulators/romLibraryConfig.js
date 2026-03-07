@@ -18,12 +18,13 @@ const SYSTEM_CONFIG = {
     badge: "PS1",
     legalNotice: LEGAL_NOTICE,
     uploadNotice: PROXY_NOTICE,
+    biosUrl: "https://portfolio-rom-proxy.workers.dev/bios/scph5501.bin",
     extraNotice:
-      "PlayStation 1 disc images stay in private R2 storage and are exposed only through Worker-backed manifest entries.",
+      "PlayStation 1 disc images stay in private R2 storage and are exposed only through Worker-backed manifest entries and a Worker-backed BIOS URL.",
     supportsUpload: false,
     uploadAccept: "",
     uploadHelpText:
-      "Manifest entries point at Worker proxy URLs. Local browser uploads are disabled for PlayStation 1 in this build.",
+      "Manifest entries point at Worker proxy URLs. This build also expects a Worker-backed SCPH-5501 BIOS for USA titles. Local browser uploads are disabled for PlayStation 1.",
     emptyStateText: "No PlayStation 1 proxy entries were found in /public/roms/ps1/manifest.json.",
   },
   "3ds": {
@@ -32,7 +33,11 @@ const SYSTEM_CONFIG = {
     legalNotice: LEGAL_NOTICE,
     uploadNotice: PROXY_NOTICE,
     extraNotice:
-      "Nintendo 3DS titles use Worker-backed .3ds or .cia URLs from the manifest. The Citra web core must be self-hosted with this deployment.",
+      "Nintendo 3DS titles use Worker-backed .3ds or .cia URLs from the manifest. The proxy architecture is ready, but EmulatorJS currently lists the Citra core as unavailable for the web build.",
+    launchSupport: "unavailable",
+    unavailableTitle: "Nintendo 3DS runtime unavailable",
+    unavailableMessage:
+      "The ROM library and Worker-backed proxy manifest are wired correctly, but EmulatorJS does not currently provide a usable Nintendo 3DS Citra core for the browser build.",
     supportsUpload: false,
     uploadAccept: "",
     uploadHelpText:
@@ -44,6 +49,8 @@ const SYSTEM_CONFIG = {
     badge: "GBA",
     legalNotice: LEGAL_NOTICE,
     uploadNotice: UPLOAD_NOTICE,
+    launchSupport: "supported",
+    biosUrl: "",
     supportsUpload: true,
     uploadAccept: ".gba,.zip",
     uploadHelpText: "Accepted files: .gba and .zip",
@@ -67,6 +74,10 @@ export const getSystemConfig = (system) =>
     badge: system?.toUpperCase?.() || "ROM",
     legalNotice: LEGAL_NOTICE,
     uploadNotice: UPLOAD_NOTICE,
+    launchSupport: "supported",
+    unavailableTitle: "Emulator unavailable",
+    unavailableMessage: "This emulator is not available in the current build.",
+    biosUrl: "",
     supportsUpload: true,
     uploadAccept: "",
     uploadHelpText: "You can upload and run your own ROMs from this browser.",
