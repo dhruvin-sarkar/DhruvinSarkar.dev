@@ -8,6 +8,18 @@
       "cover": "/roms/3ds/pokemon-ultra-sun-300x267.png"
     },
     {
+      "id": "pokemon-omega-ruby",
+      "title": "Pokemon Omega Ruby",
+      "file": "https://portfolio-rom-proxy.workers.dev/3ds/Pokemon%20Omega%20Ruby%20%28USA%29.3ds",
+      "cover": "/roms/3ds/pokemon-omega-ruby-300x266.jpg"
+    },
+    {
+      "id": "pokemon-y",
+      "title": "Pokemon Y",
+      "file": "https://portfolio-rom-proxy.workers.dev/3ds/Pokemon%20Y%20%28USA%29.3ds",
+      "cover": "/roms/3ds/pokemon-y-300x268.jpg"
+    },
+    {
       "id": "super-mario-3d-land",
       "title": "Super Mario 3D Land",
       "file": "https://portfolio-rom-proxy.workers.dev/3ds/Super%20Mario%203D%20Land%20%28USA%29%20%28En%2CFr%2CEs%29%20%28Rev%201%29.3ds",

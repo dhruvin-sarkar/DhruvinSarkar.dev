@@ -5,25 +5,43 @@
       "id": "mortal-kombat-trilogy",
       "title": "Mortal Kombat Trilogy",
       "file": "https://portfolio-rom-proxy.workers.dev/ps1/Mortal%20Kombat%20Trilogy%20%28USA%29.zip",
-      "cover": "/icons/ps1.png"
+      "cover": "/roms/ps1/Mortal-Kombat-Trilogy-300x257.jpg"
     },
     {
-      "id": "spyro-year-of-the-dragon",
-      "title": "Spyro: Year of the Dragon",
-      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Spyro%20-%20Year%20of%20the%20Dragon%20%28USA%29.zip",
-      "cover": "/icons/ps1.png"
+      "id": "spyro-the-dragon",
+      "title": "Spyro the Dragon",
+      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Spyro%20the%20Dragon%20%28USA%29.zip",
+      "cover": "/roms/ps1/220px-Spyro_the_Dragon.jpg"
     },
     {
       "id": "tekken-3",
       "title": "Tekken 3",
       "file": "https://portfolio-rom-proxy.workers.dev/ps1/Tekken%203%20%28USA%29.zip",
-      "cover": "/icons/ps1.png"
+      "cover": "/roms/ps1/220px-T3usposter.jpg"
+    },
+    {
+      "id": "final-fantasy-ix",
+      "title": "Final Fantasy IX",
+      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Final%20Fantasy%20IX%20%28USA%29.zip",
+      "cover": "/roms/ps1/Ffixbox-1.jpg"
+    },
+    {
+      "id": "gran-turismo",
+      "title": "Gran Turismo",
+      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Gran%20Turismo%20%28USA%29.zip",
+      "cover": "/roms/ps1/Gran_Turismo_-_Cover_-_North_America-300x280.jpg"
+    },
+    {
+      "id": "metal-gear-solid",
+      "title": "Metal Gear Solid",
+      "file": "https://portfolio-rom-proxy.workers.dev/ps1/Metal%20Gear%20Solid%20%28USA%29.zip",
+      "cover": "/roms/ps1/Metal_Gear_Solid_cover_art.png"
     },
     {
       "id": "tomb-raider",
       "title": "Tomb Raider",
       "file": "https://portfolio-rom-proxy.workers.dev/ps1/Tomb%20Raider%20%28USA%29.zip",
-      "cover": "/icons/ps1.png"
+      "cover": "/roms/ps1/Tomb_Raider_1996.png"
     }
   ]
 }

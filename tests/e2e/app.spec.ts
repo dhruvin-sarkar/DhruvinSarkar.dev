@@ -89,6 +89,12 @@ test("Nintendo 3DS library keeps the proxy-backed manifest flow and reports the 
 
   const rows = page.locator(".rom-library-row");
   await expect(rows.first()).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Pokemon Ultra Sun" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Pokemon Omega Ruby" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Pokemon Y" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Super Mario 3D Land" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Ocarina of Time 3D" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Pokemon Omega Ruby" }).locator("img")).toBeVisible();
   await rows.first().click();
 
   await expect(firstWindow(page).locator(".rom-player-meta")).toContainText("workers.dev");
@@ -111,6 +117,14 @@ test("PlayStation 1 library uses proxy URLs with the PS1 core mapping", async ({
 
   const rows = page.locator(".rom-library-row");
   await expect(rows.first()).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Mortal Kombat Trilogy" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Spyro the Dragon" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Tekken 3" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Final Fantasy IX" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Gran Turismo" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Metal Gear Solid" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Tomb Raider" })).toBeVisible();
+  await expect(page.locator(".rom-library-row", { hasText: "Metal Gear Solid" }).locator("img")).toBeVisible();
   await rows.first().click();
 
   const iframe = firstIframe(firstWindow(page));
