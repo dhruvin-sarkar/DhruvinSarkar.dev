@@ -1,7 +1,7 @@
-name = "win95-rom-proxy"
+name = "portfolio-rom-proxy"
 main = "src/index.js"
 compatibility_date = "2026-03-06"
 
 [[r2_buckets]]
 binding = "ROM_BUCKET"
-bucket_name = "replace-with-your-rom-bucket"
+bucket_name = "portfolio-roms"
