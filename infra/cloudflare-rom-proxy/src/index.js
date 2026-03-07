@@ -1,5 +1,5 @@
 const ALLOWED_ORIGIN = "https://dhruvin-sarkar-dev.vercel.app";
-const ALLOWED_METHODS = "GET, HEAD, OPTIONS";
+const ALLOWED_METHODS = "GET";
 const ALLOWED_HEADERS = "Range, If-Modified-Since, If-None-Match";
 
 const buildCorsHeaders = () => {
@@ -13,14 +13,7 @@ const buildCorsHeaders = () => {
 
 export default {
   async fetch(request, env) {
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        status: 204,
-        headers: buildCorsHeaders(),
-      });
-    }
-
-    if (!["GET", "HEAD"].includes(request.method)) {
+    if (request.method !== "GET") {
       return new Response("Method Not Allowed", {
         status: 405,
         headers: buildCorsHeaders(),
@@ -76,7 +69,7 @@ export default {
       headers.set("Content-Length", String(object.size));
     }
 
-    return new Response(request.method === "HEAD" ? null : object.body, {
+    return new Response(object.body, {
       status: requestedRange ? 206 : 200,
       headers,
     });
