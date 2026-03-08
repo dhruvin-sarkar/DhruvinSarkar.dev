@@ -187,6 +187,12 @@ export function imageMapping (name, type) {
     case 'Space Cadet Pinball':
       return SpaceCadetPinballIcon;
 
+    case 'Hollow Knight':
+      return '/icons/Hollow kngiht.png';
+
+    case 'ULTRAKILL':
+      return '/icons/Ultrakill.png';
+
     case 'Quake III Arena':
       return Quake3Icon;
 

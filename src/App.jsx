@@ -32,6 +32,8 @@ import QuakeOriginal from "./components/apps/emulators/QuakeOriginal";
 import ChromeDino from "./components/apps/emulators/ChromeDino";
 import DXBall from "./components/apps/emulators/DXBall";
 import SkiFree from "./components/apps/emulators/SkiFree";
+import HollowKnight from "./components/apps/emulators/HollowKnight";
+import Ultrakill from "./components/apps/emulators/Ultrakill";
 import iconInfo from "./icon.json";
 import Login from "./components/Login";
 import OpenProject from "./components/OpenProject";
@@ -457,6 +459,26 @@ function App() {
   });
 
   const [SpaceCadetExpand, setSpaceCadetExpand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [HollowKnightExpand, setHollowKnightExpand] = useState({
+    expand: false,
+    show: false,
+    hide: false,
+    focusItem: false,
+    x: 0,
+    y: 0,
+    zIndex: 1,
+  });
+
+  const [UltrakillExpand, setUltrakillExpand] = useState({
     expand: false,
     show: false,
     hide: false,
@@ -1895,6 +1917,10 @@ function App() {
     setKeen4Expand,
     SpaceCadetExpand,
     setSpaceCadetExpand,
+    HollowKnightExpand,
+    setHollowKnightExpand,
+    UltrakillExpand,
+    setUltrakillExpand,
     Quake3Expand,
     setQuake3Expand,
     Quake1Expand,
@@ -2098,6 +2124,8 @@ function App() {
         <NESEmulator />
         <CommanderKeen4 />
         <SpaceCadet />
+        <HollowKnight />
+        <Ultrakill />
         <Quake3Arena />
         <QuakeOriginal />
         <ChromeDino />
@@ -2515,6 +2543,20 @@ function App() {
         setter: setSpaceCadetExpand,
         usestate: SpaceCadetExpand,
         color: "rgba(36, 98, 162, 0.85)",
+        size: "small",
+      },
+      {
+        name: "Hollow Knight",
+        setter: setHollowKnightExpand,
+        usestate: HollowKnightExpand,
+        color: "rgba(106, 190, 48, 0.85)",
+        size: "small",
+      },
+      {
+        name: "ULTRAKILL",
+        setter: setUltrakillExpand,
+        usestate: UltrakillExpand,
+        color: "rgba(220, 38, 127, 0.85)",
         size: "small",
       },
       {

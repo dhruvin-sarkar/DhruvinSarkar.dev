@@ -516,5 +516,27 @@
         "y": 520,
         "category": "Games",
         "description": "Launch Commander Keen 4 through the stable JS-DOS compatibility page."
+    },
+    {
+        "name": "Hollow Knight",
+        "pic": "Hollow Knight",
+        "folderId": "Desktop",
+        "size": 120000,
+        "type": ".exe",
+        "x": 120,
+        "y": 520,
+        "category": "Games",
+        "description": "Explore the haunting world of Hallownest in this Unity WebGL port."
+    },
+    {
+        "name": "ULTRAKILL",
+        "pic": "ULTRAKILL",
+        "folderId": "Desktop",
+        "size": 96000,
+        "type": ".exe",
+        "x": 220,
+        "y": 520,
+        "category": "Games",
+        "description": "Experience fast-paced first-person action in this stylish shooter."
     }
 ]

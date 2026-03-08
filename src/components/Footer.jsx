@@ -319,6 +319,34 @@ export default function Footer() {
             },
         },
         {
+            className: "hollowknight",
+            imgSrc: imageMapping('Hollow Knight'),
+            imgAlt: "Hollow Knight",
+            spanText: "Hollow Knight",
+            onClick: () => {
+                handleShow('Hollow Knight');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
+            className: "ultrakill",
+            imgSrc: imageMapping('ULTRAKILL'),
+            imgAlt: "ULTRAKILL",
+            spanText: "ULTRAKILL",
+            onClick: () => {
+                handleShow('ULTRAKILL');
+                setStartActive(false);
+            },
+            onmouseenter: () => {
+                setResumejectStartBar(false);
+                setProjectStartBar(false);
+            },
+        },
+        {
             className: "quake3",
             imgSrc: imageMapping('Quake III Arena'),
             imgAlt: "Quake III Arena",
