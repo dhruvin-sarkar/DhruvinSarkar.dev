@@ -697,7 +697,9 @@ select {
     font-size: 12px;
     border: none;
     padding: 4px;
-
+    color: #000000;
+    /* Ensure text is visible */
+    background: transparent;
 }
 
 .react-calendar__month-view__days button:hover {

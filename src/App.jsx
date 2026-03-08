@@ -962,95 +962,79 @@ function App() {
       }, 100);
     }, STARTUP_PRAISE_DELAY_MS);
 
-    // Random praise notifications
-    const praiseMessages = [
+    // Random humble notifications
+    const humbleMessages = [
       {
-        text1: "Dhruvin's Design skills",
-        text2: "Are simply top-notch and pixel perfect!",
+        text1: "Welcome",
+        text2: "Thanks for checking out this portfolio project.",
       },
       {
-        text1: "Attention to Detail",
-        text2: "Every pixel in this portfolio is placed with care.",
+        text1: "About This Build",
+        text2: "A learning project exploring React and retro UI design.",
       },
       {
-        text1: "Retro Aesthetic",
-        text2: "Dhruvin nailed the Windows 95 vibe perfectly.",
+        text1: "Tech Stack",
+        text2: "Built with React, custom Hooks, and Context API.",
       },
       {
-        text1: "Smooth Experience",
-        text2: "Everything runs so smoothly thanks to Dhruvin.",
+        text1: "Features",
+        text2: "Includes draggable windows, file system, and emulator support.",
       },
       {
-        text1: "Under the Hood",
-        text2: "Built with React and custom Hooks for optimal performance.",
+        text1: "Design Approach",
+        text2: "Aiming for a nostalgic Windows 95 aesthetic.",
       },
       {
-        text1: "Smart Engineering",
-        text2: "Uses complex Context API state management efficiently.",
+        text1: "Project Goal",
+        text2: "Learning by building interactive web experiences.",
       },
       {
-        text1: "Custom Architecture",
-        text2: "Check out the recursive file system algorithm!",
+        text1: "Under Development",
+        text2: "Always improving and adding new features.",
       },
       {
-        text1: "Modern Tech",
-        text2: "Framer Motion powers these authentic animations.",
+        text1: "Feedback Welcome",
+        text2: "Open to suggestions and constructive criticism.",
       },
       {
-        text1: "Built by Dhruvin",
-        text2: "Designed, coded, and polished as a full-stack portfolio OS.",
-      },
-      {
-        text1: "Engineering + Design",
-        text2: "A rare mix of strong UX taste and production-grade coding.",
-      },
-      {
-        text1: "Project Depth",
-        text2: "This desktop includes apps, emulators, chat, and live widgets.",
-      },
-      {
-        text1: "Creative Direction",
-        text2: "The retro Windows feel is handcrafted, not template-based.",
-      },
-      {
-        text1: "Problem Solver",
-        text2: "Dhruvin thrives on shipping practical, user-focused features.",
-      },
-      {
-        text1: "Frontend Craft",
-        text2: "Micro-interactions and feedback are tuned for responsiveness.",
-      },
-      {
-        text1: "Real Builder",
-        text2: "From early C++ experiments to modern full-stack applications.",
-      },
-      {
-        text1: "Career Snapshot",
-        text2: "AI + Design Thinking student with a strong product mindset.",
-      },
-      {
-        text1: "Portfolio Goal",
-        text2: "Show what Dhruvin can build, not just what he can describe.",
-      },
-      {
-        text1: "Tech Playground",
-        text2: "Explore folders and apps to see the full personality of the project.",
+        text1: "Exploration",
+        text2: "Feel free to click around and test things out.",
       },
       {
         text1: "Thanks for Visiting",
-        text2: "Every screen here was built to be memorable and useful.",
+        text2: "Hope you enjoy exploring this project.",
+      },
+      {
+        text1: "Learning Journey",
+        text2: "From early experiments to full-stack projects.",
+      },
+      {
+        text1: "Open Source",
+        text2: "Check the GitHub for more details and code.",
+      },
+      {
+        text1: "Stay Curious",
+        text2: "Keep exploring and building cool things.",
+      },
+      {
+        text1: "Desktop Features",
+        text2: "Try the emulators, apps, and interactive elements.",
+      },
+      {
+        text1: "Questions?",
+        text2: "Reach out if you want to chat about the project.",
       },
     ];
 
     const praiseInterval = setInterval(() => {
-      // 100% chance to show a praise notification every configured interval
-      const randomPraise =
-        praiseMessages[Math.floor(Math.random() * praiseMessages.length)];
+      // Show random humble notification
+      const randomMessage =
+        humbleMessages[Math.floor(Math.random() * humbleMessages.length)];
       setNotiOn(false);
       setTimeout(() => {
         setNewMessage({
           type: "custom",
-          ...randomPraise,
+          ...randomMessage,
         });
         setNotiOn(true);
       }, 100);
