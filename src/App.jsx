@@ -130,7 +130,8 @@ function App() {
   const [tileScreen, setTileScreen] = useState(false);
   const [chatBotActive, setChatBotActive] = useState(false);
   const [runCatVideo, setRunCatVideo] = useState(false);
-  const [newsPopup, setNewsPopup] = useState(false);
+  // TODO: re-enable once CORS is fixed on Render backends
+  // const [newsPopup, setNewsPopup] = useState(false);
   const [onlineUser, setOnlineUser] = useState(0);
   const [sortedIcon, setSortedIcon] = useState([]);
   const [sortIconTrigger, setSortIconTrigger] = useState(0);
@@ -1722,8 +1723,9 @@ function App() {
     setPatchExpand,
     runCatVideo,
     setRunCatVideo,
-    newsPopup,
-    setNewsPopup,
+    // TODO: re-enable once CORS is fixed on Render backends
+    // newsPopup,
+    // setNewsPopup,
     onlineUser,
     UtilityRef,
     PaintExpand,

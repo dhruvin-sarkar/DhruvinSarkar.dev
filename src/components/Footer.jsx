@@ -16,7 +16,8 @@ import Calendar from 'react-calendar';
 import { BsFillCaretRightFill } from "react-icons/bs";
 import binEmp from '../assets/bin2.png'
 import bin from '../assets/bin.png'
-import news from '../assets/news.png'
+// TODO: re-enable once CORS is fixed on Render backends
+// import news from '../assets/news.png'
 import speaker from '../assets/speaker.png'
 import vscIcon from '../assets/vscode.png';
 
@@ -791,12 +792,13 @@ export default function Footer() {
                     ref={timeBarRef}
                 >
                     <div className="icon_time_container">
-                        <img src={news} alt="news"
+                        {/* TODO: re-enable once CORS is fixed on Render backends */}
+                        {/* <img src={news} alt="news"
                                 onClick={(e) => {
                                     e.stopPropagation()
-                                    setNewsPopup(!newsPopup)
+                                    // setNewsPopup(!newsPopup)
                                 }}
-                        />
+                        /> */}
                         {isBitcoinInstalled && (
                             <img src={btc_icon} alt="btc_icon"
     
