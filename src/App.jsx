@@ -1633,10 +1633,11 @@ function App() {
     setLastTapTime(now);
   };
 
-  // Icon sizing functions - JavaScript-style scaling
+  // Icon sizing functions - JavaScript-style scaling with resolution naming
   const iconContainerSize = (size) => {
-    // JavaScript-style scaling: 0.8x, 1.0x, 1.2x
-    const scale = size === 0 ? 0.8 : size === 1 ? 1.0 : 1.2;
+    // JavaScript-style scaling based on resolution names
+    const scales = [0.6, 0.8, 1.0, 1.2, 1.4]; // 360x640 to 3840x2160
+    const scale = scales[size] || 1.0;
     const baseSize = 100; // Base container size
     return {
       width: baseSize * scale,
@@ -1646,8 +1647,9 @@ function App() {
   };
 
   const iconImgSize = (size) => {
-    // JavaScript-style scaling: 0.8x, 1.0x, 1.2x
-    const scale = size === 0 ? 0.8 : size === 1 ? 1.0 : 1.2;
+    // JavaScript-style scaling based on resolution names
+    const scales = [0.6, 0.8, 1.0, 1.2, 1.4]; // 360x640 to 3840x2160
+    const scale = scales[size] || 1.0;
     const baseSize = 48; // Base icon size
     return {
       width: baseSize * scale,
@@ -1656,8 +1658,9 @@ function App() {
   };
 
   const iconTextSize = (size) => {
-    // JavaScript-style scaling: 0.8x, 1.0x, 1.2x
-    const scale = size === 0 ? 0.8 : size === 1 ? 1.0 : 1.2;
+    // JavaScript-style scaling based on resolution names
+    const scales = [0.6, 0.8, 1.0, 1.2, 1.4]; // 360x640 to 3840x2160
+    const scale = scales[size] || 1.0;
     const baseFontSize = 12; // Base font size
     return {
       fontSize: `${Math.round(baseFontSize * scale)}px`

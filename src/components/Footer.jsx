@@ -733,9 +733,11 @@ export default function Footer() {
     }, [clippySendemail, clippySong, clippyUsername]);
 
     const iconSizeSelection = [
-        { label: 'Small (0.8x)', value: 0 },
-        { label: 'Medium (1.0x)', value: 1 },
-        { label: 'Large (1.2x)', value: 2 }
+        { label: '360x640', value: 0 },
+        { label: '640x720', value: 1 },
+        { label: '1920x1080', value: 2 },
+        { label: '2560x1440', value: 3 },
+        { label: '3840x2160', value: 4 }
     ];
 
     const recycleBin = desktopIcon.filter(icon => icon.folderId === 'RecycleBin');
