@@ -1635,37 +1635,38 @@ function App() {
     setLastTapTime(now);
   };
 
-  // Icon sizing functions - JavaScript-style scaling with resolution naming
+  // Icon sizing functions - Fixed pixel sizes independent of viewport
   const iconContainerSize = (size) => {
-    // JavaScript-style scaling based on resolution names
-    const scales = [0.6, 0.8, 1.0, 1.2, 1.4]; // 360x640 to 3840x2160
-    const scale = scales[size] || 1.0;
-    const baseSize = 100; // Base container size
+    // Fixed container sizes: small, medium, large, extra-large, ultra-large
+    const containerSizes = [
+      { width: 60, height: 70 },   // Small (360x640)
+      { width: 75, height: 80 },   // Medium (640x720) 
+      { width: 85, height: 90 },   // Large (1920x1080)
+      { width: 95, height: 100 },  // Extra-large (2560x1440)
+      { width: 105, height: 110 }  // Ultra-large (3840x2160)
+    ];
+    const selectedSize = containerSizes[size] || containerSizes[2]; // Default to large
     return {
-      width: baseSize * scale,
-      height: baseSize * scale,
-      fontSize: Math.round(12 * scale)
+      width: `${selectedSize.width}px`,
+      height: `${selectedSize.height}px`,
+      fontSize: '11px' // Fixed font size for all sizes
     };
   };
 
   const iconImgSize = (size) => {
-    // JavaScript-style scaling based on resolution names
-    const scales = [0.6, 0.8, 1.0, 1.2, 1.4]; // 360x640 to 3840x2160
-    const scale = scales[size] || 1.0;
-    const baseSize = 48; // Base icon size
+    // Fixed icon image sizes: small, medium, large, extra-large, ultra-large
+    const iconSizes = [32, 40, 48, 56, 64]; // Win95 standard: 32px base
+    const selectedSize = iconSizes[size] || iconSizes[2]; // Default to 48px
     return {
-      width: baseSize * scale,
-      height: baseSize * scale
+      width: `${selectedSize}px`,
+      height: `${selectedSize}px`
     };
   };
 
-  const iconTextSize = (size) => {
-    // JavaScript-style scaling based on resolution names
-    const scales = [0.6, 0.8, 1.0, 1.2, 1.4]; // 360x640 to 3840x2160
-    const scale = scales[size] || 1.0;
-    const baseFontSize = 12; // Base font size
+  const iconTextSize = (_size) => {
+    // Fixed font size for all icon sizes - Win95 standard
     return {
-      fontSize: `${Math.round(baseFontSize * scale)}px`
+      fontSize: '11px'
     };
   };
 

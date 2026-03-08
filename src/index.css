@@ -403,7 +403,8 @@ select {
 
 .start_popup .sidebar_popup {
     grid-column: 1;
-    grid-row: 1 / 100; /* Span many rows to be safe */
+    grid-row: 1 / 100;
+    /* Span many rows to be safe */
     background: #7b7d7b;
     position: sticky;
     top: 0;
@@ -778,8 +779,7 @@ select {
     display: grid;
     position: relative;
     place-items: center;
-    height: 90px;
-    width: 85px;
+    /* height and width controlled by JavaScript iconContainerSize() function */
     gap: 4px;
     margin-bottom: .9rem;
     cursor: default;
@@ -799,7 +799,7 @@ select {
 
 .icon img {
     position: relative;
-    width: 55px;
+    /* width controlled by JavaScript iconImgSize() function */
     pointer-events: none;
 }
 
@@ -817,7 +817,7 @@ select {
 
 .icon p {
     position: relative;
-    font-size: 12px;
+    /* font-size controlled by JavaScript iconTextSize() function */
     color: white;
     padding-left: 1px;
     padding-top: 2px;
