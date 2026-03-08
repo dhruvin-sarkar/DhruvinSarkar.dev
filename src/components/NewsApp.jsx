@@ -46,40 +46,41 @@ function NewsApp() {
         95: '⛈️',
     };
 
-    useEffect(() => { // call fetchNews when user open news
-        const cachedNews = localStorage.getItem('cachedNews');
-        const cachedTime = localStorage.getItem('cachedNewsTime');
+    // TODO: re-enable once CORS is fixed on Render backends
+    // useEffect(() => { // call fetchNews when user open news
+    //     const cachedNews = localStorage.getItem('cachedNews');
+    //     const cachedTime = localStorage.getItem('cachedNewsTime');
         
-        if (cachedNews && cachedTime) {
-            const timeDiff = Date.now() - Number.parseInt(cachedTime);
-            // Use cached news if less than 5 minutes old
-            if (timeDiff < 300000) {
-                setAllNews(JSON.parse(cachedNews));
-                setIsLoading(false);
-                return;
-            }
-        }
+    //     if (cachedNews && cachedTime) {
+    //         const timeDiff = Date.now() - Number.parseInt(cachedTime);
+    //         // Use cached news if less than 5 minutes old
+    //         if (timeDiff < 300000) {
+    //             setAllNews(JSON.parse(cachedNews));
+    //             setIsLoading(false);
+    //             return;
+    //         }
+    //     }
         
-        fetchNews();
-    }, []);
+    //     fetchNews();
+    // }, []);
 
-    async function fetchNews() {
-        setIsLoading(true);
-        setNewsError(false);
-        try {
-            const response = await axios.get("https://ai-tweet-bot-mp70.onrender.com/news/getNews");
-            setAllNews(response.data.news);
-            // Cache the news and timestamp
-            localStorage.setItem('cachedNews', JSON.stringify(response.data.news));
-            localStorage.setItem('cachedNewsTime', Date.now().toString());
-        } catch (error) {
-            console.error("Error fetching news:", error);
-            setNewsError(true);
-            // Don't clear cached news on error - let user see last successful fetch
-        } finally {
-            setIsLoading(false);
-        }
-    }
+    // async function fetchNews() {
+    //     setIsLoading(true);
+    //     setNewsError(false);
+    //     try {
+    //         const response = await axios.get("https://ai-tweet-bot-mp70.onrender.com/news/getNews");
+    //         setAllNews(response.data.news);
+    //         // Cache the news and timestamp
+    //         localStorage.setItem('cachedNews', JSON.stringify(response.data.news));
+    //         localStorage.setItem('cachedNewsTime', Date.now().toString());
+    //     } catch (error) {
+    //         console.error("Error fetching news:", error);
+    //         setNewsError(true);
+    //         // Don't clear cached news on error - let user see last successful fetch
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // }
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -160,60 +161,8 @@ function NewsApp() {
     }
 
 
-    return (
-        <>
-            <AnimatePresence>
-                {newsPopup && (
-                    <motion.div
-                        className="news_container"
-                        ref={newsContainerRef}
-                        initial={{ opacity: 0, x: '-500px' }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ ease: 'easeInOut', duration: 0.3 }}
-                        exit={{ opacity: 0, x: '-500px' }}
-                    >
-                        {weather && (
-                            <div className="weather_container">
-                                <span className='location'
-                                    onClick={() => {
-                                        getUserLocation()
-                                    }}
-                                >
-                                    <MdGpsFixed />
-                                </span>
-                                <h1>{city}</h1>
-                                <h1>{weatherIcons[weather.code] || ''}
-                                    <span className="temp"
-                                        onClick={() => setCel(!Cel)}
-                                    >
-                                        {Cel? weather.temp : ((weather.temp - 32) * 5 / 9).toFixed(0)}
-                                        {Cel? '°F':'°C'}
-                                    </span>
-                                </h1>
-                            </div>
-                        )}
-                        {error && <p className="error">{error}</p>}
-
-                        <h1>Latest News</h1>
-                        {isLoading ? (
-                            <p className="news-loading">Loading news...</p>
-                        ) : newsError ? (
-                            <p className="news-error">News unavailable</p>
-                        ) : allNews.length > 0 ? (
-                            filteredNews.map((item, index) => (
-                                <div className="news" key={index} onClick={() => openNews(item.url)}>
-                                    <img src={item.urlToImage} alt="" />
-                                    <h5>{item.originalNews}</h5>
-                                </div>
-                            ))
-                        ) : (
-                            <p>No news available</p>
-                        )}
-                    </motion.div>
-                )}
-            </AnimatePresence>
-        </>
-    );
+    // TODO: re-enable once CORS is fixed on Render backends
+    return null; // Temporarily disable news widget
 }
 
 export default NewsApp;

@@ -397,8 +397,9 @@ export default function Tile({ id, content, index, size, color, moveTile, imageM
         return;
 
       case 'News':
-        setNewsPopup(true)
-        setTileScreen(false);
+        // TODO: re-enable once CORS is fixed on Render backends
+        // setNewsPopup(true)
+        // setTileScreen(false);
         return;
 
       case 'Picture':

@@ -58,17 +58,6 @@
         "description": "Classic Windows MineSweeper with the original look and feel."
     },
     {
-        "name": "MSN",
-        "pic": "MSN",
-        "folderId": "Desktop",
-        "size": 1500,
-        "type": ".exe",
-        "x": 20,
-        "y": 220,
-        "category": "Productivity",
-        "description": "Launch the MSN-inspired chat client experience."
-    },
-    {
         "name": "Winamp",
         "pic": "Winamp",
         "folderId": "Utility",

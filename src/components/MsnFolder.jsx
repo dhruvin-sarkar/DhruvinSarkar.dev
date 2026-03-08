@@ -8,7 +8,9 @@ import nudgeSound from '../assets/nudgeSound.mp3';
 import '../css/MSN.css';
 import { useSounds } from '../hooks/useSounds';
 
+// TODO: re-enable once CORS is fixed on Render backends
 function MsnFolder() {
+  return null; // Temporarily disable MSN/chat component
 
   const { playWindowMaximize, playWindowMinimize } = useSounds();
 

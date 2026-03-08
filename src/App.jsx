@@ -1230,7 +1230,8 @@ function App() {
 
       socket.current.onopen = () => {
         debugLog("WebSocket connected");
-        getChat();
+        // TODO: re-enable once CORS is fixed on Render backends
+        // getChat();
         setWebsocketConnection(true);
         setLoading(false);
       };
@@ -2120,7 +2121,8 @@ function App() {
         <DXBall />
         <SkiFree />
         <DoomGame />
-        <MsnFolder />
+        // TODO: re-enable once CORS is fixed on Render backends
+        // <MsnFolder />
         <OpenProject />
         <BgSetting />
         <Run />
@@ -2379,32 +2381,33 @@ function App() {
     setSendDisable(false);
   }
 
+  // TODO: re-enable once CORS is fixed on Render backends
   // Function to fetch chat data
-  async function getChat() {
-    setChatData([]);
-    try {
-      const response = await axios.get(
-        `https://notebackend4.onrender.com/chat/getchat/`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
-          },
-        },
-      );
-      setChatDown(false);
-      setChatData(response.data.chat);
-      setLoadedMessages(response.data.chat.slice(-40));
-      // if(MSNExpand.show){
-      //   endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-      // }
-      // setKeyChatSession(response.data.key)
-    } catch (error) {
-      setChatDown(true);
-      console.error("Error fetching Chat:", error);
-      console.error("CORS error detected - check backend CORS configuration");
-    }
-  }
+  // async function getChat() {
+  //   setChatData([]);
+  //   try {
+  //     const response = await axios.get(
+  //       `https://notebackend4.onrender.com/chat/getchat/`,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Access-Control-Allow-Origin": "*",
+  //         },
+  //       },
+  //     );
+  //     setChatDown(false);
+  //     setChatData(response.data.chat);
+  //     setLoadedMessages(response.data.chat.slice(-40));
+  //     // if(MSNExpand.show){
+  //     //   endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+  //     // }
+  //     // setKeyChatSession(response.data.key)
+  //   } catch (error) {
+  //     setChatDown(true);
+  //     console.error("Error fetching Chat:", error);
+  //     console.error("CORS error detected - check backend CORS configuration");
+  //   }
+  // }
 
   function ObjectState() {
     return [

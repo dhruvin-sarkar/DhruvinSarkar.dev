@@ -59,7 +59,10 @@ Live: https://Dhruvin-Sarkar.dev
 - Drag and Drop
 - Shrink and Expand window
 - Start Menu
-- Resize window
+- Resize window in all 8 directions from any edge or corner
+  - Correct directional cursors per handle
+  - Transparent overlay during resize prevents iframes swallowing mouse events
+  - Minimum window size enforced so windows cannot collapse beyond usability
 - Hide and unhide
 - One click to highlight
 - Double Click to open (also works on mobile using useState to capture the first touch and counting time within 300ms)
@@ -78,138 +81,134 @@ Live: https://Dhruvin-Sarkar.dev
   - Chat is live and has expiration key each session to prevent spam
   - Added filter words
   - Added auto delete for spams on the server side
+  - AI Chat Bot switchable on/off
+  - MSN nudge sound effect — sends nudge to server, broadcasts to all clients, shakes the chat window
+  - Reconnecting websocket, reconnects chat after user navigates away and comes back
+  - MSN notification pops up when there is a new message while MSN is hidden or closed
 - Added MineSweeper
   - Flag can now be placed on desktop
 - Added Settings
   - Wallpaper can now be changed
   - Theme will also be changed along with wallpaper
+  - Color picker for background customization
+  - Effect pattern selector
 - Added Run command
-  - Now Run command is fully functioned
-  - Added Error handling when type in the wrong file name
+  - Fully functional with error handling for wrong file names
 - Added new drag and drop feature
-  - Now every icon can be drag and drop to any folder
-  - Fixed bug where dragging out of folder causes other icons to flow in different direction by adding key to its container to rearrange (re-mount) the container
-  - Icons will now be saved in user localStorage
+  - Every icon can be dragged and dropped to any folder
+  - Fixed bug where dragging out of folder causes other icons to flow in different direction
+  - Icons saved in user localStorage
 - Added notification when page loaded
-  - Display message and running animation
-- Added MSN notification
-  - Notification will pop up when there is a new message when MSN is hidden or closed
-- Now MSN live chat is using websocket instead of API for better performance
-  - Added Reconnecting websocket, reconnect chat after user navigates away and comes back
 - Added Icon size adjustable on the icon next to the clock on footer
 - Added Calendar by clicking the time on the footer
 - Added sub folder on start menu imitating real Windows 95 functionality
-- Added Bitcoin price real-time tracking display and icon celebrating BTC hits $100k
+- Added Bitcoin price real-time tracking display
   - User can hide/unhide in tab bar
   - Using Coinbase websocket to display
-- Added Effect pattern in settings
-- Added My Computer and working on file system
-- Added Right Click and still working on more functions
-  - On Desktop uses right click
-  - On mobile uses long press
-  - Right click can be done on icon now
-- Added Right click on each icon and icon in bin
-  - Right clicking on icon now able to open and delete
-  - After icon being deleted, it will move to RecycleBin
-  - Right click on icon in RecycleBin will show option to restore
-  - Clicking on restore will store the icon to its previous position
-- Added Paint using Library [Paint](https://github.com/1j01/jspaint)
+  - Bitcoin chart
+  - Redesigned BTC widget
+  - BTC hits $100k celebration icon
+- Added My Computer with working file system
+- Added Right Click context menu
+  - Desktop right click + mobile long press
+  - Right click on icon: open and delete
+  - Deleted icons move to RecycleBin
+  - Right click in RecycleBin: restore icon to previous position
+  - Sorting icons by name per folder
+- Added Paint using [jspaint](https://github.com/1j01/jspaint)
 - Added AiAgent project
-- Added News icon on task bar
-  - Can display latest news by clicking on the article
-  - Connected to back-end
-- Added Temperature on news App
-  - Can detect user's location
-  - Able to switch between Celsius and Fahrenheit
+- Added News widget on taskbar
+  - Displays latest news with article links
+  - Connected to backend
+  - Temperature display with location detection
+  - Celsius / Fahrenheit toggle
+  - Weather night sticker based on local time
+  - Weather prediction tracking user's local time
 - Added Patch App
-- Now weather prediction can track user's local time
-- Added Weather 🌙 sticker when it's night time
-- Added color picker to Settings for background customization
 - Added 3D Object in Project folder
-- Added AI Chat Bot to MSN app
-- Chat Bot is able to be switched on/off
-- Added Tile grid App **Inspired from Windows 10 and Windows phone**
-- Added fetching background from tile screen mode with toggle on/off
-- Added Icons on Tile screen
-- Added Reconnect to MSN chat
-- Added Task Manager APP
-- Add bitcoin chart
-- Re-design BTC widget
-- Add MSN nudge sound effect
-  - Send nudge to server and broadcast to all clients
-  - Nudge shakes the chat window
-- Added sorting icon right click
-  - Each folder's icons can be sorted by name
+- Added Tile grid App (inspired by Windows 10 and Windows Phone)
+  - Fetchable background from tile screen with toggle on/off
+  - Icons on Tile screen
+- Added Task Manager App
 - Added toggleable Google Search bar
-- Added confirmation before permanently delete file
-- Added Store icon
-- All the apps in Store are now free to install
-- All the apps that being installed or uninstalled are now being added or removed on Tile as well
-- All apps are now able to install and uninstall in the store
-- Now icon will be added and deleted dynamically, and width will be adjusted automatically
-- New icon will be able to be added on the footer bottom right corner
-- Enhanced Bio Folder with consistent tab styling and new "Being Employed" section
+- Added confirmation before permanently deleting a file
+- Added Store
+  - All apps free to install and uninstall
+  - Install/uninstall syncs with Tile screen automatically
+  - Icon added and removed dynamically, width adjusts automatically
+  - Fixed silent empty render caused by missing category/description metadata
+- New icon can be added on the footer bottom right corner
+- Enhanced Bio Folder
+  - Consistent tab styling
   - Updated technology stack with categorized sections
-  - Improved tab formatting with consistent CSS classes
-  - Added employment experience section with professional content
-- DOOM Game Integration
-  - Fully playable DOOM game with js-dos emulator
-  - Fullscreen mode with proper 4:3 aspect ratio maintenance
-  - Enhanced maximize button functionality for true fullscreen experience
-  - Automatic letterboxing with black bars for authentic retro display
-  - Improved canvas scaling and display optimization
-  - Removed redundant fullscreen button for cleaner interface
-Window Resizing
+  - Employment experience section
 
-All windows can now be resized in all eight directions from any edge or corner
-Resize handles on all sides and corners with correct directional cursors
-Transparent overlay during resize prevents iframes from swallowing mouse events
-Minimum window size enforced so windows cannot be collapsed beyond usability
+---
 
+## Emulator Suite
 
-Emulator Suite
+Full emulator suite using EmulatorJS, each system with a manifest-driven ROM library. Games launch with one click — no file prompts.
 
-Nintendo 64 emulator with ROM library
-PlayStation 1 emulator with ROM library, large ROMs hosted on Cloudflare R2
-Game Boy Advance emulator with ROM library
-NES emulator with ROM library
-Windows 95 fully booting via Virtual x86 emulator with performance warning
-ROM library system with manifest-driven game card grid for each system
-Games launch instantly with one click, no file prompts
+- **Nintendo 64** — ROM library with manifest card grid
+- **PlayStation 1** — ROM library, ROMs hosted on Cloudflare R2 and streamed via a Cloudflare Worker proxy
+  - Tekken 3, Mortal Kombat Trilogy, Gran Turismo, Metal Gear Solid, Tomb Raider
+  - Silent Hill, Need for Speed III: Hot Pursuit, Grand Theft Auto, Grand Theft Auto 2, Marvel vs. Capcom, JoJo's Bizarre Adventure
+- **Game Boy Advance** — ROM library
+- **NES** — ROM library
+- **Windows 95** — fully booting via Virtual x86 with performance warning
+- **Nintendo 3DS** — wired with manifest system and cover art; displays "core unavailable" panel until a browser-compatible Citra core ships
 
+---
 
-Games
+## Games
 
-Space Cadet Pinball fully playable
-Quake via WebAssembly
-Quake III Arena
-Chrome Dino
-DX-Ball
-SkiFree
-Commander Keen 4 via js-dos
+- Space Cadet Pinball
+- DOOM (js-dos)
+- Quake (WebAssembly)
+- Quake III Arena
+- Chrome Dino
+- DX-Ball
+- SkiFree
+- Commander Keen 4 (js-dos)
+- GTA 1 (browser)
+- **Hollow Knight** — Unity WebGL, streamed from 2games.io CDN
+- **ULTRAKILL** — Unity WebGL GitHub Pages port
 
+---
 
-Internet Explorer Rebuilt
+## Internet Explorer
 
-Working address bar with URL and search query detection
-Back and forward navigation
-Bookmarks bar
-Error handling for sites that block iframe embedding
+- Working address bar with URL and search query detection
+- Back and forward navigation
+- Bookmarks bar
+- Error handling for sites that block iframe embedding
 
+---
 
-Added VS Code powered by Monaco Editor
-Added Terminal with file system support
-Added custom wallpaper support, users can set and change desktop wallpaper
-Added system sound effects for window interactions and notifications
-Expanded notification system with more contextual alerts
-Performance improvements including fewer unnecessary re-renders and better iframe handling across all apps
+## Developer Tools
+
+- **VS Code** powered by Monaco Editor
+- **Terminal** with file system support
+- **MS-DOS Prompt** via js-dos
+
+---
 
 ## Library Used
 
-- React Draggable => drag and drop functionality
-- Framer-motion => for some animation
-- Webamp => Winamp music player (for music app)
-- npm i react-calendar => for calendar
+- React Draggable — drag and drop functionality
+- Framer Motion — animations
+- Webamp — Winamp music player
+- react-calendar — calendar
+
+---
+
+## Infrastructure
+
+- ROMs hosted on **Cloudflare R2** 
+- **Cloudflare Worker** proxy streams ROMs to the frontend with CORS headers and range request support
+- Deployed on **Vercel**
+
+---
 
 ## Credits
 
