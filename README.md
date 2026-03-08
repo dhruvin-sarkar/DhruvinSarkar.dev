@@ -26,9 +26,6 @@ Live: https://Dhruvin-Sarkar.dev
 
 ![Run Command](https://github.com/dhruvin-sarkar/Win95P-DevPortfolio/blob/main/src/assets/run.gif?raw=true)
 
-- Live Chat
-
-![Live Chat](https://github.com/dhruvin-sarkar/Win95P-DevPortfolio/blob/main/src/assets/msn.gif?raw=true)
 
 - Notification
 
@@ -76,15 +73,11 @@ Live: https://Dhruvin-Sarkar.dev
 - Added Log in page
   - Added mario animation running
   - Click on ? button can increase mario's size
-- Added MSN
   - Live chat app connected to backend Node, Express and MongoDB (free server is slow sometimes)
   - Chat is live and has expiration key each session to prevent spam
   - Added filter words
   - Added auto delete for spams on the server side
   - AI Chat Bot switchable on/off
-  - MSN nudge sound effect — sends nudge to server, broadcasts to all clients, shakes the chat window
-  - Reconnecting websocket, reconnects chat after user navigates away and comes back
-  - MSN notification pops up when there is a new message while MSN is hidden or closed
 - Added MineSweeper
   - Flag can now be placed on desktop
 - Added Settings
@@ -117,8 +110,6 @@ Live: https://Dhruvin-Sarkar.dev
   - Sorting icons by name per folder
 - Added Paint using [jspaint](https://github.com/1j01/jspaint)
 - Added AiAgent project
-- Added News widget on taskbar
-  - Displays latest news with article links
   - Connected to backend
   - Temperature display with location detection
   - Celsius / Fahrenheit toggle
