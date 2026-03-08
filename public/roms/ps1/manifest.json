@@ -30,6 +30,42 @@
       "title": "Tomb Raider",
       "file": "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/ps1/tomb-raider/Tomb%20Raider%20%28USA%29%20%28Track%2001%29.bin",
       "cover": "/roms/ps1/Tomb_Raider_1996.png"
+    },
+    {
+      "id": "silent-hill",
+      "title": "Silent Hill",
+      "file": "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/ps1/silent-hill/Silent%20Hill%20%28USA%29.bin",
+      "cover": "/roms/ps1/silent-hill.jpg"
+    },
+    {
+      "id": "need-for-speed-3",
+      "title": "Need for Speed III: Hot Pursuit",
+      "file": "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/ps1/need-for-speed-3/Need%20for%20Speed%20III%20-%20Hot%20Pursuit%20%28USA%29.bin",
+      "cover": "/roms/ps1/need-for-speed-3.jpg"
+    },
+    {
+      "id": "gta1",
+      "title": "Grand Theft Auto",
+      "file": "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/ps1/gta1/Grand%20Theft%20Auto%20%28USA%29%20%28Track%2001%29.bin",
+      "cover": "/roms/ps1/gta1.jpg"
+    },
+    {
+      "id": "gta2",
+      "title": "Grand Theft Auto 2",
+      "file": "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/ps1/gta2/Grand%20Theft%20Auto%202%20%28USA%29.bin",
+      "cover": "/roms/ps1/gta2.jpg"
+    },
+    {
+      "id": "marvel-vs-capcom",
+      "title": "Marvel vs. Capcom",
+      "file": "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/ps1/marvel-vs-capcom/Marvel%20vs.%20Capcom%20-%20Clash%20of%20Super%20Heroes%20%28USA%29.bin",
+      "cover": "/roms/ps1/marvel-vs-capcom.jpg"
+    },
+    {
+      "id": "jojos-bizarre-adventure",
+      "title": "JoJo's Bizarre Adventure",
+      "file": "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/ps1/jojos-bizarre-adventure/JoJo%27s%20Bizarre%20Adventure%20%28USA%29.bin",
+      "cover": "/roms/ps1/jojos-bizarre-adventure.jpg"
     }
   ]
 }
