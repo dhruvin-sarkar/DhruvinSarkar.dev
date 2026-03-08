@@ -1634,16 +1634,18 @@ function App() {
   };
 
   // Icon sizing functions - Fixed pixel sizes independent of viewport
+  // Inverted scale: lower resolution = larger icons, higher resolution = smaller icons
   const iconContainerSize = (size) => {
-    // Fixed container sizes: small, medium, large, extra-large, ultra-large
+    // Fixed container sizes: inverted for real OS behavior
+    // Low resolution (360x640) = largest icons, High resolution (3840x2160) = smallest icons
     const containerSizes = [
-      { width: 60, height: 70 },   // Small (360x640)
-      { width: 75, height: 80 },   // Medium (640x720) 
-      { width: 85, height: 90 },   // Large (1920x1080)
-      { width: 95, height: 100 },  // Extra-large (2560x1440)
-      { width: 105, height: 110 }  // Ultra-large (3840x2160)
+      { width: 105, height: 110 },  // Small resolution (360x640) = largest icons
+      { width: 90, height: 96 },   // Medium-small (640x720)
+      { width: 85, height: 90 },   // Baseline (1920x1080) = default
+      { width: 72, height: 77 },   // Large (2560x1440)
+      { width: 60, height: 65 }    // Ultra-large (3840x2160) = smallest icons
     ];
-    const selectedSize = containerSizes[size] || containerSizes[2]; // Default to large
+    const selectedSize = containerSizes[size] || containerSizes[2]; // Default to baseline
     return {
       width: `${selectedSize.width}px`,
       height: `${selectedSize.height}px`,
@@ -1652,8 +1654,9 @@ function App() {
   };
 
   const iconImgSize = (size) => {
-    // Fixed icon image sizes: small, medium, large, extra-large, ultra-large
-    const iconSizes = [32, 40, 48, 56, 64]; // Win95 standard: 32px base
+    // Fixed icon image sizes: inverted for real OS behavior
+    // Low resolution = larger icons, High resolution = smaller icons
+    const iconSizes = [64, 52, 48, 40, 32]; // Inverted: 64px (low res) to 32px (high res)
     const selectedSize = iconSizes[size] || iconSizes[2]; // Default to 48px
     return {
       width: `${selectedSize}px`,
