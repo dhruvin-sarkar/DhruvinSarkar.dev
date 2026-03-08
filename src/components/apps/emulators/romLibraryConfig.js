@@ -19,8 +19,6 @@ const SYSTEM_CONFIG = {
     legalNotice: LEGAL_NOTICE,
     uploadNotice: PROXY_NOTICE,
     biosUrl: "https://portfolio-rom-proxy.dhruvinsarkar.workers.dev/bios/scph5501.bin",
-    extraNotice:
-      "PlayStation 1 disc images stay in private R2 storage and are exposed only through Worker-backed manifest entries and a Worker-backed BIOS URL.",
     supportsUpload: false,
     uploadAccept: "",
     uploadHelpText:
@@ -32,8 +30,6 @@ const SYSTEM_CONFIG = {
     badge: "3DS",
     legalNotice: LEGAL_NOTICE,
     uploadNotice: PROXY_NOTICE,
-    extraNotice:
-      "Nintendo 3DS titles use Worker-backed .3ds or .cia URLs from the manifest. The proxy architecture is ready, but EmulatorJS currently lists the Citra core as unavailable for the web build.",
     launchSupport: "unavailable",
     unavailableTitle: "Nintendo 3DS runtime unavailable",
     unavailableMessage:
