@@ -10,6 +10,7 @@ function NewsApp() {
     const [error, setError] = useState('');
     const [allNews, setAllNews] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [newsError, setNewsError] = useState(false);
 
     const { 
         tileScreen,
@@ -64,6 +65,7 @@ function NewsApp() {
 
     async function fetchNews() {
         setIsLoading(true);
+        setNewsError(false);
         try {
             const response = await axios.get("https://ai-tweet-bot-mp70.onrender.com/news/getNews");
             setAllNews(response.data.news);
@@ -72,6 +74,8 @@ function NewsApp() {
             localStorage.setItem('cachedNewsTime', Date.now().toString());
         } catch (error) {
             console.error("Error fetching news:", error);
+            setNewsError(true);
+            // Don't clear cached news on error - let user see last successful fetch
         } finally {
             setIsLoading(false);
         }
@@ -193,6 +197,8 @@ function NewsApp() {
                         <h1>Latest News</h1>
                         {isLoading ? (
                             <p className="news-loading">Loading news...</p>
+                        ) : newsError ? (
+                            <p className="news-error">News unavailable</p>
                         ) : allNews.length > 0 ? (
                             filteredNews.map((item, index) => (
                                 <div className="news" key={index} onClick={() => openNews(item.url)}>

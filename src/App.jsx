@@ -2402,6 +2402,7 @@ function App() {
     } catch (error) {
       setChatDown(true);
       console.error("Error fetching Chat:", error);
+      console.error("CORS error detected - check backend CORS configuration");
     }
   }
 

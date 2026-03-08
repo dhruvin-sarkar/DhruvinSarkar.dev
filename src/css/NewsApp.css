@@ -19,7 +19,7 @@
 }
 
 /* Ensure 2 items per row with spacing */
-.news_container > * {
+.news_container>* {
     flex: 0 0 calc(50% - 10px);
 }
 
@@ -34,12 +34,12 @@
 }
 
 .news_container .news {
-    width: 48%; 
-    height: 180px; 
+    width: 48%;
+    height: 180px;
     background: rgb(208, 169, 169);
     overflow: hidden;
-    position: relative; 
-    border-radius: 4px; 
+    position: relative;
+    border-radius: 4px;
     border: 1px solid rgb(25, 22, 22);
     cursor: pointer;
     margin-left: 2px;
@@ -61,23 +61,46 @@
     animation: loading-dots 1.5s infinite;
 }
 
-@keyframes loading-dots {
-    0%, 20% { content: 'Loading news.'; }
-    40% { content: 'Loading news..'; }
-    60%, 100% { content: 'Loading news...'; }
+.news_container .news-error {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #ff6b6b;
+    background: transparent;
+    border: none;
+    cursor: default;
 }
 
-.news_container .news:hover > h5 {
+@keyframes loading-dots {
+
+    0%,
+    20% {
+        content: 'Loading news.';
+    }
+
+    40% {
+        content: 'Loading news..';
+    }
+
+    60%,
+    100% {
+        content: 'Loading news...';
+    }
+}
+
+.news_container .news:hover>h5 {
     color: #c6c5c5;
 }
-.news_container .news:hover > img {
+
+.news_container .news:hover>img {
     opacity: 0.9;
 }
 
 .news_container img {
     width: 100%;
     height: 100%;
-    object-fit: cover; 
+    object-fit: cover;
 }
 
 .news_container h5 {
@@ -85,7 +108,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    background: #151212d2; 
+    background: #151212d2;
     color: rgb(249, 249, 249);
     padding: 8px;
     font-size: 13px;
@@ -120,33 +143,33 @@
     top: 3.5px;
     color: #f2f2f2;
     cursor: pointer;
-} 
+}
 
 .weather_container .location:hover {
     color: #474747;
 }
 
 .temp {
-   position: relative;
-   margin-left: 4px;
-   cursor: pointer;
+    position: relative;
+    margin-left: 4px;
+    cursor: pointer;
 }
 
 .temp:hover {
-   color: #474747; 
+    color: #474747;
 }
 
 
-@media screen and (width <= 600px){
+@media screen and (width <=600px) {
     .news_container {
         width: 97svw;
         margin-left: 0rem;
         left: .5rem;
-    }  
+    }
 }
 
-@media screen and (width <= 400px){
+@media screen and (width <=400px) {
     .news_container {
         left: .3rem;
-    }  
+    }
 }
