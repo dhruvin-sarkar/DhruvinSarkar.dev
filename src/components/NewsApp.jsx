@@ -9,6 +9,7 @@ function NewsApp() {
     const newsContainerRef = useRef();
     const [error, setError] = useState('');
     const [allNews, setAllNews] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     const { 
         tileScreen,
@@ -45,15 +46,34 @@ function NewsApp() {
     };
 
     useEffect(() => { // call fetchNews when user open news
+        const cachedNews = localStorage.getItem('cachedNews');
+        const cachedTime = localStorage.getItem('cachedNewsTime');
+        
+        if (cachedNews && cachedTime) {
+            const timeDiff = Date.now() - Number.parseInt(cachedTime);
+            // Use cached news if less than 5 minutes old
+            if (timeDiff < 300000) {
+                setAllNews(JSON.parse(cachedNews));
+                setIsLoading(false);
+                return;
+            }
+        }
+        
         fetchNews();
     }, []);
 
     async function fetchNews() {
+        setIsLoading(true);
         try {
             const response = await axios.get("https://ai-tweet-bot-mp70.onrender.com/news/getNews");
             setAllNews(response.data.news);
+            // Cache the news and timestamp
+            localStorage.setItem('cachedNews', JSON.stringify(response.data.news));
+            localStorage.setItem('cachedNewsTime', Date.now().toString());
         } catch (error) {
             console.error("Error fetching news:", error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -171,7 +191,9 @@ function NewsApp() {
                         {error && <p className="error">{error}</p>}
 
                         <h1>Latest News</h1>
-                        {allNews.length > 0 ? (
+                        {isLoading ? (
+                            <p className="news-loading">Loading news...</p>
+                        ) : allNews.length > 0 ? (
                             filteredNews.map((item, index) => (
                                 <div className="news" key={index} onClick={() => openNews(item.url)}>
                                     <img src={item.urlToImage} alt="" />
@@ -179,7 +201,7 @@ function NewsApp() {
                                 </div>
                             ))
                         ) : (
-                            <p>News are loading...</p>
+                            <p>No news available</p>
                         )}
                     </motion.div>
                 )}

@@ -49,6 +49,24 @@
     border-color: rgb(224, 221, 221);
 }
 
+.news_container .news-loading {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    font-size: 14px;
+    color: #f5f5f6;
+    background: transparent;
+    border: none;
+    cursor: default;
+    animation: loading-dots 1.5s infinite;
+}
+
+@keyframes loading-dots {
+    0%, 20% { content: 'Loading news.'; }
+    40% { content: 'Loading news..'; }
+    60%, 100% { content: 'Loading news...'; }
+}
+
 .news_container .news:hover > h5 {
     color: #c6c5c5;
 }
