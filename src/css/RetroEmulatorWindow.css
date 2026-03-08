@@ -110,14 +110,6 @@
   border-top: 1px solid #808080;
 }
 
-.retro-emulator-note,
-.rom-player-bar,
-.rom-library-toolbar,
-.rom-library-statusbar,
-.rom-library-listhead {
-  font-family: 'win95', sans-serif;
-}
-
 .retro-emulator-note {
   min-height: 28px;
   display: flex;
@@ -144,6 +136,38 @@
   background: #ffffe1;
   border: 1px solid #000;
   font-weight: 700;
+}
+
+.rom-player-bar {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 4px 8px;
+  background: #c0c0c0;
+  border-top: 1px solid #ffffff;
+  border-left: 1px solid #ffffff;
+  border-right: 1px solid #808080;
+  border-bottom: 1px solid #808080;
+  font-family: 'win95', sans-serif;
+}
+
+.rom-player-label {
+  flex: 1;
+  min-width: 0;
+  font-size: 11px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #000;
+}
+
+.rom-library-toolbar,
+.rom-library-statusbar,
+.rom-library-listhead {
+  font-family: 'win95', sans-serif;
 }
 
 .emulator-loading-screen,
@@ -594,7 +618,9 @@
   }
 
   .rom-player-bar {
-    grid-template-columns: auto 1fr;
+    display: flex;
+    justify-content: flex-start;
+    gap: 8px;
   }
 }
 
