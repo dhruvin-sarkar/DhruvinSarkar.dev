@@ -1633,35 +1633,35 @@ function App() {
     setLastTapTime(now);
   };
 
-  // Icon sizing functions
+  // Icon sizing functions - JavaScript-style scaling
   const iconContainerSize = (size) => {
-    // Direct mapping: 0 = Small, 1 = Medium, 2 = Large
-    const sizes = {
-      0: { width: 80, height: 80, fontSize: 12 },
-      1: { width: 90, height: 90, fontSize: 13 },
-      2: { width: 100, height: 100, fontSize: 14 }
+    // JavaScript-style scaling: 0.8x, 1.0x, 1.2x
+    const scale = size === 0 ? 0.8 : size === 1 ? 1.0 : 1.2;
+    const baseSize = 100; // Base container size
+    return {
+      width: baseSize * scale,
+      height: baseSize * scale,
+      fontSize: Math.round(12 * scale)
     };
-    return sizes[size] || sizes[0];
   };
 
   const iconImgSize = (size) => {
-    // Direct mapping: 0 = Small, 1 = Medium, 2 = Large
-    const sizes = {
-      0: { width: 36, height: 36 },
-      1: { width: 44, height: 44 },
-      2: { width: 52, height: 52 }
+    // JavaScript-style scaling: 0.8x, 1.0x, 1.2x
+    const scale = size === 0 ? 0.8 : size === 1 ? 1.0 : 1.2;
+    const baseSize = 48; // Base icon size
+    return {
+      width: baseSize * scale,
+      height: baseSize * scale
     };
-    return sizes[size] || sizes[0];
   };
 
   const iconTextSize = (size) => {
-    // Direct mapping: 0 = Small, 1 = Medium, 2 = Large
-    const sizes = {
-      0: { fontSize: '12px' },
-      1: { fontSize: '13px' },
-      2: { fontSize: '14px' }
+    // JavaScript-style scaling: 0.8x, 1.0x, 1.2x
+    const scale = size === 0 ? 0.8 : size === 1 ? 1.0 : 1.2;
+    const baseFontSize = 12; // Base font size
+    return {
+      fontSize: `${Math.round(baseFontSize * scale)}px`
     };
-    return sizes[size] || sizes[0];
   };
 
   const contextValue = {
