@@ -1230,7 +1230,7 @@ function App() {
 
       socket.current.onopen = () => {
         debugLog("WebSocket connected");
-              // getChat();
+        // getChat();
         setWebsocketConnection(true);
         setLoading(false);
       };
@@ -1725,7 +1725,7 @@ function App() {
     setPatchExpand,
     runCatVideo,
     setRunCatVideo,
-      // newsPopup,
+    // newsPopup,
     // setNewsPopup,
     onlineUser,
     UtilityRef,
