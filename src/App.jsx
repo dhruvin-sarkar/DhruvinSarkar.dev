@@ -2121,7 +2121,7 @@ function App() {
         <DXBall />
         <SkiFree />
         <DoomGame />
-              // <MsnFolder />
+        {/* <MsnFolder /> */}
         <OpenProject />
         <BgSetting />
         <Run />
