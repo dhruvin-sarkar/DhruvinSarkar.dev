@@ -117,8 +117,6 @@ Live: https://Dhruvin-Sarkar.dev
   - Sorting icons by name per folder
 - Added Paint using [jspaint](https://github.com/1j01/jspaint)
 - Added AiAgent project
-- Added News widget on taskbar
-  - Displays latest news with article links
   - Connected to backend
   - Temperature display with location detection
   - Celsius / Fahrenheit toggle
