@@ -130,7 +130,6 @@ function App() {
   const [tileScreen, setTileScreen] = useState(false);
   const [chatBotActive, setChatBotActive] = useState(false);
   const [runCatVideo, setRunCatVideo] = useState(false);
-  // TODO: re-enable once CORS is fixed on Render backends
   // const [newsPopup, setNewsPopup] = useState(false);
   const [onlineUser, setOnlineUser] = useState(0);
   const [sortedIcon, setSortedIcon] = useState([]);
@@ -1231,8 +1230,7 @@ function App() {
 
       socket.current.onopen = () => {
         debugLog("WebSocket connected");
-        // TODO: re-enable once CORS is fixed on Render backends
-        // getChat();
+              // getChat();
         setWebsocketConnection(true);
         setLoading(false);
       };
@@ -1724,8 +1722,7 @@ function App() {
     setPatchExpand,
     runCatVideo,
     setRunCatVideo,
-    // TODO: re-enable once CORS is fixed on Render backends
-    // newsPopup,
+      // newsPopup,
     // setNewsPopup,
     onlineUser,
     UtilityRef,
@@ -2124,8 +2121,7 @@ function App() {
         <DXBall />
         <SkiFree />
         <DoomGame />
-        // TODO: re-enable once CORS is fixed on Render backends
-        // <MsnFolder />
+              // <MsnFolder />
         <OpenProject />
         <BgSetting />
         <Run />
@@ -2384,7 +2380,6 @@ function App() {
     setSendDisable(false);
   }
 
-  // TODO: re-enable once CORS is fixed on Render backends
   // Function to fetch chat data
   // async function getChat() {
   //   setChatData([]);

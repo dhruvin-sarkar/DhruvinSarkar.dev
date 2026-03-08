@@ -46,7 +46,6 @@ function NewsApp() {
         95: '⛈️',
     };
 
-    // TODO: re-enable once CORS is fixed on Render backends
     // useEffect(() => { // call fetchNews when user open news
     //     const cachedNews = localStorage.getItem('cachedNews');
     //     const cachedTime = localStorage.getItem('cachedNewsTime');
@@ -161,7 +160,6 @@ function NewsApp() {
     }
 
 
-    // TODO: re-enable once CORS is fixed on Render backends
     return null; // Temporarily disable news widget
 }
 
