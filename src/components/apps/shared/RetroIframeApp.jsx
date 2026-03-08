@@ -20,6 +20,10 @@ const RetroIframeApp = ({
   loadingSubtitle,
   iframeAllow = "autoplay; fullscreen; gamepad",
   iframeLoading = "lazy",
+  iframeSandbox,
+  iframeScrolling,
+  iframeStyle,
+  timeoutMs,
   perfWarning,
   appNotice,
   awaitRuntimeSignal = false,
@@ -48,6 +52,7 @@ const RetroIframeApp = ({
     externalUrl,
     isEnabled: !isWarningActive,
     awaitRuntimeSignal,
+    timeoutMs,
   });
 
   useEffect(() => {
@@ -131,6 +136,9 @@ const RetroIframeApp = ({
             onError={handleError}
             allow={iframeAllow}
             loading={iframeLoading}
+            sandbox={iframeSandbox}
+            scrolling={iframeScrolling}
+            style={iframeStyle ? { border: '0', width: '100%', height: '100%' } : undefined}
           />
           {hasError ? (
             <div className="iframe-error-overlay">

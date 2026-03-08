@@ -12,6 +12,7 @@ const useEmulatorWindow = ({
   externalUrl,
   isEnabled = true,
   awaitRuntimeSignal = false,
+  timeoutMs = 20000, // Default 20 seconds, customizable per app
 }) => {
   const instanceSeedRef = useRef(createInstanceSeed());
   const [src, setSrc] = useState(isEnabled ? iframeSrc : "about:blank");
@@ -49,10 +50,10 @@ const useEmulatorWindow = ({
         }
         return false;
       });
-    }, SAFETY_TIMEOUT_MS);
+    }, timeoutMs);
 
     return () => clearTimeout(timer);
-  }, [iframeSrc, isEnabled, appInstance]);
+  }, [iframeSrc, isEnabled, appInstance, timeoutMs]);
 
   useEffect(() => {
     const handleMessage = (event) => {
