@@ -1635,48 +1635,33 @@ function App() {
 
   // Icon sizing functions
   const iconContainerSize = (size) => {
-    // Normalize size to 0, 1, or 2 based on actual values
-    let normalizedSize = 0;
-    if (size >= 2000) normalizedSize = 2;  // Large folders
-    else if (size >= 30) normalizedSize = 1;  // Medium folders
-    else normalizedSize = 0;  // Small icons
-    
+    // Direct mapping: 0 = Small, 1 = Medium, 2 = Large
     const sizes = {
       0: { width: 80, height: 80, fontSize: 12 },
       1: { width: 90, height: 90, fontSize: 13 },
       2: { width: 100, height: 100, fontSize: 14 }
     };
-    return sizes[normalizedSize] || sizes[0];
+    return sizes[size] || sizes[0];
   };
 
   const iconImgSize = (size) => {
-    // Normalize size to 0, 1, or 2 based on actual values
-    let normalizedSize = 0;
-    if (size >= 2000) normalizedSize = 2;  // Large folders
-    else if (size >= 30) normalizedSize = 1;  // Medium folders
-    else normalizedSize = 0;  // Small icons
-    
+    // Direct mapping: 0 = Small, 1 = Medium, 2 = Large
     const sizes = {
       0: { width: 36, height: 36 },
       1: { width: 44, height: 44 },
       2: { width: 52, height: 52 }
     };
-    return sizes[normalizedSize] || sizes[0];
+    return sizes[size] || sizes[0];
   };
 
   const iconTextSize = (size) => {
-    // Normalize size to 0, 1, or 2 based on actual values
-    let normalizedSize = 0;
-    if (size >= 2000) normalizedSize = 2;  // Large folders
-    else if (size >= 30) normalizedSize = 1;  // Medium folders
-    else normalizedSize = 0;  // Small icons
-    
+    // Direct mapping: 0 = Small, 1 = Medium, 2 = Large
     const sizes = {
       0: { fontSize: '12px' },
       1: { fontSize: '13px' },
       2: { fontSize: '14px' }
     };
-    return sizes[normalizedSize] || sizes[0];
+    return sizes[size] || sizes[0];
   };
 
   const contextValue = {
