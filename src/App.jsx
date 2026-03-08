@@ -167,7 +167,7 @@ function App() {
   const [calenderToggle, setCalenderToggle] = useState(false);
   const [iconScreenSize, setIconScreenSize] = useState(() => {
     const savedIconSize = localStorage.getItem("iconSize");
-    return savedIconSize ? Number(savedIconSize) : 0;
+    return savedIconSize ? Number(savedIconSize) : 3; // Default to 2560x1440 (index 3)
   });
   const [iconSize, setIconSize] = useState(false);
   const [allowNoti, setAllowNoti] = useState(false);
