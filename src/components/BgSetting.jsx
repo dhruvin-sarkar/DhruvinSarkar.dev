@@ -195,14 +195,13 @@ function BgSetting() {
         const bodyBG = document.getElementsByTagName('body')[0];
         const rootEffect = document.getElementById('root');
 
-        if (ImgBgPreviewEffect) { // for Effect
+        if (ImgBgPreviewEffect) { // for effect
           rootEffect.style.setProperty('--before-bg-image', `url(${ImgBgPreviewEffect})`);
-          
-        } 
-
+        }
+        
         if (ImgBgPreview) { // for background
-          bodyBG.style.backgroundColor = themeColor
           bodyBG.style.backgroundImage = `url(${ImgBgPreview})`; 
+          bodyBG.style.backgroundColor = themeColor
           setThemeDragBar(barcolor)
         } else {
           return;
