@@ -81,6 +81,18 @@
         "description": "Play music through the Winamp-style desktop player."
     },
     {
+        "name": "Spotify",
+        "pic": "Spotify",
+        "folderId": "Utility",
+        "desktopShortcut": true,
+        "size": 3200,
+        "type": ".exe",
+        "x": 420,
+        "y": 220,
+        "category": "Media",
+        "description": "Browse Last.fm listening stats in the Spotify-inspired Win95 player."
+    },
+    {
         "name": "Hard Disk (C:)",
         "pic": "Hard Disk (C:)",
         "folderId": "MyComputer",
