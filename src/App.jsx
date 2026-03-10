@@ -364,15 +364,9 @@ function App() {
     zIndex: 1,
   });
 
-  const [desktopIcon, setDesktopIcon] = useState(() => {
-    const deleteIcon = ["Cat", "AiAgent", "Winamp", "Paint", "3dObject", "TaskManager", "Patch", "SpinningCat", "Notification", "Shutdown", "Bitcoin", "Github", "ResetStorage", "Utility", "Picture", "Hard Disk (C:)", "Hard Disk (D:)", "CD-ROM", "001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011"];
-
-    const filteredItems = iconInfo.filter(
-      (item) => !deleteIcon.includes(item.name),
-    );
-
-    return filteredItems;
-  });
+  const [desktopIcon, setDesktopIcon] = useState(() =>
+    iconInfo.map((icon) => ({ ...icon })),
+  );
 
   const [MineSweeperExpand, setMineSweeperExpand] = useState({
     expand: false,
