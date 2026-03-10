@@ -1218,6 +1218,7 @@ function App() {
 
       // Create new WebSocket instance
       socket.current = new WebSocket(CHAT_WEBSOCKET_URL);
+      console.log("MSN WebSocket readyState:", socket.current.readyState);
 
       socket.current.onopen = () => {
         debugLog("WebSocket connected");

@@ -6,4 +6,5 @@ export const CHAT_BACKEND_URL =
 
 export const CHAT_MESSAGES_ENDPOINT = `${CHAT_BACKEND_URL}/chat/getchat/`;
 export const CHAT_SESSION_ENDPOINT = `${CHAT_BACKEND_URL}/chat/session`;
-export const CHAT_WEBSOCKET_URL = CHAT_BACKEND_URL.replace(/^http/, "ws");
+export const CHAT_WEBSOCKET_URL =
+  "wss://portfolio-chat-backend-rp3d.onrender.com";
