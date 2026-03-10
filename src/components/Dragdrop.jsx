@@ -152,7 +152,9 @@ function Dragdrop() {
       <div className='drag_drop'
         key={refresh}
       >
-        {desktopIcon.filter(icon => icon.folderId === 'Desktop').map((icon) => (
+        {desktopIcon
+          .filter((icon) => icon.folderId === 'Desktop' || icon.desktopShortcut)
+          .map((icon) => (
           <Draggable
             key={icon.name}
             grid={[10, 10]}
