@@ -236,17 +236,6 @@
         "y": 120
     },
     {
-        "name": "AiAgent",
-        "pic": "AiAgent",
-        "folderId": "Desktop",
-        "size": 10000,
-        "type": ".exe",
-        "x": 320,
-        "y": 120,
-        "category": "Productivity",
-        "description": "Use the built-in AI agent workspace from the desktop."
-    },
-    {
         "name": "Cat",
         "pic": "Cat",
         "folderId": "Desktop",
