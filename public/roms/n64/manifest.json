@@ -48,6 +48,24 @@
       "title": "Mario Party 2",
       "file": "Mario Party 2 (USA).z64",
       "cover": "roms/n64/Mario-Party-2-Japan.jpg"
+    },
+    {
+      "id": "mortal-kombat-4",
+      "title": "Mortal Kombat 4",
+      "file": "Mortal Kombat 4 (USA).z64",
+      "cover": "roms/n64/mortal-kombat-4-nintendo64.jpg"
+    },
+    {
+      "id": "paper-mario",
+      "title": "Paper Mario",
+      "file": "Paper Mario (USA).z64",
+      "cover": "roms/n64/Mario-Story.jpg"
+    },
+    {
+      "id": "pokemon-stadium",
+      "title": "Pokemon Stadium",
+      "file": "Pokemon Stadium (USA).z64",
+      "cover": "roms/n64/Pokemon-Stadium-V1.1.jpg"
     }
   ]
 }
