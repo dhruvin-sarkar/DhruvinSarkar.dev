@@ -78,6 +78,12 @@
       "title": "Pokemon Ruby Version",
       "file": "Pokemon - Ruby Version (USA, Europe) (Rev 2)/Pokemon - Ruby Version (USA, Europe) (Rev 2).gba",
       "cover": "roms/gba/Pokemon-Ruby.jpg"
+    },
+    {
+      "id": "sonic-advance-3",
+      "title": "Sonic Advance 3",
+      "file": "Sonic Advance 3 (USA) (En,Ja,Fr,De,Es,It)/Sonic Advance 3 (USA) (En,Ja,Fr,De,Es,It).gba",
+      "cover": "roms/gba/Sonic-Advance-3.png"
     }
   ]
 }
