@@ -66,6 +66,12 @@
       "title": "The Legend of Zelda: A Link to the Past & Four Swords",
       "file": "Legend of Zelda, The - A Link to the Past & Four Swords (USA)/Legend of Zelda, The - A Link to the Past & Four Swords (USA).gba",
       "cover": "roms/gba/The-Legend-Of-Zelda-A-Link-To-The-Past.jpg"
+    },
+    {
+      "id": "mario-vs-donkey-kong",
+      "title": "Mario vs. Donkey Kong",
+      "file": "Mario vs. Donkey Kong (USA, Australia)/Mario vs. Donkey Kong (USA, Australia).gba",
+      "cover": "roms/gba/Mario_vs._Donkey_Kong_Coverart.png"
     }
   ]
 }
