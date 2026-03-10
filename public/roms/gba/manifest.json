@@ -90,6 +90,36 @@
       "title": "Super Mario Advance 2: Super Mario World",
       "file": "Super Mario Advance 2 - Super Mario World (USA)/Super Mario Advance 2 - Super Mario World (USA).gba",
       "cover": "roms/gba/SuperMarioAdvance2-SuperMarioWorldUSAAustralia-image.jpg"
+    },
+    {
+      "id": "fire-emblem-sacred-stones",
+      "title": "Fire Emblem: The Sacred Stones",
+      "file": "Fire Emblem - The Sacred Stones (USA, Australia)/Fire Emblem - The Sacred Stones (USA, Australia).gba",
+      "cover": "roms/gba/Fire-Emblem.jpg"
+    },
+    {
+      "id": "metroid-zero-mission",
+      "title": "Metroid: Zero Mission",
+      "file": "Metroid - Zero Mission (USA)/Metroid - Zero Mission (USA).gba",
+      "cover": "roms/gba/metroid-zero-mission-eu-gba.jpg"
+    },
+    {
+      "id": "metroid-fusion",
+      "title": "Metroid Fusion",
+      "file": "Metroid Fusion (USA)/Metroid Fusion (USA).gba",
+      "cover": "roms/gba/MetroidFusionUSAAustralia-image.jpg"
+    },
+    {
+      "id": "pac-man-world",
+      "title": "Pac-Man World",
+      "file": "Pac-Man World (USA)/Pac-Man World (USA).gba",
+      "cover": "roms/gba/Pac-Man-World.jpg"
+    },
+    {
+      "id": "sonic-advance-2",
+      "title": "Sonic Advance 2",
+      "file": "Sonic Advance 2 (USA) (En,Ja,Fr,De,Es,It)/Sonic Advance 2 (USA) (En,Ja,Fr,De,Es,It).gba",
+      "cover": "roms/gba/Sonic-Advance-2.png"
     }
   ]
 }
