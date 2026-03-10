@@ -148,9 +148,6 @@ export function imageMapping (name, type) {
     case 'Winamp':
       return Winamp;
 
-    case 'Spotify':
-      return '/spotify.png';
-
     case 'ResumeFile':
       return resumefile;
 

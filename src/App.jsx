@@ -13,7 +13,6 @@ import ResumeFolder from "./components/ResumeFolder";
 import ProjectFolder from "./components/ProjectFolder";
 import MailFolder from "./components/MailFolder";
 import WebampPlayer from "./components/WinampPlayer";
-import Spotify from "./components/apps/Spotify";
 import ResumeFile from "./components/ResumeFile";
 import Shutdown from "./components/Shutdown";
 import MineSweeper from "./components/MineSweeper";
@@ -307,16 +306,6 @@ function App() {
 
   const [WinampExpand, setWinampExpand] = useState({
     focus: false,
-    show: false,
-    hide: false,
-    focusItem: true,
-    x: 0,
-    y: 0,
-    zIndex: 1,
-  });
-
-  const [SpotifyExpand, setSpotifyExpand] = useState({
-    expand: false,
     show: false,
     hide: false,
     focusItem: true,
@@ -1849,8 +1838,6 @@ function App() {
     handleDoubleTapiframeMobile,
     WinampExpand,
     setWinampExpand,
-    SpotifyExpand,
-    setSpotifyExpand,
     showClippy,
     setShowClippy,
     clippyIndex,
@@ -2102,7 +2089,6 @@ function App() {
         <MailFolder />
         <ResumeFile />
         <WebampPlayer />
-        <Spotify />
         <MineSweeper />
         <InternetExplorer />
         <WindowsXPWin95 />
@@ -2491,13 +2477,6 @@ function App() {
         name: "Winamp",
         setter: setWinampExpand,
         usestate: WinampExpand,
-        color: "rgba(105, 136, 145, 0.85)",
-        size: "small",
-      },
-      {
-        name: "Spotify",
-        setter: setSpotifyExpand,
-        usestate: SpotifyExpand,
         color: "rgba(105, 136, 145, 0.85)",
         size: "small",
       },
