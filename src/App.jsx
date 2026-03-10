@@ -2376,12 +2376,16 @@ function App() {
 
   async function getChatSession() {
     try {
-      const response = await axios.get(CHAT_SESSION_ENDPOINT, {
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
+      const response = await axios.post(
+        CHAT_SESSION_ENDPOINT,
+        {},
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
         },
-      });
+      );
 
       if (response.data?.key) {
         setKeyChatSession(response.data.key);

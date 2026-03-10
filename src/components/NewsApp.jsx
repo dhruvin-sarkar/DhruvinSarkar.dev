@@ -25,11 +25,24 @@ function NewsApp() {
         newsPopup, setNewsPopup }
          = useContext(UseContext);
 
+    function getArticleUrl(item = {}) {
+        return item.url || item.link || '';
+    }
+
+    function getArticleImage(item = {}) {
+        return item.urlToImage || item.image || item.imageUrl || '';
+    }
+
+    function getArticleTitle(item = {}) {
+        return item.originalNews || item.title || item.headline || item.description || 'Untitled article';
+    }
+
     const hasSeen = new Set();
     const filteredNews = allNews
         .filter(item => {
-            if (hasSeen.has(item.url)) return false;
-            hasSeen.add(item.url);
+            const articleUrl = getArticleUrl(item);
+            if (!articleUrl || hasSeen.has(articleUrl)) return false;
+            hasSeen.add(articleUrl);
             return true;
         })
         .reverse()
@@ -82,7 +95,11 @@ function NewsApp() {
 
         try {
             const response = await axios.get(NEWS_BACKEND_URL);
-            const latestNews = Array.isArray(response.data?.news) ? response.data.news : [];
+            const latestNews = Array.isArray(response.data?.articles)
+                ? response.data.articles
+                : Array.isArray(response.data?.news)
+                    ? response.data.news
+                    : [];
 
             setAllNews(latestNews);
             localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify(latestNews));
@@ -221,9 +238,9 @@ function NewsApp() {
                             <p className="news-error">News unavailable</p>
                         ) : allNews.length > 0 ? (
                             filteredNews.map((item, index) => (
-                                <div className="news" key={index} onClick={() => openNews(item.url)}>
-                                    <img src={item.urlToImage} alt="" />
-                                    <h5>{item.originalNews}</h5>
+                                <div className="news" key={index} onClick={() => openNews(getArticleUrl(item))}>
+                                    <img src={getArticleImage(item)} alt="" />
+                                    <h5>{getArticleTitle(item)}</h5>
                                 </div>
                             ))
                         ) : (
