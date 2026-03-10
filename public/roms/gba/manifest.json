@@ -36,6 +36,12 @@
       "title": "Pokemon Sword and Shield",
       "file": "Pokemon_Sword_and_Shield_b1.1_eng1.gba",
       "cover": "roms/gba/download (3).jpg"
+    },
+    {
+      "id": "batman-begins",
+      "title": "Batman Begins",
+      "file": "Batman Begins (USA, Europe) (En,Fr,De,Es,It,Nl)/Batman Begins (USA, Europe) (En,Fr,De,Es,It,Nl).gba",
+      "cover": "roms/gba/batmanbegins-1641.jpg"
     }
   ]
 }
