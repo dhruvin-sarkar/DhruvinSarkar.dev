@@ -1215,16 +1215,15 @@ function App() {
       }
 
       await getChatSession();
+      await getChat();
 
       // Create new WebSocket instance
       socket.current = new WebSocket(CHAT_WEBSOCKET_URL);
       console.log("MSN WebSocket readyState:", socket.current.readyState);
 
       socket.current.onopen = () => {
-        debugLog("WebSocket connected");
-        void getChat();
+        console.log("WS connected");
         setWebsocketConnection(true);
-        setLoading(false);
       };
 
       socket.current.onmessage = (event) => {
@@ -1251,18 +1250,16 @@ function App() {
       };
 
       socket.current.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        setLoading(false);
+        console.log("WS error", error);
         setWebsocketConnection(false);
       };
 
-      socket.current.onclose = () => {
-        debugLog("WebSocket closed");
+      socket.current.onclose = (event) => {
+        console.log("WS closed", event.code, event.reason);
         setWebsocketConnection(false);
       };
     } catch (err) {
       console.error("WebSocket connection error:", err);
-      setLoading(false);
       setWebsocketConnection(false);
     }
   };
@@ -2426,6 +2423,8 @@ function App() {
     } catch (error) {
       setChatDown(true);
       console.error("Error fetching Chat:", error);
+    } finally {
+      setLoading(false);
     }
   }
 
