@@ -24,6 +24,48 @@
       "title": "Tetris",
       "file": "Tetris (USA) (Tengen) (Unl).nes",
       "cover": "roms/nes/download (2).jpg"
+    },
+    {
+      "id": "castlevania",
+      "title": "Castlevania",
+      "file": "Castlevania (USA)/Castlevania (USA).nes",
+      "cover": "roms/nes/Castlevania_1_cover-1.png"
+    },
+    {
+      "id": "final-fantasy",
+      "title": "Final Fantasy",
+      "file": "Final Fantasy (USA)/Final Fantasy (USA).nes",
+      "cover": "roms/nes/FF1_USA_boxart-1-1.jpg"
+    },
+    {
+      "id": "mega-man-2",
+      "title": "Mega Man 2",
+      "file": "Mega Man 2 (USA)/Mega Man 2 (USA).nes",
+      "cover": "roms/nes/Megaman2_box.jpg"
+    },
+    {
+      "id": "mega-man-3",
+      "title": "Mega Man 3",
+      "file": "Mega Man 3 (USA)/Mega Man 3 (USA).nes",
+      "cover": "roms/nes/Megaman3_box-1.jpg"
+    },
+    {
+      "id": "metroid",
+      "title": "Metroid",
+      "file": "Metroid (USA)/Metroid (USA).nes",
+      "cover": "roms/nes/Metroid_boxart.jpg"
+    },
+    {
+      "id": "super-mario-bros-2",
+      "title": "Super Mario Bros. 2",
+      "file": "Super Mario Bros. 2 (USA)/Super Mario Bros. 2 (USA).nes",
+      "cover": "roms/nes/Super_Mario_Bros_2-1.jpg"
+    },
+    {
+      "id": "zelda-ii-the-adventure-of-link",
+      "title": "Zelda II: The Adventure of Link",
+      "file": "Zelda II - The Adventure of Link (USA)/Zelda II - The Adventure of Link (USA).nes",
+      "cover": "roms/nes/Zelda_II_The_Adventure_of_Link_box-1.jpg"
     }
   ]
 }
