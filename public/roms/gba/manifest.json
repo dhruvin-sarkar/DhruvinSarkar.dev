@@ -42,6 +42,12 @@
       "title": "Batman Begins",
       "file": "Batman Begins (USA, Europe) (En,Fr,De,Es,It,Nl)/Batman Begins (USA, Europe) (En,Fr,De,Es,It,Nl).gba",
       "cover": "roms/gba/batmanbegins-1641.jpg"
+    },
+    {
+      "id": "donkey-kong-country",
+      "title": "Donkey Kong Country",
+      "file": "Donkey Kong Country (USA)/Donkey Kong Country (USA).gba",
+      "cover": "roms/gba/11333front-45181.jpg"
     }
   ]
 }
