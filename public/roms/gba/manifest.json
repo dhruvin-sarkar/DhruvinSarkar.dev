@@ -72,6 +72,12 @@
       "title": "Mario vs. Donkey Kong",
       "file": "Mario vs. Donkey Kong (USA, Australia)/Mario vs. Donkey Kong (USA, Australia).gba",
       "cover": "roms/gba/Mario_vs._Donkey_Kong_Coverart.png"
+    },
+    {
+      "id": "pokemon-ruby",
+      "title": "Pokemon Ruby Version",
+      "file": "Pokemon - Ruby Version (USA, Europe) (Rev 2)/Pokemon - Ruby Version (USA, Europe) (Rev 2).gba",
+      "cover": "roms/gba/Pokemon-Ruby.jpg"
     }
   ]
 }
