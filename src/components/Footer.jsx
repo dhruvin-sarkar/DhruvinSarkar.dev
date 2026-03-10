@@ -60,7 +60,6 @@ export default function Footer() {
         imageMapping,
         handleShow,
         StyleHide,
-        setWinampExpand,
         showClippy, setShowClippy,
         clippyIndex, setClippyIndex,
         randomClippyPopup, setRandomClippyPopup,
@@ -620,16 +619,6 @@ export default function Footer() {
                 maxZindexRef.current += 1;
                 item.setter(prev => ({...prev, hide: false, focusItem: true, zIndex: maxZindexRef.current}));
                 sounds?.playWindowMaximize();
-                
-                if(lowerCaseName === 'winamp') {
-                    const webampElement = document.querySelector('#webamp');
-                    if (webampElement) {
-                        webampElement.style.opacity = 1;
-                        webampElement.style.pointerEvents = 'auto';
-                        webampElement.style.touchAction = 'auto';
-                        setWinampExpand(prev => ({...prev, hide: false}));
-                    }
-                }
             } else if (item.usestate.focusItem) {
                 // Already focused and visible - Minimize to taskbar
                 item.setter(prev => ({...prev, hide: true, focusItem: false}));

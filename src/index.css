@@ -841,26 +841,6 @@ select {
 }
 
 
-/* ------------- WIMAMP ---------------- */
-
-.winampRef {
-    position: absolute;
-    margin-left: 12rem;
-    z-index: -1;
-    width: 100px;
-    height: 800px;
-    top: 1rem;
-}
-
-#webamp {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-
-
 /* -------------- clippy ---------------- */
 
 .clippy_container {
