@@ -54,6 +54,12 @@
       "title": "Grand Theft Auto Advance",
       "file": "Grand Theft Auto Advance (USA)/Grand Theft Auto Advance (USA).gba",
       "cover": "roms/gba/Grand-Theft-Auto-Advance.jpg"
+    },
+    {
+      "id": "kirby-and-the-amazing-mirror",
+      "title": "Kirby & The Amazing Mirror",
+      "file": "Kirby & The Amazing Mirror (USA)/Kirby & The Amazing Mirror (USA).gba",
+      "cover": "roms/gba/KirbytheAmazingMirrorUSA-image.jpg"
     }
   ]
 }
