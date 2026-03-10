@@ -84,6 +84,12 @@
       "title": "Sonic Advance 3",
       "file": "Sonic Advance 3 (USA) (En,Ja,Fr,De,Es,It)/Sonic Advance 3 (USA) (En,Ja,Fr,De,Es,It).gba",
       "cover": "roms/gba/Sonic-Advance-3.png"
+    },
+    {
+      "id": "super-mario-advance-2",
+      "title": "Super Mario Advance 2: Super Mario World",
+      "file": "Super Mario Advance 2 - Super Mario World (USA)/Super Mario Advance 2 - Super Mario World (USA).gba",
+      "cover": "roms/gba/SuperMarioAdvance2-SuperMarioWorldUSAAustralia-image.jpg"
     }
   ]
 }
