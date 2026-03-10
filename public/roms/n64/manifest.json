@@ -42,6 +42,12 @@
       "title": "Super Smash Bros.",
       "file": "Super Smash Bros. (USA).z64",
       "cover": "roms/n64/download (4).jpg"
+    },
+    {
+      "id": "mario-party-2",
+      "title": "Mario Party 2",
+      "file": "Mario Party 2 (USA).z64",
+      "cover": "roms/n64/Mario-Party-2-Japan.jpg"
     }
   ]
 }
