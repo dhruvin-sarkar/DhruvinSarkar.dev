@@ -48,6 +48,12 @@
       "title": "Donkey Kong Country",
       "file": "Donkey Kong Country (USA)/Donkey Kong Country (USA).gba",
       "cover": "roms/gba/11333front-45181.jpg"
+    },
+    {
+      "id": "grand-theft-auto-advance",
+      "title": "Grand Theft Auto Advance",
+      "file": "Grand Theft Auto Advance (USA)/Grand Theft Auto Advance (USA).gba",
+      "cover": "roms/gba/Grand-Theft-Auto-Advance.jpg"
     }
   ]
 }
