@@ -12,7 +12,7 @@ import MyComputer from "./components/MyComputer";
 import ResumeFolder from "./components/ResumeFolder";
 import ProjectFolder from "./components/ProjectFolder";
 import MailFolder from "./components/MailFolder";
-import WinampPlayer from "./components/WinampPlayer";
+import WebampPlayer from "./components/WinampPlayer";
 import ResumeFile from "./components/ResumeFile";
 import Shutdown from "./components/Shutdown";
 import MineSweeper from "./components/MineSweeper";
@@ -305,7 +305,6 @@ function App() {
   });
 
   const [WinampExpand, setWinampExpand] = useState({
-    expand: false,
     focus: false,
     show: false,
     hide: false,
@@ -2089,7 +2088,7 @@ function App() {
         <ProjectFolder />
         <MailFolder />
         <ResumeFile />
-      <WinampPlayer />
+        <WebampPlayer />
         <MineSweeper />
         <InternetExplorer />
         <WindowsXPWin95 />
