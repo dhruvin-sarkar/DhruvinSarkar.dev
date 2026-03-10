@@ -9,8 +9,6 @@ import '../css/MSN.css';
 import { useSounds } from '../hooks/useSounds';
 
 function MsnFolder() {
-  return null; // Temporarily disable MSN/chat component
-
   const { playWindowMaximize, playWindowMinimize } = useSounds();
 
   const {

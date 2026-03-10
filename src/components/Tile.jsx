@@ -130,13 +130,12 @@ export default function Tile({ id, content, index, size, color, moveTile, imageM
           pointerEvents: disable ? 'none' : 'auto',
         };
       case 'MSN':
-        return null;
-        // return {
-        //   backgroundImage: `url(${chat})`,
-        //   backgroundPosition: '50% 13px',
-        //   backgroundSize: '85px',
-        //   backgroundRepeat: 'no-repeat',
-        // };
+        return {
+          backgroundImage: `url(${chat})`,
+          backgroundPosition: '50% 13px',
+          backgroundSize: '85px',
+          backgroundRepeat: 'no-repeat',
+        };
       case 'Settings':
         return {
           backgroundImage: `url(${settings})`,
@@ -398,8 +397,8 @@ export default function Tile({ id, content, index, size, color, moveTile, imageM
         return;
 
       case 'News':
-                // setNewsPopup(true)
-        // setTileScreen(false);
+        setNewsPopup(true)
+        setTileScreen(false);
         return;
 
       case 'Picture':

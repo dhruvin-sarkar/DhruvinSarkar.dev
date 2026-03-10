@@ -56,6 +56,11 @@ import TaskManager from "./components/TaskManager";
 import Terminal from "./components/Terminal";
 import VSCode from "./components/VSCode";
 import {
+  CHAT_MESSAGES_ENDPOINT,
+  CHAT_SESSION_ENDPOINT,
+  CHAT_WEBSOCKET_URL,
+} from "./config/backend";
+import {
   StyleHide,
   minimizeWindow,
   imageMapping,
@@ -130,7 +135,7 @@ function App() {
   const [tileScreen, setTileScreen] = useState(false);
   const [chatBotActive, setChatBotActive] = useState(false);
   const [runCatVideo, setRunCatVideo] = useState(false);
-  // const [newsPopup, setNewsPopup] = useState(false);
+  const [newsPopup, setNewsPopup] = useState(false);
   const [onlineUser, setOnlineUser] = useState(0);
   const [sortedIcon, setSortedIcon] = useState([]);
   const [sortIconTrigger, setSortIconTrigger] = useState(0);
@@ -360,7 +365,7 @@ function App() {
   });
 
   const [desktopIcon, setDesktopIcon] = useState(() => {
-    const deleteIcon = ["Cat", "AiAgent", "Winamp", "Paint", "3dObject", "TaskManager", "Patch", "SpinningCat", "NewsApp", "Notification", "Shutdown", "Bitcoin", "Github", "ResetStorage", "Utility", "Picture", "Hard Disk (C:)", "Hard Disk (D:)", "CD-ROM", "001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011", "MSN"];
+    const deleteIcon = ["Cat", "AiAgent", "Winamp", "Paint", "3dObject", "TaskManager", "Patch", "SpinningCat", "Notification", "Shutdown", "Bitcoin", "Github", "ResetStorage", "Utility", "Picture", "Hard Disk (C:)", "Hard Disk (D:)", "CD-ROM", "001", "002", "003", "004", "005", "006", "007", "008", "009", "010", "011"];
 
     const filteredItems = iconInfo.filter(
       (item) => !deleteIcon.includes(item.name),
@@ -1209,12 +1214,14 @@ function App() {
         });
       }
 
+      await getChatSession();
+
       // Create new WebSocket instance
-      socket.current = new WebSocket("wss://notebackend-wrqt.onrender.com");
+      socket.current = new WebSocket(CHAT_WEBSOCKET_URL);
 
       socket.current.onopen = () => {
         debugLog("WebSocket connected");
-        // getChat();
+        void getChat();
         setWebsocketConnection(true);
         setLoading(false);
       };
@@ -1709,8 +1716,8 @@ function App() {
     setPatchExpand,
     runCatVideo,
     setRunCatVideo,
-    // newsPopup,
-    // setNewsPopup,
+    newsPopup,
+    setNewsPopup,
     onlineUser,
     UtilityRef,
     PaintExpand,
@@ -2108,7 +2115,7 @@ function App() {
         <DXBall />
         <SkiFree />
         <DoomGame />
-        {/* <MsnFolder /> */}
+        <MsnFolder />
         <OpenProject />
         <BgSetting />
         <Run />
@@ -2367,32 +2374,55 @@ function App() {
     setSendDisable(false);
   }
 
-  // Function to fetch chat data
-  // async function getChat() {
-  //   setChatData([]);
-  //   try {
-  //     const response = await axios.get(
-  //       `https://notebackend4.onrender.com/chat/getchat/`,
-  //       {
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           "Access-Control-Allow-Origin": "*",
-  //         },
-  //       },
-  //     );
-  //     setChatDown(false);
-  //     setChatData(response.data.chat);
-  //     setLoadedMessages(response.data.chat.slice(-40));
-  //     // if(MSNExpand.show){
-  //     //   endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  //     // }
-  //     // setKeyChatSession(response.data.key)
-  //   } catch (error) {
-  //     setChatDown(true);
-  //     console.error("Error fetching Chat:", error);
-  //     console.error("CORS error detected - check backend CORS configuration");
-  //   }
-  // }
+  async function getChatSession() {
+    try {
+      const response = await axios.get(CHAT_SESSION_ENDPOINT, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+
+      if (response.data?.key) {
+        setKeyChatSession(response.data.key);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        debugLog("Chat session endpoint unavailable");
+        return;
+      }
+
+      console.error("Error fetching chat session:", error);
+    }
+  }
+
+  async function getChat() {
+    setChatData([]);
+
+    try {
+      const response = await axios.get(CHAT_MESSAGES_ENDPOINT, {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      });
+
+      const chatMessages = Array.isArray(response.data?.chat)
+        ? response.data.chat
+        : [];
+
+      setChatDown(false);
+      setChatData(chatMessages);
+      setLoadedMessages(chatMessages.slice(-40));
+
+      if (response.data?.key) {
+        setKeyChatSession(response.data.key);
+      }
+    } catch (error) {
+      setChatDown(true);
+      console.error("Error fetching Chat:", error);
+    }
+  }
 
   function ObjectState() {
     return [

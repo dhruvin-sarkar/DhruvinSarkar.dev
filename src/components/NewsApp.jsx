@@ -4,6 +4,11 @@ import axios from "axios";
 import { motion, AnimatePresence } from 'framer-motion';
 import "../css/NewsApp.css";
 import { MdGpsFixed } from "react-icons/md";
+import { NEWS_BACKEND_URL } from '../config/backend';
+
+const NEWS_CACHE_KEY = 'cachedNews';
+const NEWS_CACHE_TIME_KEY = 'cachedNewsTime';
+const NEWS_CACHE_MAX_AGE_MS = 300000;
 
 function NewsApp() {
     const newsContainerRef = useRef();
@@ -46,40 +51,53 @@ function NewsApp() {
         95: '⛈️',
     };
 
-    // useEffect(() => { // call fetchNews when user open news
-    //     const cachedNews = localStorage.getItem('cachedNews');
-    //     const cachedTime = localStorage.getItem('cachedNewsTime');
-        
-    //     if (cachedNews && cachedTime) {
-    //         const timeDiff = Date.now() - Number.parseInt(cachedTime);
-    //         // Use cached news if less than 5 minutes old
-    //         if (timeDiff < 300000) {
-    //             setAllNews(JSON.parse(cachedNews));
-    //             setIsLoading(false);
-    //             return;
-    //         }
-    //     }
-        
-    //     fetchNews();
-    // }, []);
+    function restoreCachedNews() {
+        const cachedNews = localStorage.getItem(NEWS_CACHE_KEY);
+        const cachedTime = localStorage.getItem(NEWS_CACHE_TIME_KEY);
 
-    // async function fetchNews() {
-    //     setIsLoading(true);
-    //     setNewsError(false);
-    //     try {
-    //         const response = await axios.get("https://ai-tweet-bot-mp70.onrender.com/news/getNews");
-    //         setAllNews(response.data.news);
-    //         // Cache the news and timestamp
-    //         localStorage.setItem('cachedNews', JSON.stringify(response.data.news));
-    //         localStorage.setItem('cachedNewsTime', Date.now().toString());
-    //     } catch (error) {
-    //         console.error("Error fetching news:", error);
-    //         setNewsError(true);
-    //         // Don't clear cached news on error - let user see last successful fetch
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // }
+        if (!cachedNews || !cachedTime) {
+            return false;
+        }
+
+        const timeDiff = Date.now() - Number.parseInt(cachedTime, 10);
+
+        if (timeDiff >= NEWS_CACHE_MAX_AGE_MS) {
+            return false;
+        }
+
+        try {
+            setAllNews(JSON.parse(cachedNews));
+            setNewsError(false);
+            setIsLoading(false);
+            return true;
+        } catch (cacheError) {
+            console.error("Error reading cached news:", cacheError);
+            return false;
+        }
+    }
+
+    async function fetchNews() {
+        setIsLoading(true);
+        setNewsError(false);
+
+        try {
+            const response = await axios.get(NEWS_BACKEND_URL);
+            const latestNews = Array.isArray(response.data?.news) ? response.data.news : [];
+
+            setAllNews(latestNews);
+            localStorage.setItem(NEWS_CACHE_KEY, JSON.stringify(latestNews));
+            localStorage.setItem(NEWS_CACHE_TIME_KEY, Date.now().toString());
+        } catch (fetchError) {
+            console.error("Error fetching news:", fetchError);
+            setNewsError(true);
+
+            if (!restoreCachedNews()) {
+                setAllNews([]);
+            }
+        } finally {
+            setIsLoading(false);
+        }
+    }
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -107,6 +125,9 @@ function NewsApp() {
 
     useEffect(() => {
         if(newsPopup){
+            if (!restoreCachedNews()) {
+                fetchNews();
+            }
             getUserLocation();   
         }
     }, [newsPopup]);
@@ -159,8 +180,60 @@ function NewsApp() {
             .catch(() => setCity('Unknown'));
     }
 
+    return (
+        <>
+            <AnimatePresence>
+                {newsPopup && (
+                    <motion.div
+                        className="news_container"
+                        ref={newsContainerRef}
+                        initial={{ opacity: 0, x: '-500px' }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ ease: 'easeInOut', duration: 0.3 }}
+                        exit={{ opacity: 0, x: '-500px' }}
+                    >
+                        {weather && (
+                            <div className="weather_container">
+                                <span className='location'
+                                    onClick={() => {
+                                        getUserLocation();
+                                    }}
+                                >
+                                    <MdGpsFixed />
+                                </span>
+                                <h1>{city}</h1>
+                                <h1>{weatherIcons[weather.code] || ''}
+                                    <span className="temp"
+                                        onClick={() => setCel(!Cel)}
+                                    >
+                                        {Cel ? weather.temp : ((weather.temp - 32) * 5 / 9).toFixed(0)}
+                                        {Cel ? '°F' : '°C'}
+                                    </span>
+                                </h1>
+                            </div>
+                        )}
+                        {error && <p className="error">{error}</p>}
 
-    return null; // Temporarily disable news widget
+                        <h1>Latest News</h1>
+                        {isLoading ? (
+                            <p className="news-loading">Loading news...</p>
+                        ) : newsError && allNews.length === 0 ? (
+                            <p className="news-error">News unavailable</p>
+                        ) : allNews.length > 0 ? (
+                            filteredNews.map((item, index) => (
+                                <div className="news" key={index} onClick={() => openNews(item.url)}>
+                                    <img src={item.urlToImage} alt="" />
+                                    <h5>{item.originalNews}</h5>
+                                </div>
+                            ))
+                        ) : (
+                            <p>No news available</p>
+                        )}
+                    </motion.div>
+                )}
+            </AnimatePresence>
+        </>
+    );
 }
 
 export default NewsApp;
