@@ -7,18 +7,20 @@ import "./Spotify.css";
 
 const VIEW_OPTIONS = [
   { key: "recentTracks", label: "Recent" },
-  { key: "topTracksWeek", label: "Top Tracks Week" },
-  { key: "topTracksMonth", label: "Top Tracks Month" },
-  { key: "topTracksAllTime", label: "Top Tracks All Time" },
-  { key: "topArtistsWeek", label: "Top Artists Week" },
-  { key: "topArtistsMonth", label: "Top Artists Month" },
-  { key: "topArtistsAllTime", label: "Top Artists All Time" },
-  { key: "topAlbumsWeek", label: "Top Albums Week" },
-  { key: "topAlbumsMonth", label: "Top Albums Month" },
-  { key: "topAlbumsAllTime", label: "Top Albums All Time" },
+  { key: "topTracksWeek", label: "Tracks: Week" },
+  { key: "topTracksMonth", label: "Tracks: Month" },
+  { key: "topTracksAllTime", label: "Tracks: All Time" },
+  { key: "topArtistsWeek", label: "Artists: Week" },
+  { key: "topArtistsMonth", label: "Artists: Month" },
+  { key: "topArtistsAllTime", label: "Artists: All Time" },
+  { key: "topAlbumsWeek", label: "Albums: Week" },
+  { key: "topAlbumsMonth", label: "Albums: Month" },
+  { key: "topAlbumsAllTime", label: "Albums: All Time" },
   { key: "weeklyTrackChart", label: "Weekly Chart" },
   { key: "friends", label: "Friends" },
 ];
+
+const DEFAULT_VIEW = VIEW_OPTIONS[0];
 
 const normalizeText = (value) => String(value ?? "").trim().toLowerCase();
 
@@ -46,57 +48,87 @@ const formatMemberSince = (value) => {
 };
 
 const buildTrackRows = (items, prefix) =>
-  (items ?? []).map((item, index) => ({
-    id: `${prefix}-${item.rank ?? index + 1}-${item.artist ?? "unknown"}-${item.title ?? "track"}`,
-    type: "track",
-    rank: item.rank ?? index + 1,
-    title: item.title ?? "Unknown Track",
-    artist: item.artist ?? "Unknown Artist",
-    subtitle: item.artist ?? "Unknown Artist",
-    meta: item.playcount != null ? `${formatCount(item.playcount)} plays` : "",
-    image: item.image ?? null,
-    album: item.album ?? null,
-    url: item.url ?? null,
-  }));
+  (items ?? []).map((item, index) => {
+    const rank = item.rank ?? index + 1;
+    const title = item.title ?? "Unknown Track";
+    const artist = item.artist ?? "Unknown Artist";
+    const album = item.album ?? null;
+
+    return {
+      id: `${prefix}-${rank}-${artist}-${title}`,
+      type: "track",
+      rank,
+      title,
+      artist,
+      primary: `${artist} - ${title}`,
+      secondary: album ? `Album: ${album}` : "",
+      meta: item.playcount != null ? `${formatCount(item.playcount)} plays` : "",
+      image: item.image ?? null,
+      album,
+      url: item.url ?? null,
+    };
+  });
 
 const buildArtistRows = (items, prefix) =>
-  (items ?? []).map((item, index) => ({
-    id: `${prefix}-${item.rank ?? index + 1}-${item.name ?? "artist"}`,
-    type: "artist",
-    rank: item.rank ?? index + 1,
-    title: item.name ?? "Unknown Artist",
-    artist: item.name ?? "Unknown Artist",
-    subtitle: "Artist",
-    meta: item.playcount != null ? `${formatCount(item.playcount)} plays` : "",
-    image: item.image ?? null,
-    url: item.url ?? null,
-  }));
+  (items ?? []).map((item, index) => {
+    const rank = item.rank ?? index + 1;
+    const artist = item.name ?? "Unknown Artist";
+
+    return {
+      id: `${prefix}-${rank}-${artist}`,
+      type: "artist",
+      rank,
+      title: artist,
+      artist,
+      primary: artist,
+      secondary: "Artist",
+      meta: item.playcount != null ? `${formatCount(item.playcount)} plays` : "",
+      image: item.image ?? null,
+      url: item.url ?? null,
+    };
+  });
 
 const buildAlbumRows = (items, prefix) =>
-  (items ?? []).map((item, index) => ({
-    id: `${prefix}-${item.rank ?? index + 1}-${item.artist ?? "artist"}-${item.name ?? "album"}`,
-    type: "album",
-    rank: item.rank ?? index + 1,
-    title: item.name ?? "Unknown Album",
-    artist: item.artist ?? "Unknown Artist",
-    subtitle: item.artist ?? "Unknown Artist",
-    meta: item.playcount != null ? `${formatCount(item.playcount)} plays` : "",
-    image: item.image ?? null,
-    url: item.url ?? null,
-  }));
+  (items ?? []).map((item, index) => {
+    const rank = item.rank ?? index + 1;
+    const album = item.name ?? "Unknown Album";
+    const artist = item.artist ?? "Unknown Artist";
+
+    return {
+      id: `${prefix}-${rank}-${artist}-${album}`,
+      type: "album",
+      rank,
+      title: album,
+      artist,
+      primary: `${artist} - ${album}`,
+      secondary: "Album",
+      meta: item.playcount != null ? `${formatCount(item.playcount)} plays` : "",
+      image: item.image ?? null,
+      url: item.url ?? null,
+    };
+  });
 
 const buildFriendRows = (items, prefix) =>
-  (items ?? []).map((item, index) => ({
-    id: `${prefix}-${item.rank ?? index + 1}-${item.name ?? "friend"}`,
-    type: "friend",
-    rank: item.rank ?? index + 1,
-    title: item.name ?? "Unknown Friend",
-    artist: item.name ?? "Unknown Friend",
-    subtitle: item.realname || item.country || "Last.fm Friend",
-    meta: item.country || "",
-    image: item.image ?? null,
-    url: item.url ?? null,
-  }));
+  (items ?? []).map((item, index) => {
+    const rank = item.rank ?? index + 1;
+    const username = item.name ?? "Unknown Friend";
+
+    return {
+      id: `${prefix}-${rank}-${username}`,
+      type: "friend",
+      rank,
+      title: username,
+      artist: username,
+      primary: username,
+      secondary: item.realname || item.country || "Last.fm Friend",
+      meta:
+        item.playcount != null
+          ? `${formatCount(item.playcount)} scrobbles`
+          : "Scrobbles unavailable",
+      image: item.image ?? null,
+      url: item.url ?? null,
+    };
+  });
 
 const resolveRows = (stats, currentView) => {
   if (!stats) {
@@ -174,8 +206,8 @@ function Spotify() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [currentView, setCurrentView] = useState({
     type: "preset",
-    key: "recentTracks",
-    label: "Recent",
+    key: DEFAULT_VIEW.key,
+    label: DEFAULT_VIEW.label,
   });
   const [viewHistory, setViewHistory] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
@@ -191,8 +223,8 @@ function Spotify() {
     setMenuOpen(false);
     setCurrentView({
       type: "preset",
-      key: "recentTracks",
-      label: "Recent",
+      key: DEFAULT_VIEW.key,
+      label: DEFAULT_VIEW.label,
     });
     setViewHistory([]);
     setSelectedId(null);
@@ -217,7 +249,9 @@ function Spotify() {
           return;
         }
 
-        setStats(response.data ?? null);
+        const payload = response.data?.data ?? response.data ?? null;
+        console.log("Spotify stats response:", payload);
+        setStats(payload);
       })
       .catch((requestError) => {
         if (ignore) {
@@ -308,7 +342,9 @@ function Spotify() {
     const downloadUrl = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.download = `spotify-${currentView.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}.json`;
+    link.download = `spotify-${currentView.label
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")}.json`;
     link.click();
     window.URL.revokeObjectURL(downloadUrl);
   };
@@ -361,10 +397,10 @@ function Spotify() {
     openView(
       {
         type: "preset",
-        key: "recentTracks",
-        label: "Recent",
+        key: DEFAULT_VIEW.key,
+        label: DEFAULT_VIEW.label,
       },
-      currentView.type !== "preset" || currentView.key !== "recentTracks"
+      currentView.type !== "preset" || currentView.key !== DEFAULT_VIEW.key
     );
   };
 
@@ -393,8 +429,12 @@ function Spotify() {
     >
       <div className="spotify-window">
         <div className="spotify-menu-bar">
-          <button type="button" className="spotify-menu-button">File</button>
-          <button type="button" className="spotify-menu-button">Edit</button>
+          <button type="button" className="spotify-menu-button">
+            File
+          </button>
+          <button type="button" className="spotify-menu-button">
+            Edit
+          </button>
           <div className="spotify-menu-group">
             <button
               type="button"
@@ -422,8 +462,12 @@ function Spotify() {
               </div>
             ) : null}
           </div>
-          <button type="button" className="spotify-menu-button">Options</button>
-          <button type="button" className="spotify-menu-button">Help</button>
+          <button type="button" className="spotify-menu-button">
+            Options
+          </button>
+          <button type="button" className="spotify-menu-button">
+            Help
+          </button>
         </div>
 
         <div className="spotify-command-bar">
@@ -474,7 +518,9 @@ function Spotify() {
             </div>
             <div className="spotify-track-subheading">
               {currentTrack
-                ? `${currentTrack.album || "Unknown Album"} by ${currentTrack.artist || "Unknown Artist"}`
+                ? `${currentTrack.album || "Unknown Album"} by ${
+                    currentTrack.artist || "Unknown Artist"
+                  }`
                 : "Last.fm stats will appear here once loaded."}
             </div>
 
@@ -486,14 +532,36 @@ function Spotify() {
               Shuffle play
             </button>
 
-            <div className="spotify-user-meta">
-              <span>Scrobbles: {totalScrobbles}</span>
-              <span>Country: {user?.country || "Unknown"}</span>
-              <span>Member since: {formatMemberSince(user?.registered)}</span>
-            </div>
+            <fieldset className="spotify-user-group">
+              <legend>Last.fm</legend>
+              <div className="spotify-user-meta">
+                <span>Scrobbles: {totalScrobbles}</span>
+                <span>Country: {user?.country || "Unknown"}</span>
+                <span>Member since: {formatMemberSince(user?.registered)}</span>
+              </div>
+            </fieldset>
           </div>
 
           <div className="spotify-list-panel">
+            <div className="spotify-tabs" role="tablist" aria-label="Spotify stats views">
+              {VIEW_OPTIONS.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  role="tab"
+                  aria-selected={currentView.type === "preset" && currentView.key === option.key}
+                  className={`spotify-tab ${
+                    currentView.type === "preset" && currentView.key === option.key
+                      ? "is-active"
+                      : ""
+                  }`}
+                  onClick={() => openPresetView(option)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+
             <div className="spotify-list-header">{currentView.label}</div>
             <div className="spotify-list-body">
               {loading ? (
@@ -511,15 +579,23 @@ function Spotify() {
                     }`}
                     onClick={() => setSelectedId(row.id)}
                     onDoubleClick={() => handleRowAction(row)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" || event.key === " ") {
+                        event.preventDefault();
+                        handleRowAction(row);
+                      }
+                    }}
                   >
                     <div className="spotify-row-main">
                       <div className="spotify-row-rank">{row.rank}.</div>
                       <div className="spotify-row-copy">
-                        <div className="spotify-row-title">{row.title}</div>
-                        <div className="spotify-row-subtitle">{row.subtitle}</div>
-                        {row.meta ? (
-                          <div className="spotify-row-meta">{row.meta}</div>
+                        <div className="spotify-row-title">{row.primary}</div>
+                        {row.secondary ? (
+                          <div className="spotify-row-subtitle">{row.secondary}</div>
                         ) : null}
+                        {row.meta ? <div className="spotify-row-meta">{row.meta}</div> : null}
                       </div>
                     </div>
                     <button
@@ -540,14 +616,17 @@ function Spotify() {
         </div>
 
         <div className="spotify-status-bar">
-          <span className="spotify-status-caret">▶</span>
-          <span className="spotify-status-text">
-            {selectedRow
-              ? `${selectedRow.title} — ${selectedRow.artist}`
-              : currentTrack
-                ? `${currentTrack.title} — ${currentTrack.artist}`
-                : "Current Track — None"}
-          </span>
+          <div className="spotify-status-display">
+            <span className="spotify-status-caret">{"\u25B6"}</span>
+            <span className="spotify-status-text">
+              {selectedRow
+                ? `${selectedRow.title} - ${selectedRow.artist}`
+                : currentTrack
+                  ? `${currentTrack.title} - ${currentTrack.artist}`
+                  : "Current Track - None"}
+            </span>
+          </div>
+          <span className="spotify-status-separator" aria-hidden="true" />
           <button
             type="button"
             className="spotify-button spotify-status-toggle"
@@ -558,21 +637,39 @@ function Spotify() {
         </div>
 
         <div className="spotify-toolbar">
-          <button type="button" className="spotify-button spotify-toolbar-button" onClick={handleHome}>
-            ⌂
-          </button>
-          <button type="button" className="spotify-button spotify-toolbar-button" onClick={handleSkip}>
-            &gt;&gt;|
-          </button>
-          <button type="button" className="spotify-button spotify-toolbar-button" onClick={handleSearch}>
-            ?
+          <button
+            type="button"
+            className="spotify-button spotify-toolbar-button"
+            onClick={handleHome}
+            title="Home"
+          >
+            {"\u2302"}
           </button>
           <button
             type="button"
-            className={`spotify-button spotify-toolbar-button ${repeatEnabled ? "is-toggled" : ""}`}
-            onClick={() => setRepeatEnabled((previous) => !previous)}
+            className="spotify-button spotify-toolbar-button"
+            onClick={handleSkip}
+            title="Skip"
           >
-            R
+            {"\u23ED"}
+          </button>
+          <button
+            type="button"
+            className="spotify-button spotify-toolbar-button"
+            onClick={handleSearch}
+            title="Search"
+          >
+            {"\u2315"}
+          </button>
+          <button
+            type="button"
+            className={`spotify-button spotify-toolbar-button ${
+              repeatEnabled ? "is-toggled" : ""
+            }`}
+            onClick={() => setRepeatEnabled((previous) => !previous)}
+            title="Repeat"
+          >
+            {"\u27F3"}
           </button>
           <button
             type="button"
@@ -580,8 +677,9 @@ function Spotify() {
               selectedRow && likedRows[selectedRow.id] ? "is-toggled" : ""
             }`}
             onClick={handleLike}
+            title="Like"
           >
-            ♥
+            {selectedRow && likedRows[selectedRow.id] ? "\u2665" : "\u2661"}
           </button>
         </div>
       </div>
