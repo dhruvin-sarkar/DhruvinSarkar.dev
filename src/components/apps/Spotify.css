@@ -108,6 +108,8 @@
   min-height: 0;
   gap: 10px;
   padding: 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .spotify-hero,

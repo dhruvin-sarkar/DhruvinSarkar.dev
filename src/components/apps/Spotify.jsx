@@ -202,7 +202,6 @@ function Spotify() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [hasFetched, setHasFetched] = useState(false);
   const [currentView, setCurrentView] = useState({
     type: "preset",
     key: DEFAULT_VIEW.key,
@@ -227,28 +226,25 @@ function Spotify() {
     });
     setViewHistory([]);
     setSelectedId(null);
-    setHasFetched(false);
     setIsViewMenuOpen(false);
   }, [SpotifyExpand.show]);
 
   useEffect(() => {
-    if (!SpotifyExpand.show || stats || loading || hasFetched) {
+    if (!SpotifyExpand.show) {
       return undefined;
     }
 
-    let ignore = false;
+    const controller = new AbortController();
 
-    setHasFetched(true);
     setLoading(true);
     setError("");
 
     axios
-      .get(SPOTIFY_STATS_API_URL, { timeout: 15000 })
+      .get(SPOTIFY_STATS_API_URL, {
+        timeout: 30000,
+        signal: controller.signal,
+      })
       .then((response) => {
-        if (ignore) {
-          return;
-        }
-
         console.log("Spotify stats raw response:", response.data);
         const payload = response.data?.data ?? response.data ?? null;
         if (!payload || typeof payload !== "object") {
@@ -260,7 +256,11 @@ function Spotify() {
         setStats(payload);
       })
       .catch((requestError) => {
-        if (ignore) {
+        if (
+          controller.signal.aborted ||
+          requestError?.code === "ERR_CANCELED" ||
+          axios.isCancel?.(requestError)
+        ) {
           return;
         }
 
@@ -273,15 +273,13 @@ function Spotify() {
         setStats(null);
       })
       .finally(() => {
-        if (!ignore) {
+        if (!controller.signal.aborted) {
           setLoading(false);
         }
       });
 
-    return () => {
-      ignore = true;
-    };
-  }, [SpotifyExpand.show, stats, loading, hasFetched]);
+    return () => controller.abort();
+  }, [SpotifyExpand.show]);
 
   const rows = resolveRows(stats, currentView);
   const currentTrack = buildCurrentTrack(stats);
