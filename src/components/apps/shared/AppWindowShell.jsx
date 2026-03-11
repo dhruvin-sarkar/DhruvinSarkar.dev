@@ -17,6 +17,8 @@ const AppWindowShell = ({
   stateName,
   defaultWidth = 800,
   defaultHeight = 600,
+  minWidth,
+  minHeight,
   defaultPosition = { x: 60, y: 60 },
   children,
   className = "",
@@ -43,11 +45,15 @@ const AppWindowShell = ({
   const windowStyle = state.expand
     ? {
         ...inlineStyleExpand(stateName),
+        ...(minWidth ? { minWidth: `${minWidth}px` } : {}),
+        ...(minHeight ? { minHeight: `${minHeight}px` } : {}),
       }
     : {
         ...inlineStyle(stateName),
         width: `${defaultWidth}px`,
         height: `${defaultHeight}px`,
+        ...(minWidth ? { minWidth: `${minWidth}px` } : {}),
+        ...(minHeight ? { minHeight: `${minHeight}px` } : {}),
       };
 
   const focusWindow = () => {

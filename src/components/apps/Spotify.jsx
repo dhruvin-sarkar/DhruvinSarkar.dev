@@ -213,6 +213,7 @@ function Spotify() {
   const [isPaused, setIsPaused] = useState(false);
   const [repeatEnabled, setRepeatEnabled] = useState(false);
   const [likedRows, setLikedRows] = useState({});
+  const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
 
   useEffect(() => {
     if (SpotifyExpand.show) {
@@ -227,6 +228,7 @@ function Spotify() {
     setViewHistory([]);
     setSelectedId(null);
     setHasFetched(false);
+    setIsViewMenuOpen(false);
   }, [SpotifyExpand.show]);
 
   useEffect(() => {
@@ -307,6 +309,8 @@ function Spotify() {
   };
 
   const openPresetView = (option) => {
+    setIsViewMenuOpen(false);
+
     if (currentView.type === "preset" && currentView.key === option.key) {
       return;
     }
@@ -319,6 +323,8 @@ function Spotify() {
   };
 
   const handleBack = () => {
+    setIsViewMenuOpen(false);
+
     setViewHistory((previous) => {
       if (previous.length === 0) {
         return previous;
@@ -393,6 +399,33 @@ function Spotify() {
     }));
   };
 
+  const getCurrentPresetIndex = () => {
+    if (currentView.type === "preset") {
+      const presetIndex = VIEW_OPTIONS.findIndex((option) => option.key === currentView.key);
+      if (presetIndex >= 0) {
+        return presetIndex;
+      }
+    }
+
+    for (let index = viewHistory.length - 1; index >= 0; index -= 1) {
+      const view = viewHistory[index];
+      if (view?.type === "preset") {
+        const presetIndex = VIEW_OPTIONS.findIndex((option) => option.key === view.key);
+        if (presetIndex >= 0) {
+          return presetIndex;
+        }
+      }
+    }
+
+    return 0;
+  };
+
+  const handleCycleView = (direction) => {
+    const currentIndex = getCurrentPresetIndex();
+    const nextIndex = (currentIndex + direction + VIEW_OPTIONS.length) % VIEW_OPTIONS.length;
+    openPresetView(VIEW_OPTIONS[nextIndex]);
+  };
+
   return (
     <AppWindowShell
       title="spotify.exe"
@@ -400,8 +433,10 @@ function Spotify() {
       state={SpotifyExpand}
       setState={setSpotifyExpand}
       stateName="Spotify"
-      defaultWidth={520}
-      defaultHeight={680}
+      defaultWidth={600}
+      defaultHeight={750}
+      minWidth={520}
+      minHeight={600}
       defaultPosition={{ x: 180, y: 80 }}
       className="spotify-app"
     >
@@ -415,23 +450,60 @@ function Spotify() {
           >
             Back
           </button>
-          <div className="spotify-tabs" role="tablist" aria-label="Spotify stats views">
-            {VIEW_OPTIONS.map((option) => (
+          <div className="spotify-view-nav">
+            <button
+              type="button"
+              className="spotify-button spotify-nav-button"
+              onClick={() => handleCycleView(-1)}
+              aria-label="Previous view"
+            >
+              {"<"}
+            </button>
+            <div className="spotify-view-picker">
               <button
-                key={option.key}
                 type="button"
-                role="tab"
-                aria-selected={currentView.type === "preset" && currentView.key === option.key}
-                className={`spotify-tab ${
-                  currentView.type === "preset" && currentView.key === option.key
-                    ? "is-active"
-                    : ""
-                }`}
-                onClick={() => openPresetView(option)}
+                className="spotify-view-label"
+                onClick={() => setIsViewMenuOpen((previous) => !previous)}
+                aria-haspopup="listbox"
+                aria-expanded={isViewMenuOpen}
               >
-                {option.label}
+                {currentView.label}
               </button>
-            ))}
+              {isViewMenuOpen ? (
+                <div
+                  className="spotify-view-menu"
+                  role="listbox"
+                  aria-label="Spotify stats views"
+                >
+                  {VIEW_OPTIONS.map((option) => (
+                    <button
+                      key={option.key}
+                      type="button"
+                      role="option"
+                      aria-selected={
+                        currentView.type === "preset" && currentView.key === option.key
+                      }
+                      className={`spotify-view-option ${
+                        currentView.type === "preset" && currentView.key === option.key
+                          ? "is-active"
+                          : ""
+                      }`}
+                      onClick={() => openPresetView(option)}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+            <button
+              type="button"
+              className="spotify-button spotify-nav-button"
+              onClick={() => handleCycleView(1)}
+              aria-label="Next view"
+            >
+              {">"}
+            </button>
           </div>
         </div>
 
