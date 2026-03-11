@@ -203,7 +203,6 @@ function Spotify() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [hasFetched, setHasFetched] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
   const [currentView, setCurrentView] = useState({
     type: "preset",
     key: DEFAULT_VIEW.key,
@@ -220,7 +219,6 @@ function Spotify() {
       return;
     }
 
-    setMenuOpen(false);
     setCurrentView({
       type: "preset",
       key: DEFAULT_VIEW.key,
@@ -243,14 +241,20 @@ function Spotify() {
     setError("");
 
     axios
-      .get(SPOTIFY_STATS_API_URL)
+      .get(SPOTIFY_STATS_API_URL, { timeout: 15000 })
       .then((response) => {
         if (ignore) {
           return;
         }
 
+        console.log("Spotify stats raw response:", response.data);
         const payload = response.data?.data ?? response.data ?? null;
-        console.log("Spotify stats response:", payload);
+        if (!payload || typeof payload !== "object") {
+          setError("Unexpected response from Last.fm stats endpoint.");
+          setStats(null);
+          return;
+        }
+
         setStats(payload);
       })
       .catch((requestError) => {
@@ -258,7 +262,13 @@ function Spotify() {
           return;
         }
 
-        setError(requestError.message || "Unable to load Last.fm stats.");
+        console.error("Spotify stats request failed:", requestError);
+        setError(
+          requestError.response?.data?.error ||
+            requestError.message ||
+            "Unable to load Last.fm stats."
+        );
+        setStats(null);
       })
       .finally(() => {
         if (!ignore) {
@@ -289,8 +299,6 @@ function Spotify() {
   }, [rows, selectedId]);
 
   const openView = (nextView, pushHistory = true) => {
-    setMenuOpen(false);
-
     if (pushHistory) {
       setViewHistory((previous) => [...previous, currentView]);
     }
@@ -300,7 +308,6 @@ function Spotify() {
 
   const openPresetView = (option) => {
     if (currentView.type === "preset" && currentView.key === option.key) {
-      setMenuOpen(false);
       return;
     }
 
@@ -312,8 +319,6 @@ function Spotify() {
   };
 
   const handleBack = () => {
-    setMenuOpen(false);
-
     setViewHistory((previous) => {
       if (previous.length === 0) {
         return previous;
@@ -323,30 +328,6 @@ function Spotify() {
       setCurrentView(nextView);
       return previous.slice(0, -1);
     });
-  };
-
-  const handleSave = () => {
-    if (!stats) {
-      return;
-    }
-
-    const payload = {
-      view: currentView,
-      user: stats.user,
-      rows,
-    };
-
-    const blob = new Blob([JSON.stringify(payload, null, 2)], {
-      type: "application/json",
-    });
-    const downloadUrl = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.download = `spotify-${currentView.label
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")}.json`;
-    link.click();
-    window.URL.revokeObjectURL(downloadUrl);
   };
 
   const openArtistView = (artistName) => {
@@ -387,10 +368,7 @@ function Spotify() {
   const handleSearch = () => {
     if (selectedRow?.artist) {
       openArtistView(selectedRow.artist);
-      return;
     }
-
-    setMenuOpen((previous) => !previous);
   };
 
   const handleHome = () => {
@@ -422,54 +400,12 @@ function Spotify() {
       state={SpotifyExpand}
       setState={setSpotifyExpand}
       stateName="Spotify"
-      defaultWidth={540}
-      defaultHeight={640}
+      defaultWidth={520}
+      defaultHeight={680}
       defaultPosition={{ x: 180, y: 80 }}
       className="spotify-app"
     >
       <div className="spotify-window">
-        <div className="spotify-menu-bar">
-          <button type="button" className="spotify-menu-button">
-            File
-          </button>
-          <button type="button" className="spotify-menu-button">
-            Edit
-          </button>
-          <div className="spotify-menu-group">
-            <button
-              type="button"
-              className={`spotify-menu-button ${menuOpen ? "is-open" : ""}`}
-              onClick={() => setMenuOpen((previous) => !previous)}
-            >
-              View
-            </button>
-            {menuOpen ? (
-              <div className="spotify-view-menu">
-                {VIEW_OPTIONS.map((option) => (
-                  <button
-                    key={option.key}
-                    type="button"
-                    className={`spotify-view-option ${
-                      currentView.type === "preset" && currentView.key === option.key
-                        ? "is-active"
-                        : ""
-                    }`}
-                    onClick={() => openPresetView(option)}
-                  >
-                    {option.label}
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-          <button type="button" className="spotify-menu-button">
-            Options
-          </button>
-          <button type="button" className="spotify-menu-button">
-            Help
-          </button>
-        </div>
-
         <div className="spotify-command-bar">
           <button
             type="button"
@@ -479,23 +415,23 @@ function Spotify() {
           >
             Back
           </button>
-
-          <div className="spotify-command-actions">
-            <button
-              type="button"
-              className="spotify-button"
-              onClick={handleSave}
-              disabled={!stats}
-            >
-              Save
-            </button>
-            <button
-              type="button"
-              className="spotify-button spotify-square-button"
-              onClick={() => setMenuOpen((previous) => !previous)}
-            >
-              ...
-            </button>
+          <div className="spotify-tabs" role="tablist" aria-label="Spotify stats views">
+            {VIEW_OPTIONS.map((option) => (
+              <button
+                key={option.key}
+                type="button"
+                role="tab"
+                aria-selected={currentView.type === "preset" && currentView.key === option.key}
+                className={`spotify-tab ${
+                  currentView.type === "preset" && currentView.key === option.key
+                    ? "is-active"
+                    : ""
+                }`}
+                onClick={() => openPresetView(option)}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
         </div>
 
@@ -543,25 +479,6 @@ function Spotify() {
           </div>
 
           <div className="spotify-list-panel">
-            <div className="spotify-tabs" role="tablist" aria-label="Spotify stats views">
-              {VIEW_OPTIONS.map((option) => (
-                <button
-                  key={option.key}
-                  type="button"
-                  role="tab"
-                  aria-selected={currentView.type === "preset" && currentView.key === option.key}
-                  className={`spotify-tab ${
-                    currentView.type === "preset" && currentView.key === option.key
-                      ? "is-active"
-                      : ""
-                  }`}
-                  onClick={() => openPresetView(option)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-
             <div className="spotify-list-header">{currentView.label}</div>
             <div className="spotify-list-body">
               {loading ? (
@@ -651,7 +568,7 @@ function Spotify() {
             onClick={handleSkip}
             title="Skip"
           >
-            {"\u23ED"}
+            {"\u25B6\u25B6"}
           </button>
           <button
             type="button"
@@ -659,7 +576,7 @@ function Spotify() {
             onClick={handleSearch}
             title="Search"
           >
-            {"\u2315"}
+            ?
           </button>
           <button
             type="button"
@@ -669,7 +586,7 @@ function Spotify() {
             onClick={() => setRepeatEnabled((previous) => !previous)}
             title="Repeat"
           >
-            {"\u27F3"}
+            {"\u21BA"}
           </button>
           <button
             type="button"
@@ -679,7 +596,7 @@ function Spotify() {
             onClick={handleLike}
             title="Like"
           >
-            {selectedRow && likedRows[selectedRow.id] ? "\u2665" : "\u2661"}
+            {"\u2665"}
           </button>
         </div>
       </div>

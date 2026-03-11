@@ -24,7 +24,6 @@
   background: #c0c0c0;
 }
 
-.spotify-menu-bar,
 .spotify-command-bar {
   border-bottom: 1px solid #808080;
   box-shadow: inset 0 1px 0 #fff;
@@ -39,10 +38,6 @@
   justify-content: center;
   gap: 8px;
   border-top: 1px solid #fff;
-}
-
-.spotify-menu-group {
-  position: relative;
 }
 
 .spotify-button,
@@ -76,8 +71,6 @@
 
 .spotify-button:focus-visible,
 .spotify-tab:focus-visible,
-.spotify-menu-button:focus-visible,
-.spotify-view-option:focus-visible,
 .spotify-list-row:focus-visible {
   outline: 1px dotted #000;
   outline-offset: -4px;
@@ -89,22 +82,6 @@
   cursor: default;
 }
 
-.spotify-menu-button {
-  min-height: 22px;
-  padding: 1px 8px;
-  border: 0;
-  background: transparent;
-  color: #000;
-  font: inherit;
-  cursor: pointer;
-}
-
-.spotify-menu-button.is-open {
-  background: #000080;
-  color: #fff;
-}
-
-.spotify-square-button,
 .spotify-row-more,
 .spotify-status-toggle,
 .spotify-toolbar-button {
@@ -113,47 +90,9 @@
 }
 
 .spotify-command-bar {
-  justify-content: space-between;
-}
-
-.spotify-command-actions {
-  display: flex;
-  gap: 4px;
-}
-
-.spotify-view-menu {
-  position: absolute;
-  top: calc(100% + 2px);
-  left: 0;
-  z-index: 30;
-  min-width: 190px;
-  display: flex;
-  flex-direction: column;
-  padding: 2px;
-  border-top: 2px solid #fff;
-  border-left: 2px solid #fff;
-  border-right: 2px solid #404040;
-  border-bottom: 2px solid #404040;
-  box-shadow:
-    inset -1px -1px 0 #808080,
-    inset 1px 1px 0 #dfdfdf;
-  background: #c0c0c0;
-}
-
-.spotify-view-option {
-  padding: 4px 8px;
-  border: 0;
-  background: transparent;
-  color: #000;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.spotify-view-option:hover,
-.spotify-view-option.is-active {
-  background: #000080;
-  color: #fff;
+  gap: 6px;
+  align-items: stretch;
+  min-width: 0;
 }
 
 .spotify-body {
@@ -268,16 +207,28 @@
 
 .spotify-tabs {
   display: flex;
-  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+  flex-wrap: nowrap;
   gap: 2px;
-  padding: 8px 8px 0;
+  padding: 0;
   background: #c0c0c0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.spotify-tabs::-webkit-scrollbar {
+  display: none;
 }
 
 .spotify-tab {
+  flex: 0 0 auto;
   min-height: 26px;
   padding: 4px 8px 3px;
   margin-bottom: -2px;
+  white-space: nowrap;
 }
 
 .spotify-tab.is-active {
@@ -397,13 +348,14 @@
 }
 
 .spotify-toolbar-button {
-  width: 32px;
+  min-width: 44px;
+  width: 46px;
   height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0;
-  font-size: 14px;
+  font-size: 16px;
   line-height: 1;
 }
 
@@ -418,6 +370,6 @@
   }
 
   .spotify-tabs {
-    padding-top: 6px;
+    gap: 4px;
   }
 }
