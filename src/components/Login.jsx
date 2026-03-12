@@ -32,11 +32,8 @@ function Login() {
             if (sounds?.playStartup) {
                 sounds.playStartup();
             }
-            
-            // Small delay to let sound start before UI changes
-            setTimeout(() => {
-                setLogin(false)
-            }, 100);
+
+            setLogin(false)
             return;
         }
 

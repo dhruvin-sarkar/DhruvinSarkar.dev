@@ -89,6 +89,9 @@ function shouldDebugLog() {
   );
 }
 
+const DESKTOP_TRANSITION_DELAY_MS = 250;
+const DESKTOP_TRANSITION_FALLBACK_MS = 5000;
+
 function App() {
   // Initialize sound system
   const sounds = useSounds();
@@ -238,6 +241,10 @@ function App() {
   const lastShowRequestRef = useRef({ name: "", time: 0 });
   const lastUserWindowInteractionRef = useRef(0);
   const startupWindowsTimeoutRef = useRef(null);
+  const startupPraiseTimeoutRef = useRef(null);
+  const desktopTransitionTimeoutRef = useRef(null);
+  const desktopTransitionFallbackTimeoutRef = useRef(null);
+  const desktopStartupInitializedRef = useRef(false);
   const [projectUrl, setProjectUrl] = useState("");
   const [MybioExpand, setMybioExpand] = useState({
     expand: false, // fullscreen
@@ -941,6 +948,52 @@ function App() {
   }
 
   useEffect(() => {
+    const clearDesktopTransition = () => {
+      if (desktopTransitionTimeoutRef.current) {
+        clearTimeout(desktopTransitionTimeoutRef.current);
+        desktopTransitionTimeoutRef.current = null;
+      }
+
+      if (desktopTransitionFallbackTimeoutRef.current) {
+        clearTimeout(desktopTransitionFallbackTimeoutRef.current);
+        desktopTransitionFallbackTimeoutRef.current = null;
+      }
+    };
+
+    clearDesktopTransition();
+
+    if (login) {
+      desktopStartupInitializedRef.current = false;
+      setLoading(true);
+      return clearDesktopTransition;
+    }
+
+    const completeDesktopTransition = () => {
+      clearDesktopTransition();
+      setLoading(false);
+    };
+
+    desktopTransitionTimeoutRef.current = setTimeout(() => {
+      completeDesktopTransition();
+    }, DESKTOP_TRANSITION_DELAY_MS);
+
+    desktopTransitionFallbackTimeoutRef.current = setTimeout(() => {
+      console.warn(
+        "Desktop transition fallback triggered after login; forcing desktop render.",
+      );
+      completeDesktopTransition();
+    }, DESKTOP_TRANSITION_FALLBACK_MS);
+
+    return clearDesktopTransition;
+  }, [login]);
+
+  useEffect(() => {
+    if (login || loading || desktopStartupInitializedRef.current) {
+      return undefined;
+    }
+
+    desktopStartupInitializedRef.current = true;
+
     // force user to update version by clearing their local storage!
     startupWindowsTimeoutRef.current = setTimeout(() => {
       openWindow("Patch", { source: "system" });
@@ -962,7 +1015,7 @@ function App() {
     const PRAISE_NOTIFICATION_INTERVAL_MS = 30000;
 
     // Startup sound praise
-    setTimeout(() => {
+    startupPraiseTimeoutRef.current = setTimeout(() => {
       setNotiOn(false);
       setTimeout(() => {
         setNewMessage({
@@ -1061,9 +1114,14 @@ function App() {
       clearInterval(praiseInterval);
       if (startupWindowsTimeoutRef.current) {
         clearTimeout(startupWindowsTimeoutRef.current);
+        startupWindowsTimeoutRef.current = null;
+      }
+      if (startupPraiseTimeoutRef.current) {
+        clearTimeout(startupPraiseTimeoutRef.current);
+        startupPraiseTimeoutRef.current = null;
       }
     };
-  }, []);
+  }, [loading, login]);
 
   useEffect(() => {
     const handleRightClick = (e) => {
@@ -1296,7 +1354,10 @@ function App() {
   };
 
   useEffect(() => {
-    setLoading(true);
+    if (login || loading) {
+      return undefined;
+    }
+
     connectWebSocket();
 
     return () => {
@@ -1309,7 +1370,7 @@ function App() {
         setWebsocketConnection(false);
       }
     };
-  }, []);
+  }, [loading, login]);
 
   useEffect(() => {
     let invisibilityTimeout = null;
@@ -2468,8 +2529,6 @@ function App() {
       setChatDown(true);
       console.error("Error fetching Chat:", error);
       return null;
-    } finally {
-      setLoading(false);
     }
   }
 
