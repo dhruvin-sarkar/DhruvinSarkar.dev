@@ -182,6 +182,8 @@ function App() {
   const [newMessage, setNewMessage] = useState("");
   const [notiOn, setNotiOn] = useState(false);
   const [chatDown, setChatDown] = useState(false);
+  const [msnBootstrapLoading, setMsnBootstrapLoading] = useState(false);
+  const [msnBootstrapReady, setMsnBootstrapReady] = useState(false);
   const [key, setKey] = useState(0);
   const [dragging, setDragging] = useState(false);
   const DesktopRef = useRef(null);
@@ -1199,6 +1201,8 @@ function App() {
   }, [rightClickDefault]);
 
   const connectWebSocket = async () => {
+    setMsnBootstrapLoading(true);
+
     try {
       // Close existing socket if still open or connecting
       if (socket.current && socket.current.readyState !== WebSocket.CLOSED) {
@@ -1220,7 +1224,14 @@ function App() {
       }
 
       await getChatSession();
-      await getChat();
+      const chatMessages = await getChat();
+      if (chatMessages !== null) {
+        setMsnBootstrapReady(true);
+        console.log("MSN bootstrap state updated:", {
+          ready: true,
+          messageCount: chatMessages.length,
+        });
+      }
 
       // Create new WebSocket instance
       socket.current = new WebSocket(CHAT_WEBSOCKET_URL);
@@ -1232,25 +1243,38 @@ function App() {
       };
 
       socket.current.onmessage = (event) => {
-        const data = JSON.parse(event.data);
+        try {
+          const data = JSON.parse(event.data);
+          console.log("WS message received", data);
 
-        if (data.count !== undefined) {
-          setOnlineUser(data.count);
-        }
+          if (data.count !== undefined) {
+            setOnlineUser(data.count);
+          }
 
-        if (data.key) {
-          setKeyChatSession(data.key);
-        }
-        if (data.ring) {
-          setRingMsn(true);
-        } else if (data.name && data.chat) {
-          setChatData((prevData) => [...prevData, data]);
-          setLoadedMessages((prev) => [...prev, data]);
-          setAllowNoti(true);
+          if (data.key) {
+            setKeyChatSession(data.key);
+          }
+          if (data.ring) {
+            setRingMsn(true);
+          } else if (data.name && data.chat) {
+            setChatData((prevData) => {
+              const nextData = [...prevData, data];
+              console.log("MSN chatData state updated:", nextData.length);
+              return nextData;
+            });
+            setLoadedMessages((prev) => {
+              const nextMessages = [...prev, data];
+              console.log("MSN loadedMessages state updated:", nextMessages.length);
+              return nextMessages;
+            });
+            setAllowNoti(true);
 
-          setTimeout(() => {
-            endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-          }, 100);
+            setTimeout(() => {
+              endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+            }, 100);
+          }
+        } catch (messageError) {
+          console.error("WS message parse error:", messageError, event.data);
         }
       };
 
@@ -1266,6 +1290,8 @@ function App() {
     } catch (err) {
       console.error("WebSocket connection error:", err);
       setWebsocketConnection(false);
+    } finally {
+      setMsnBootstrapLoading(false);
     }
   };
 
@@ -1698,6 +1724,8 @@ function App() {
     setLocalBg,
     connectWebSocket,
     websocketConnection,
+    msnBootstrapLoading,
+    msnBootstrapReady,
     setWebsocketConnection,
     city,
     setCity,
@@ -2393,16 +2421,21 @@ function App() {
         },
       );
 
+      console.log("MSN session created:", response.data);
+
       if (response.data?.key) {
         setKeyChatSession(response.data.key);
       }
+
+      return response.data ?? null;
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
         debugLog("Chat session endpoint unavailable");
-        return;
+        return null;
       }
 
       console.error("Error fetching chat session:", error);
+      return null;
     }
   }
 
@@ -2421,6 +2454,7 @@ function App() {
         ? response.data.chat
         : [];
 
+      console.log("MSN history loaded:", chatMessages);
       setChatDown(false);
       setChatData(chatMessages);
       setLoadedMessages(chatMessages.slice(-40));
@@ -2428,9 +2462,12 @@ function App() {
       if (response.data?.key) {
         setKeyChatSession(response.data.key);
       }
+
+      return chatMessages;
     } catch (error) {
       setChatDown(true);
       console.error("Error fetching Chat:", error);
+      return null;
     } finally {
       setLoading(false);
     }

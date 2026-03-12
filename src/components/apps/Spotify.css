@@ -366,6 +366,14 @@
 
 .spotify-empty-state {
   padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.spotify-empty-action {
+  margin-top: 2px;
 }
 
 .spotify-status-display {

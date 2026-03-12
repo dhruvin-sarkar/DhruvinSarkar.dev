@@ -2,7 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import UseContext from "../../Context";
 import AppWindowShell from "./shared/AppWindowShell";
-import { SPOTIFY_STATS_API_URL } from "../../config/backend";
+import {
+  SPOTIFY_PING_API_URL,
+  SPOTIFY_STATS_API_URL,
+} from "../../config/backend";
 import "./Spotify.css";
 
 const VIEW_OPTIONS = [
@@ -21,8 +24,30 @@ const VIEW_OPTIONS = [
 ];
 
 const DEFAULT_VIEW = VIEW_OPTIONS[0];
+const SPOTIFY_FETCH_TIMEOUT_MS = 15000;
+const SPOTIFY_RETRY_DELAY_MS = 2000;
 
 const normalizeText = (value) => String(value ?? "").trim().toLowerCase();
+
+const isCanceledRequest = (error) =>
+  error?.code === "ERR_CANCELED" ||
+  error?.name === "CanceledError" ||
+  axios.isCancel?.(error);
+
+const waitForRetry = (duration, signal) =>
+  new Promise((resolve, reject) => {
+    const timeoutId = window.setTimeout(() => {
+      signal?.removeEventListener("abort", cancelWait);
+      resolve();
+    }, duration);
+
+    const cancelWait = () => {
+      window.clearTimeout(timeoutId);
+      reject(new axios.CanceledError("Spotify request cancelled"));
+    };
+
+    signal?.addEventListener("abort", cancelWait, { once: true });
+  });
 
 const formatCount = (value) => {
   const numeric = Number(value);
@@ -213,6 +238,7 @@ function Spotify() {
   const [repeatEnabled, setRepeatEnabled] = useState(false);
   const [likedRows, setLikedRows] = useState({});
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
+  const [fetchNonce, setFetchNonce] = useState(0);
 
   useEffect(() => {
     if (SpotifyExpand.show) {
@@ -235,56 +261,101 @@ function Spotify() {
     }
 
     const controller = new AbortController();
-
-    setLoading(true);
-    setError("");
-
-    axios
-      .get(SPOTIFY_STATS_API_URL, {
-        timeout: 30000,
+    const requestStats = () =>
+      axios.get(SPOTIFY_STATS_API_URL, {
+        timeout: SPOTIFY_FETCH_TIMEOUT_MS,
         signal: controller.signal,
-      })
-      .then((response) => {
+      });
+
+    const loadStats = async () => {
+      setLoading(true);
+      setError("");
+      setStats(null);
+
+      try {
+        try {
+          const pingResponse = await axios.get(SPOTIFY_PING_API_URL, {
+            timeout: SPOTIFY_FETCH_TIMEOUT_MS,
+            signal: controller.signal,
+          });
+
+          console.log("Spotify ping response:", pingResponse.data);
+        } catch (pingError) {
+          if (isCanceledRequest(pingError)) {
+            return;
+          }
+
+          console.warn("Spotify ping request failed:", pingError);
+        }
+
+        let response = null;
+        let lastError = null;
+
+        for (let attempt = 1; attempt <= 2; attempt += 1) {
+          try {
+            response = await requestStats();
+            break;
+          } catch (requestError) {
+            if (isCanceledRequest(requestError)) {
+              return;
+            }
+
+            lastError = requestError;
+            console.error(
+              `Spotify stats request attempt ${attempt} failed:`,
+              requestError,
+            );
+
+            if (attempt < 2) {
+              await waitForRetry(SPOTIFY_RETRY_DELAY_MS, controller.signal);
+            }
+          }
+        }
+
+        if (!response) {
+          throw lastError ?? new Error("Unable to load Last.fm stats.");
+        }
+
         console.log("Spotify stats raw response:", response.data);
         const payload = response.data?.data ?? response.data ?? null;
+
         if (!payload || typeof payload !== "object") {
-          setError("Unexpected response from Last.fm stats endpoint.");
-          setStats(null);
-          return;
+          throw new Error("Unexpected response from Last.fm stats endpoint.");
         }
 
         setStats(payload);
-      })
-      .catch((requestError) => {
-        if (
-          controller.signal.aborted ||
-          requestError?.code === "ERR_CANCELED" ||
-          axios.isCancel?.(requestError)
-        ) {
+      } catch (requestError) {
+        if (isCanceledRequest(requestError)) {
           return;
         }
 
-        console.error("Spotify stats request failed:", requestError);
+        console.error("Spotify stats request failed after retry:", requestError);
         setError(
           requestError.response?.data?.error ||
             requestError.message ||
-            "Unable to load Last.fm stats."
+            "Last.fm is taking longer than expected to respond. Please try again."
         );
-        setStats(null);
-      })
-      .finally(() => {
+      } finally {
         if (!controller.signal.aborted) {
           setLoading(false);
         }
-      });
+      }
+    };
+
+    loadStats();
 
     return () => controller.abort();
-  }, [SpotifyExpand.show]);
+  }, [SpotifyExpand.show, fetchNonce]);
 
   const rows = resolveRows(stats, currentView);
   const currentTrack = buildCurrentTrack(stats);
   const user = stats?.user ?? null;
-  const totalScrobbles = user?.playcount != null ? formatCount(user.playcount) : "0";
+  const isConnecting = loading && !stats;
+  const totalScrobbles = isConnecting
+    ? "Connecting..."
+    : user?.playcount != null
+      ? formatCount(user.playcount)
+      : "0";
   const selectedRow = rows.find((row) => row.id === selectedId) ?? rows[0] ?? null;
 
   useEffect(() => {
@@ -424,6 +495,10 @@ function Spotify() {
     openPresetView(VIEW_OPTIONS[nextIndex]);
   };
 
+  const handleRetryFetch = () => {
+    setFetchNonce((previous) => previous + 1);
+  };
+
   return (
     <AppWindowShell
       title="spotify.exe"
@@ -520,14 +595,22 @@ function Spotify() {
             </div>
 
             <div className="spotify-track-heading">
-              {currentTrack?.title ?? "No recent track"}
+              {isConnecting
+                ? "Connecting to Last.fm..."
+                : error
+                  ? "Last.fm unavailable"
+                  : currentTrack?.title ?? "No recent track"}
             </div>
             <div className="spotify-track-subheading">
-              {currentTrack
-                ? `${currentTrack.album || "Unknown Album"} by ${
-                    currentTrack.artist || "Unknown Artist"
-                  }`
-                : "Last.fm stats will appear here once loaded."}
+              {isConnecting
+                ? "Waking the stats server and loading your listening history."
+                : error
+                  ? "Use Retry to try the request again."
+                  : currentTrack
+                    ? `${currentTrack.album || "Unknown Album"} by ${
+                        currentTrack.artist || "Unknown Artist"
+                      }`
+                    : "Last.fm stats will appear here once loaded."}
             </div>
 
             <button
@@ -542,8 +625,11 @@ function Spotify() {
               <legend>Last.fm</legend>
               <div className="spotify-user-meta">
                 <span>Scrobbles: {totalScrobbles}</span>
-                <span>Country: {user?.country || "Unknown"}</span>
-                <span>Member since: {formatMemberSince(user?.registered)}</span>
+                <span>Country: {isConnecting ? "Connecting..." : user?.country || "Unknown"}</span>
+                <span>
+                  Member since:{" "}
+                  {isConnecting ? "Connecting..." : formatMemberSince(user?.registered)}
+                </span>
               </div>
             </fieldset>
           </div>
@@ -552,9 +638,18 @@ function Spotify() {
             <div className="spotify-list-header">{currentView.label}</div>
             <div className="spotify-list-body">
               {loading ? (
-                <div className="spotify-empty-state">Loading Last.fm stats...</div>
+                <div className="spotify-empty-state">Connecting to Last.fm...</div>
               ) : error ? (
-                <div className="spotify-empty-state">{error}</div>
+                <div className="spotify-empty-state">
+                  <div>{error}</div>
+                  <button
+                    type="button"
+                    className="spotify-button spotify-empty-action"
+                    onClick={handleRetryFetch}
+                  >
+                    Retry
+                  </button>
+                </div>
               ) : rows.length === 0 ? (
                 <div className="spotify-empty-state">No items available for this view.</div>
               ) : (

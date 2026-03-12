@@ -17,6 +17,8 @@ function MsnFolder() {
     ringMsn, setRingMsn,
     connectWebSocket,
     websocketConnection,
+    msnBootstrapLoading,
+    msnBootstrapReady,
     chatBotActive, setChatBotActive,
     onlineUser,
     loadedMessages, setLoadedMessages,
@@ -35,6 +37,7 @@ function MsnFolder() {
     inlineStyleExpand,
     inlineStyle,
     deleteTap,
+    chatDown,
   } = useContext(UseContext);
 
 
@@ -322,23 +325,30 @@ useEffect(() => {
           
           <div className="folder_content-MSN"
             style={{ 
-              background: !websocketConnection ? 'rgba(0, 0, 0, 0.426)' : '',
+              background: msnBootstrapLoading ? 'rgba(0, 0, 0, 0.426)' : '',
             }}
           >
-            {!websocketConnection && (
-              <div className="reconnect_container">
+            {!msnBootstrapLoading && (!websocketConnection || chatDown) && (
+              <div className="reconnect_container" style={{ position: 'static', marginBottom: '8px' }}>
                 <p
                   onClick={() => {
                     connectWebSocket()
                   }}
                 >
-                  Click here to reconnect
+                  {msnBootstrapReady
+                    ? 'Live chat is still connecting. Click here to retry.'
+                    : 'Click here to reconnect'}
                 </p>
               </div>
             )}
-            {chatData.length === 0 &&  (
+            {msnBootstrapLoading &&  (
               <span style={{ position: 'relative', fontSize: '13px' }}>
                 LOADING.......
+              </span>
+            )}
+            {!msnBootstrapLoading && msnBootstrapReady && !chatDown && loadedMessages.length === 0 && (
+              <span style={{ position: 'relative', fontSize: '13px' }}>
+                No messages yet. Start the conversation.
               </span>
             )}
             <div ref={topOfMessagesRef} /> {/* Ref to track the top of the chat container */}
