@@ -16,8 +16,8 @@ const styles = {
   scanlines: {
     background: `repeating-linear-gradient(
       0deg,
-      rgba(0,0,0,0.02) 0px,
-      rgba(0,0,0,0.02) 1px,
+      rgba(0,0,0,0.16) 0px,
+      rgba(0,0,0,0.16) 1px,
       transparent 1px,
       transparent 2px
     )`,
@@ -37,7 +37,7 @@ const styles = {
     willChange: "opacity",
   },
   glow: {
-    background: "rgba(0, 20, 0, 0.03)",
+    background: "rgba(0, 20, 0, 0.12)",
   },
 };
 
