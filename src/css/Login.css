@@ -16,7 +16,7 @@
     border-right: 1px solid black;
     border-bottom: 1px solid black;
     outline: 1px solid white;
-    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.148);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.148);
     overflow: hidden;
     grid-template-rows: 22% auto;
     grid-template-columns: 18% 62% 20%;
@@ -305,7 +305,7 @@
     border: 2px solid white;
     border-right-color: black;
     border-bottom-color: black;
-    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 .login_error_dialog {
@@ -314,7 +314,7 @@
     border: 2px solid white;
     border-right-color: black;
     border-bottom-color: black;
-    box-shadow: 8px 8px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
 }
 
 .login_error_content {
