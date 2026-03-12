@@ -106,6 +106,17 @@ function getHandleStyle(direction) {
   }
 }
 
+function resolveMinDimension(value, fallback) {
+  if (Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const parsed = Number.parseFloat(value);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+  return fallback;
+}
+
 function ResizeHandle({ direction, disabled, onStartResize }) {
   if (disabled) return null;
   const style = getHandleStyle(direction);
@@ -520,12 +531,14 @@ const WindowDraggable = React.forwardRef(function WindowDraggable(props, ref) {
   const mergedChildStyle = useMemo(() => {
     const previousStyle = children.props.style || {};
     const duringInteraction = isDragging || isResizing;
+    const nextMinWidth = resolveMinDimension(previousStyle.minWidth, DEFAULT_MIN_WIDTH);
+    const nextMinHeight = resolveMinDimension(previousStyle.minHeight, DEFAULT_MIN_HEIGHT);
     return {
       ...previousStyle,
       width: !disabled && windowSize.width ? windowSize.width : previousStyle.width,
       height: !disabled && windowSize.height ? windowSize.height : previousStyle.height,
-      minWidth: Math.max(DEFAULT_MIN_WIDTH, previousStyle.minWidth || 0),
-      minHeight: Math.max(DEFAULT_MIN_HEIGHT, previousStyle.minHeight || 0),
+      minWidth: Math.max(DEFAULT_MIN_WIDTH, nextMinWidth),
+      minHeight: Math.max(DEFAULT_MIN_HEIGHT, nextMinHeight),
       resize: "none",
       willChange: duringInteraction ? "transform, width, height" : previousStyle.willChange,
       transition: duringInteraction ? "none" : previousStyle.transition,

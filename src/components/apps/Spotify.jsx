@@ -24,8 +24,9 @@ const VIEW_OPTIONS = [
 ];
 
 const DEFAULT_VIEW = VIEW_OPTIONS[0];
-const SPOTIFY_FETCH_TIMEOUT_MS = 15000;
+const SPOTIFY_FETCH_TIMEOUT_MS = 25000;
 const SPOTIFY_RETRY_DELAY_MS = 2000;
+const DEFAULT_LOADING_MESSAGE = "Connecting to Last.fm...";
 
 const normalizeText = (value) => String(value ?? "").trim().toLowerCase();
 
@@ -48,6 +49,22 @@ const waitForRetry = (duration, signal) =>
 
     signal?.addEventListener("abort", cancelWait, { once: true });
   });
+
+const getLoadingMessage = (elapsedMs) => {
+  if (elapsedMs < 3000) {
+    return "Connecting to Last.fm...";
+  }
+
+  if (elapsedMs < 8000) {
+    return "Waking up the server, this may take a moment...";
+  }
+
+  if (elapsedMs < 15000) {
+    return "Almost there, server is starting up...";
+  }
+
+  return "Still loading, hang tight...";
+};
 
 const formatCount = (value) => {
   const numeric = Number(value);
@@ -239,6 +256,7 @@ function Spotify() {
   const [likedRows, setLikedRows] = useState({});
   const [isViewMenuOpen, setIsViewMenuOpen] = useState(false);
   const [fetchNonce, setFetchNonce] = useState(0);
+  const [loadingMessage, setLoadingMessage] = useState(DEFAULT_LOADING_MESSAGE);
 
   useEffect(() => {
     if (SpotifyExpand.show) {
@@ -346,6 +364,25 @@ function Spotify() {
 
     return () => controller.abort();
   }, [SpotifyExpand.show, fetchNonce]);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingMessage(DEFAULT_LOADING_MESSAGE);
+      return undefined;
+    }
+
+    const startedAt = Date.now();
+    setLoadingMessage(DEFAULT_LOADING_MESSAGE);
+
+    const intervalId = window.setInterval(() => {
+      const elapsedMs = Date.now() - startedAt;
+      setLoadingMessage(getLoadingMessage(elapsedMs));
+    }, 500);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [loading]);
 
   const rows = resolveRows(stats, currentView);
   const currentTrack = buildCurrentTrack(stats);
@@ -596,14 +633,14 @@ function Spotify() {
 
             <div className="spotify-track-heading">
               {isConnecting
-                ? "Connecting to Last.fm..."
+                ? loadingMessage
                 : error
                   ? "Last.fm unavailable"
                   : currentTrack?.title ?? "No recent track"}
             </div>
             <div className="spotify-track-subheading">
               {isConnecting
-                ? "Waking the stats server and loading your listening history."
+                ? loadingMessage
                 : error
                   ? "Use Retry to try the request again."
                   : currentTrack
@@ -638,7 +675,7 @@ function Spotify() {
             <div className="spotify-list-header">{currentView.label}</div>
             <div className="spotify-list-body">
               {loading ? (
-                <div className="spotify-empty-state">Connecting to Last.fm...</div>
+                <div className="spotify-empty-state">{loadingMessage}</div>
               ) : error ? (
                 <div className="spotify-empty-state">
                   <div>{error}</div>
