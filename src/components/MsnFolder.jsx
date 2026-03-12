@@ -47,7 +47,7 @@ function MsnFolder() {
   const hasScrolledRef = useRef(false);
 
   const lastMessage = chatData.length > 0
-    ? chatData[chatData.length - 1].date.split('').slice(0, 10).join('')
+    ? (chatData[chatData.length - 1]?.date || 'No messages yet').split('').slice(0, 10).join('')
     : 'No messages yet';
 
   useEffect(() => {
@@ -310,7 +310,7 @@ useEffect(() => {
             >
               <img src={nudge} alt="" />
             </div>
-            <span>Username: {userNameValue ? userNameValue : 'Anonymous'}</span>
+            <span>Username: {userNameValue ? userNameValue : 'Visitor'}</span>
             <div className={`activate_bot ${chatBotActive ? 'active' : ''}`}
               onClick={() => setChatBotActive(!chatBotActive)}
             >
@@ -373,13 +373,18 @@ useEffect(() => {
               value={chatValue}
               onChange={(e) => setChatValue(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') createChat()
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  console.log('MSN send keypress fired');
+                  createChat();
+                }
               }}
             />
             <button
               style={{ color: sendDisable ? 'grey' : null }}
               disabled={sendDisable}
               onClick={() => {
+                console.log('MSN send button clicked');
                 createChat()
               }}
             >
@@ -389,7 +394,7 @@ useEffect(() => {
           <div className="status_div">
             <p>
               {chatValue.trim().length > 0
-                ? `${userNameValue} is typing...`
+                ? `${userNameValue || 'Visitor'} is typing...`
                 : `Last message received on ${lastMessage}`}
             </p>
 

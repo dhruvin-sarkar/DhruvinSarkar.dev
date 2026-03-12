@@ -210,6 +210,7 @@ function App() {
   const [detectMouse, setDetectMouse] = useState(false);
   const endOfMessagesRef = useRef(null);
   const [KeyChatSession, setKeyChatSession] = useState("");
+  const [chatSessionId, setChatSessionId] = useState("");
   const [sendDisable, setSendDisable] = useState(false);
   const [userNameValue, setUserNameValue] = useState(() => {
     return localStorage.getItem("username") || "";
@@ -751,6 +752,113 @@ function App() {
     if (shouldDebugLog()) {
       console.log(...args);
     }
+  }
+
+  function formatMsnTimestamp(value) {
+    const timestamp = value ? new Date(value) : new Date();
+    return Number.isNaN(timestamp.getTime())
+      ? new Date().toISOString()
+      : timestamp.toISOString();
+  }
+
+  function appendUniqueChatMessage(prevMessages, nextMessage) {
+    if (!nextMessage) {
+      return prevMessages;
+    }
+
+    if (
+      nextMessage._id &&
+      prevMessages.some((message) => message?._id === nextMessage._id)
+    ) {
+      return prevMessages;
+    }
+
+    return [...prevMessages, nextMessage];
+  }
+
+  function normalizeChatMessage(message) {
+    if (!message || typeof message !== "object") {
+      return null;
+    }
+
+    if (typeof message.chat === "string" && typeof message.name === "string") {
+      return {
+        ...message,
+        name: message.name,
+        chat: message.chat,
+        date: formatMsnTimestamp(message.date ?? message.timestamp),
+      };
+    }
+
+    const text =
+      typeof message.text === "string"
+        ? message.text
+        : typeof message.chat === "string"
+          ? message.chat
+          : "";
+    const username =
+      typeof message.username === "string"
+        ? message.username
+        : typeof message.name === "string"
+          ? message.name
+          : "Visitor";
+
+    if (!text) {
+      return null;
+    }
+
+    return {
+      ...message,
+      name: username,
+      username,
+      chat: text,
+      text,
+      date: formatMsnTimestamp(message.timestamp ?? message.date),
+    };
+  }
+
+  function getEffectiveChatUsername(rawValue = userNameValue) {
+    const trimmed = String(rawValue ?? "").trim();
+    if (trimmed.length > 0) {
+      return trimmed;
+    }
+
+    if (chatSessionId) {
+      return `Visitor-${String(chatSessionId).slice(0, 6)}`;
+    }
+
+    return "Visitor";
+  }
+
+  function persistChatUsername(nextUsername) {
+    setUserNameValue(nextUsername);
+    localStorage.setItem("username", nextUsername);
+  }
+
+  function pushIncomingChatMessage(message) {
+    if (!message) {
+      return;
+    }
+
+    setChatData((prevData) => {
+      const nextData = appendUniqueChatMessage(prevData, message);
+      console.log("MSN chatData state updated:", nextData.length);
+      return nextData;
+    });
+    setLoadedMessages((prevMessages) => {
+      const nextMessages = appendUniqueChatMessage(prevMessages, message);
+      const visibleMessages = nextMessages.slice(-40);
+      console.log(
+        "MSN loadedMessages state updated:",
+        visibleMessages.length,
+      );
+      return visibleMessages;
+    });
+    setAllowNoti(true);
+
+    setTimeout(() => {
+      endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   }
 
   function updateWindowProps(item, nextProps) {
@@ -1312,24 +1420,22 @@ function App() {
           if (data.key) {
             setKeyChatSession(data.key);
           }
-          if (data.ring) {
-            setRingMsn(true);
-          } else if (data.name && data.chat) {
-            setChatData((prevData) => {
-              const nextData = [...prevData, data];
-              console.log("MSN chatData state updated:", nextData.length);
-              return nextData;
-            });
-            setLoadedMessages((prev) => {
-              const nextMessages = [...prev, data];
-              console.log("MSN loadedMessages state updated:", nextMessages.length);
-              return nextMessages;
-            });
-            setAllowNoti(true);
 
-            setTimeout(() => {
-              endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-            }, 100);
+          if (data.type === "error") {
+            console.log("WS backend error", data);
+            setSendDisable(false);
+            return;
+          }
+
+          if (data.type === "nudge" || data.ring) {
+            setRingMsn(true);
+            return;
+          }
+
+          const nextMessage = normalizeChatMessage(data);
+          if (nextMessage) {
+            console.log("WS message received", nextMessage);
+            pushIncomingChatMessage(nextMessage);
           }
         } catch (messageError) {
           console.error("WS message parse error:", messageError, event.data);
@@ -2412,11 +2518,17 @@ function App() {
   }
 
   function ringMsnOff() {
-    if (socket.current) {
-      socket.current.send(JSON.stringify({ ring: true }));
-    } else {
+    if (!socket.current || socket.current.readyState !== WebSocket.OPEN) {
       console.error("WebSocket is not initialized.");
+      return;
     }
+
+    const username = getEffectiveChatUsername();
+    console.log("MSN nudge send fired", {
+      readyState: socket.current.readyState,
+      username,
+    });
+    socket.current.send(JSON.stringify({ type: "nudge", username }));
   }
 
   async function createChat() {
@@ -2438,42 +2550,55 @@ function App() {
     offendedWords.forEach((word) => filter.addWords(word));
 
     const newChatVal = filter.clean(chatValue);
+    const username = filter.clean(getEffectiveChatUsername());
     const payload = {
-      chat: newChatVal,
+      type: "message",
+      text: newChatVal,
+      sessionId: chatSessionId,
       key: KeyChatSession,
-      mouse: detectMouse,
-      touch: isTouchDevice,
-      chatBotActive: chatBotActive,
+      username,
     };
 
-    if (userNameValue.trim().length < 1) {
-      payload.name = "Anonymous";
+    if (!userNameValue.trim()) {
+      persistChatUsername(username);
     }
 
-    if (userNameValue.trim().length > 0) {
-      const cleanedName = filter.clean(userNameValue);
-      payload.name = cleanedName;
+    console.log("MSN send handler fired", {
+      readyState: socket.current?.readyState,
+      sessionId: chatSessionId,
+      username,
+      textLength: newChatVal.length,
+    });
+
+    if (!chatSessionId || !KeyChatSession) {
+      console.error("MSN send blocked: session is not ready.", {
+        sessionId: chatSessionId,
+        keyReady: Boolean(KeyChatSession),
+      });
+      setSendDisable(false);
+      return;
     }
 
-    // Send the payload via WebSocket
-    if (socket.current) {
-      // Check if socket is initialized
-      socket.current.send(JSON.stringify(payload));
-      debugLog("Chat payload:", payload);
-    } else {
-      console.error("WebSocket is not initialized.");
+    if (!socket.current || socket.current.readyState !== WebSocket.OPEN) {
+      console.error("MSN send blocked: WebSocket is not open.", {
+        readyState: socket.current?.readyState,
+      });
+      setSendDisable(false);
+      return;
     }
 
-    // Clear the chat input field and reset sendDisable
+    socket.current.send(JSON.stringify(payload));
+    debugLog("Chat payload:", payload);
     setChatValue("");
     setSendDisable(false);
   }
 
   async function getChatSession() {
     try {
+      const username = getEffectiveChatUsername();
       const response = await axios.post(
         CHAT_SESSION_ENDPOINT,
-        {},
+        { username },
         {
           headers: {
             "Content-Type": "application/json",
@@ -2486,6 +2611,13 @@ function App() {
 
       if (response.data?.key) {
         setKeyChatSession(response.data.key);
+      }
+      if (response.data?.sessionId) {
+        setChatSessionId(response.data.sessionId);
+
+        if (!userNameValue.trim()) {
+          persistChatUsername(`Visitor-${String(response.data.sessionId).slice(0, 6)}`);
+        }
       }
 
       return response.data ?? null;
@@ -2511,9 +2643,14 @@ function App() {
         },
       });
 
-      const chatMessages = Array.isArray(response.data?.chat)
-        ? response.data.chat
-        : [];
+      const rawMessages = Array.isArray(response.data)
+        ? response.data
+        : Array.isArray(response.data?.chat)
+          ? response.data.chat
+          : [];
+      const chatMessages = rawMessages
+        .map((message) => normalizeChatMessage(message))
+        .filter(Boolean);
 
       console.log("MSN history loaded:", chatMessages);
       setChatDown(false);
