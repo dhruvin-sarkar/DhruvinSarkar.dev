@@ -4,6 +4,7 @@ import { Filter } from "bad-words";
 import badword from "./badword";
 import { useSounds } from "./hooks/useSounds";
 import Footer from "./components/Footer";
+import CRTOverlay from "./components/CRTOverlay";
 import Store from "./components/Store";
 import Dragdrop from "./components/Dragdrop";
 import MyBioFolder from "./components/MyBioFolder";
@@ -2158,28 +2159,25 @@ function App() {
     setTerminalExpand,
   };
 
-  // show login page
+  let appContent;
+
   if (login) {
-    return (
+    appContent = (
       <UserContext.Provider value={contextValue}>
         <Login />
         <WindowsDragLogin />
       </UserContext.Provider>
     );
-  }
-
-  if (windowsShutDownAnimation) {
-    return (
+  } else if (windowsShutDownAnimation) {
+    appContent = (
       <UserContext.Provider value={contextValue}>
         <WindowsShutdown />
       </UserContext.Provider>
     );
-  }
-
-  if (loading && !login) {
+  } else if (loading) {
     const localThemeBg = localStorage.getItem("theme") || "#098684";
 
-    return (
+    appContent = (
       <div
         style={{
           width: "100%",
@@ -2200,19 +2198,17 @@ function App() {
         />
       </div>
     );
-  }
+  } else {
+    // // show login page
+    // if(tileScreen ) {
+    //   return(
+    //     <UserContext.Provider value={contextValue}>
+    //       <WindowsDragLogin/>
+    //     </UserContext.Provider>
+    //   )
+    // }
 
-  // // show login page
-  // if(tileScreen ) {
-  //   return(
-  //     <UserContext.Provider value={contextValue}>
-  //       <WindowsDragLogin/>
-  //     </UserContext.Provider>
-  //   )
-  // }
-
-  return (
-    <>
+    appContent = (
       <UserContext.Provider value={contextValue}>
         <WindowsDragLogin />
         {regErrorPopUp && (
@@ -2327,6 +2323,13 @@ function App() {
         <Footer />
         {import.meta.env.PROD ? <Analytics /> : null}
       </UserContext.Provider>
+    );
+  }
+
+  return (
+    <>
+      {appContent}
+      <CRTOverlay />
     </>
   );
 
