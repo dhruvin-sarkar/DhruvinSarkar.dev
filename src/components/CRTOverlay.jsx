@@ -21,23 +21,23 @@ const styles = {
       transparent 1px,
       transparent 2px
     )`,
-    opacity: 0.4,
+    opacity: 0.5,
   },
   vignette: {
     background: `radial-gradient(
       ellipse at center,
-      transparent 60%,
-      rgba(0,0,0,0.25) 100%
+      transparent 50%,
+      rgba(0,0,0,0.32) 100%
     )`,
   },
   flicker: {
     background: "rgba(255, 255, 255, 0.012)",
-    opacity: 0.97,
+    opacity: 0.962,
     animation: "crtOverlayFlicker 4s ease-in-out infinite",
     willChange: "opacity",
   },
   glow: {
-    background: "rgba(0, 20, 0, 0.04)",
+    background: "rgba(0, 20, 0, 0.05)",
   },
 };
 
@@ -49,7 +49,7 @@ export default function CRTOverlay() {
           @keyframes crtOverlayFlicker {
             0%,
             100% {
-              opacity: 0.97;
+              opacity: 0.962;
             }
 
             50% {
