@@ -16,28 +16,28 @@ const styles = {
   scanlines: {
     background: `repeating-linear-gradient(
       0deg,
-      rgba(0,0,0,0.03) 0px,
-      rgba(0,0,0,0.03) 1px,
+      rgba(0,0,0,0.02) 0px,
+      rgba(0,0,0,0.02) 1px,
       transparent 1px,
       transparent 2px
     )`,
-    opacity: 0.5,
+    opacity: 0.45,
   },
   vignette: {
     background: `radial-gradient(
       ellipse at center,
-      transparent 50%,
-      rgba(0,0,0,0.32) 100%
+      transparent 72%,
+      rgba(0,0,0,0.18) 100%
     )`,
   },
   flicker: {
     background: "rgba(255, 255, 255, 0.012)",
-    opacity: 0.962,
+    opacity: 0.947,
     animation: "crtOverlayFlicker 4s ease-in-out infinite",
     willChange: "opacity",
   },
   glow: {
-    background: "rgba(0, 20, 0, 0.05)",
+    background: "rgba(0, 20, 0, 0.03)",
   },
 };
 
@@ -49,7 +49,7 @@ export default function CRTOverlay() {
           @keyframes crtOverlayFlicker {
             0%,
             100% {
-              opacity: 0.962;
+              opacity: 0.947;
             }
 
             50% {
