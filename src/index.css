@@ -18,14 +18,6 @@
     user-select: none;
 }
 
-@supports (zoom: 1) {
-    #root {
-        zoom: 0.9;
-        transform: scale(1.1111111111);
-        transform-origin: top left;
-    }
-}
-
 #root::before {
     content: "";
     position: absolute;
