@@ -92,7 +92,7 @@
     config.alignStartButton = window.EJS_alignStartButton;
     config.VirtualGamepadSettings = window.EJS_VirtualGamepadSettings;
     config.buttonOpts = window.EJS_Buttons;
-    config.volume = window.EJS_volume;
+    config.volume = (typeof window.EJS_volume === "number") ? window.EJS_volume * 0.5 : 0.25;
     config.defaultControllers = window.EJS_defaultControls;
     config.startOnLoad = window.EJS_startOnLoaded;
     config.fullscreenOnLoad = window.EJS_fullscreenOnLoaded;

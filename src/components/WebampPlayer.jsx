@@ -3,6 +3,8 @@ import UseContext from '../Context'
 import Webamp from 'webamp';
 import mp3 from '../assets/never-gonna-give-you-up.mp3';
 
+const WEBAMP_DEFAULT_VOLUME = Math.round((200 / 255) * 100 * 0.5);
+
 const WebampPlayer = () => {
 
     const [focus, setFocus] = useState(false)
@@ -36,6 +38,7 @@ const WebampPlayer = () => {
                 };
                 const webamp = new Webamp(options);
                 webampInstance = webamp;
+                webamp.store.dispatch({ type: 'SET_VOLUME', volume: WEBAMP_DEFAULT_VOLUME });
     
                 const handleClose = () => {
                     if (!disposed) {

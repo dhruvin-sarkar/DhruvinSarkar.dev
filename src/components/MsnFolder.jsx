@@ -60,6 +60,7 @@ function MsnFolder() {
     if (ringMsn) {
       handleShow('MSN');
       const audio = new Audio(nudgeSound);
+      audio.volume = 0.5;
       audio.play().catch((err) => console.error("Audio play failed:", err));
       
     }

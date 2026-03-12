@@ -19,6 +19,11 @@ const SOUND_FILES = {
   minimize: minimizeSound,
 };
 
+const MASTER_VOLUME_MULTIPLIER = 0.5;
+
+const getScaledVolume = (level) =>
+  Math.max(0, Math.min(1, level * MASTER_VOLUME_MULTIPLIER));
+
 export const useSounds = () => {
   const [volume, setVolume] = useState(() => {
     const saved = localStorage.getItem('win95_volume');
@@ -42,7 +47,7 @@ export const useSounds = () => {
         Object.entries(SOUND_FILES).forEach(([key, src]) => {
           const audio = new Audio(src);
           audio.preload = 'auto';
-          audio.volume = muted ? 0 : volume;
+          audio.volume = muted ? 0 : getScaledVolume(volume);
           // Enable looping for the startup sound (background music)
           if (key === 'startup') {
             audio.loop = true;
@@ -69,7 +74,7 @@ export const useSounds = () => {
   // Update volume for all audio elements
   useEffect(() => {
     Object.values(audioRefs.current).forEach(audio => {
-      audio.volume = muted ? 0 : volume;
+      audio.volume = muted ? 0 : getScaledVolume(volume);
     });
     localStorage.setItem('win95_volume', volume.toString());
   }, [volume, muted]);
@@ -130,7 +135,8 @@ export const useSounds = () => {
 
     // Reset audio to start
     audio.currentTime = 0;
-    audio.volume = muted ? 0 : (fadeIn ? 0 : volume);
+    const targetVolume = getScaledVolume(volume);
+    audio.volume = muted ? 0 : (fadeIn ? 0 : targetVolume);
 
     const playPromise = audio.play();
 
@@ -142,11 +148,11 @@ export const useSounds = () => {
           // Fade in effect
           if (fadeIn && !muted) {
             let currentVol = 0;
-            const step = volume / (fadeInDuration / 50);
+            const step = targetVolume / (fadeInDuration / 50);
             const fadeInterval = setInterval(() => {
               currentVol += step;
-              if (currentVol >= volume) {
-                audio.volume = volume;
+              if (currentVol >= targetVolume) {
+                audio.volume = targetVolume;
                 clearInterval(fadeInterval);
               } else {
                 audio.volume = currentVol;

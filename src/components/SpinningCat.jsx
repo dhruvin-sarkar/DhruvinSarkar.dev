@@ -38,7 +38,7 @@ function SpinningCat() {
 
     const handleStartSound = () => {
         if(oiiaRef.current){
-            oiiaRef.current.volume = 0.25;
+            oiiaRef.current.volume = 0.125;
             oiiaRef.current.play();
         }
     }
@@ -46,7 +46,7 @@ function SpinningCat() {
     const handleAnimationEnd = () => {
         setTimeout(() => {
             if (videoRef.current && audioRef.current) {
-                audioRef.current.volume = 0.25;
+                audioRef.current.volume = 0.125;
     
                 // Play audio and video simultaneously
                 Promise.all([
