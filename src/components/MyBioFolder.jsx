@@ -41,7 +41,7 @@ function MyBioFolder() {
     <div className="technology-content">
       <div className="tech_section">
         <h3 className="tech_header">Languages</h3>
-        <p className="tech_prose">I gravitate toward languages that give me direct control over behavior and performance. C and C++ are my foundation - they taught me how systems work at the lowest levels and instilled in me a respect for memory management and optimization. JavaScript and TypeScript are where I spend most of my time now, building interactive web experiences with the type safety and tooling that modern development demands. I appreciate CSS for its ability to bring designs to life, and I turn to Bash when I need to automate or script system-level tasks. Lua, Dart, and Kotlin each serve specific purposes in my toolkit -  Dart for Flutter development.</p>
+        <p className="tech_prose">I like languages that let me feel what the system is doing under the hood. C and C++ gave me that first. They taught me to care about memory, performance, and the cost of every abstraction. These days I spend most of my time in JavaScript and TypeScript, building interactive web apps with good tooling and just enough structure to move fast without making a mess. CSS is still one of my favorite parts of the stack because it decides whether an interface feels dead or alive. Bash is what I reach for when I want to automate the annoying parts, and I keep Lua, Dart, and Kotlin around for the projects that call for them.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/C-00599C?style=for-the-badge&logo=c&logoColor=white" alt="C" />
           <img src="https://img.shields.io/badge/C++-00599C?style=for-the-badge&logo=c%2B%2B&logoColor=white" alt="C++" />
@@ -55,7 +55,7 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Operating Systems</h3>
-        <p className="tech_prose">My relationship with operating systems is defined by a balance between necessity and preference. Windows 11 remains my daily driver by necessity - it's where gaming, certain development tools, and compatibility requirements keep me anchored. But my heart belongs to Linux. I've spent countless hours distro-hopping through Pop!_OS, Linux Mint, Kali, Fedora, and ultimately settling on Arch Linux. Each distribution taught me something different about system architecture, package management, and the philosophy of open source. Arch Linux, in particular, gave me complete control over my environment and forced me to understand every component of my system from the ground up.</p>
+        <p className="tech_prose">My OS choice is split between practicality and preference. Windows 11 is still my daily driver because gaming, drivers, and a few tools keep dragging me back. Linux is the one I actually enjoy living in. I've gone through Pop!_OS, Linux Mint, Kali, Fedora, and eventually settled on Arch. Every distro taught me something different, whether that was package management, workflow, system structure, or just how much pain I was willing to tolerate in exchange for control. Arch is the one that really stuck because it gave me full control and forced me to understand what every part of the machine was doing.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/Windows_11-0078D4?style=for-the-badge&logo=windows-11&logoColor=white" alt="Windows 11" />
           <img src="https://img.shields.io/badge/Pop!_OS-48B9C7?style=for-the-badge&logo=pop!_os&logoColor=white" alt="Pop!_OS" />
@@ -68,7 +68,7 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Frontend & Design</h3>
-        <p className="tech_prose">Frontend development is where my technical skills and creative instincts converge. I love crafting interfaces that feel intuitive and responsive, using React as my primary framework for building complex interactive experiences. HTML5 and CSS3 form the foundation, but Tailwind CSS has become my go-to for rapid prototyping without sacrificing design consistency. I'm equally comfortable working in design tools - Figma for planning and prototyping, Framer for adding sophisticated animations, and Canva for quick visual assets. What drives me here is the immediate feedback loop - I can see and interact with what I'm building in real-time, which makes the development process incredibly engaging and iterative.</p>
+        <p className="tech_prose">Frontend work is where the technical side of my brain and the design side actually get along. I like building interfaces that feel fast, clear, and good to use. React is my default because it gives me room to build more complex interactive pieces without fighting the framework. HTML and CSS are still the base of everything, and Tailwind helps me prototype quickly without losing visual consistency. I also spend a lot of time in Figma, Framer, and Canva. The part I enjoy most is the feedback loop: build something, see it immediately, tweak it, repeat.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" alt="React" />
           <img src="https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white" alt="HTML5" />
@@ -82,7 +82,7 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Frameworks</h3>
-        <p className="tech_prose">Frameworks are the scaffolding that lets me build bigger ideas faster. Flutter has become my framework of choice for cross-platform mobile development - I love how it lets me create beautiful, performant apps from a single codebase. On the web, I work fluidly between Angular and Vue.js depending on the project needs, and Electron.js when I need to break out of the browser. For backend work, Django provides the structure and security I need for robust applications, while Express.js and Next.js give me the flexibility to build everything from APIs to full-stack applications. Node.js ties it all together as my runtime environment of choice for JavaScript-based development.</p>
+        <p className="tech_prose">I use frameworks the same way I use tools in general: whatever gets the idea built well without boxing me in. Flutter is my favorite option for cross-platform mobile work because I can move quickly and still ship something that feels polished. On the web, I move between Angular and Vue depending on the project, and I use Electron when I need desktop behavior without leaving the JavaScript ecosystem. For backend work, Django gives me structure, Express gives me flexibility, and Next.js sits nicely in the middle when I want a full-stack setup that doesn't feel heavy.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white" alt="Flutter" />
           <img src="https://img.shields.io/badge/angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white" alt="Angular" />
@@ -97,7 +97,7 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Backend & Databases</h3>
-        <p className="tech_prose">While I naturally lean frontend-first, I'm comfortable building complete full-stack applications when the project demands it. Python has become my go-to for backend scripting and data processing, though I'm equally proficient with Java and C# for enterprise-level applications. When it comes to data persistence, I choose based on the use case - MongoDB for flexible document storage, MySQL for traditional relational needs, and PostgreSQL when I need advanced features and robustness. I don't just connect these technologies; I think deeply about data architecture, scalability, and the trade-offs between different approaches.</p>
+        <p className="tech_prose">I naturally lean frontend-first, but I'm comfortable owning the whole stack when a project needs it. Python is my usual choice for backend scripting and data work, and I still use Java and C# when the job fits them better. For databases, I care more about the shape of the problem than brand loyalty. MongoDB is useful when the data wants to stay flexible. MySQL handles the straightforward relational cases. PostgreSQL is usually where I end up when I want stronger features and fewer compromises. I like thinking through schema design, tradeoffs, and how the data model will age once the project stops being small.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python" />
           <img src="https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white" alt="Java" />
@@ -110,7 +110,7 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Game Development</h3>
-        <p className="tech_prose">Game development is where my technical curiosity and creative passion collide. I spend countless hours in Unity and Unreal Engine, building both 2D and 3D experiences that challenge my understanding of performance, physics, and player psychology. Blender has become an essential part of my workflow for creating and iterating on assets. Godot Engine, with its GDScript and C++ integration, offers a refreshing alternative when I need something more lightweight. I even dabble in Roblox development - it's surprisingly sophisticated and teaches valuable lessons about multiplayer architecture and user-generated content. What I love most about game dev is how every technical decision directly impacts the player experience.</p>
+        <p className="tech_prose">Game development is where a lot of my curiosity ends up. I've spent plenty of time in Unity and Unreal making 2D and 3D projects, learning the hard way how performance, rendering, scripting, and game feel all fight each other. Blender is part of that workflow too, mostly because I like being able to make or modify assets instead of waiting on them. Godot is great when I want something lighter and more direct, and even Roblox has taught me useful lessons about systems and multiplayer design. Game dev is fun because every technical decision is immediately visible to the player.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/Unity-100000?style=for-the-badge&logo=unity&logoColor=white" alt="Unity" />
           <img src="https://img.shields.io/badge/Unreal_Engine-313131?style=for-the-badge&logo=unreal-engine&logoColor=white" alt="Unreal Engine" />
@@ -122,7 +122,7 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Hardware & Electronics</h3>
-        <p className="tech_prose">I love working closer to the metal, where software meets the physical world. Arduino projects taught me the fundamentals of embedded systems and how code can directly control physical components. Raspberry Pi became my playground for more complex projects, from home automation to network services. This hands-on experience with hardware has fundamentally changed how I think about software - it makes me more conscious of resource constraints, power consumption, and the real-world impact of my code. There's something deeply satisfying about writing code that makes an LED blink or a motor turn, and that satisfaction keeps me coming back to hardware projects.</p>
+        <p className="tech_prose">I really like the point where software stops being abstract and starts affecting something physical. Arduino got me into embedded systems because it made code feel tangible fast. Raspberry Pi pulled me further in with projects that were bigger, messier, and closer to real-world systems. Working with hardware changed how I think about software. You stop treating resources like they're infinite when you've had to deal with power limits, thermals, or physical failure. Also, it's just satisfying to write code and watch an actual thing move because of it.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/Arduino-00979D?style=for-the-badge&logo=Arduino&logoColor=white" alt="Arduino" />
           <img src="https://img.shields.io/badge/Raspberry%20Pi-A22846?style=for-the-badge&logo=Raspberry%20Pi&logoColor=white" alt="Raspberry Pi" />
@@ -131,7 +131,7 @@ function MyBioFolder() {
 
       <div className="tech_section">
         <h3 className="tech_header">Tools & DevOps</h3>
-        <p className="tech_prose">My development workflow is built around a core set of tools that keep me productive and organized. Git and GitHub are non-negotiable - version control isn't just a safety net, it's how I think about code evolution and collaboration. Docker has revolutionized how I approach development environments, ensuring consistency across different machines and deployment targets. These tools aren't just utilities; they're extensions of my development philosophy - automated, reproducible, and scalable. I'm constantly refining my workflow to eliminate friction and focus on what matters: building great software.</p>
+        <p className="tech_prose">A lot of my workflow comes down to a few tools I trust completely. Git and GitHub are non-negotiable at this point. Version control isn't just backup; it's how I think about iteration, collaboration, and not losing my mind. Docker helped a lot too because it made environments more predictable and cut down on machine-specific nonsense. I'm always tweaking my setup, but the goal is simple: less friction, fewer repeated mistakes, and more time spent actually building.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" alt="Git" />
           <img src="https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" />
@@ -144,36 +144,36 @@ function MyBioFolder() {
   const linuxText = (
     <div className="technology-content">
       <div className="tech_section">
-        <h3 className="tech_header">Linux, Ricing, and Living Inside My OS</h3>
-        <p className="tech_prose">My relationship with Linux started early. In the 4th grade, my school issued us dedicated PCs that came preinstalled with Ubuntu, and that was my first real exposure to Linux. At the time, I didn&apos;t fully understand what made it different, but I lived with it for almost a year, learning its quirks and limitations simply by using it every day. Eventually, curiosity got the better of me, and I installed Fedora, diving headfirst into customization — which, unsurprisingly, got me into trouble at school.</p>
+        <h3 className="tech_header">Linux, ricing, and living inside my OS</h3>
+        <p className="tech_prose">My relationship with Linux started earlier than most. In 4th grade, my school gave us PCs running Ubuntu, and that was my first real exposure to an operating system that felt different. I didn&apos;t understand much at the time, but I used it every day and got used to its quirks by force. Eventually curiosity won, I installed Fedora, and that was the beginning of me treating my OS like something I was allowed to mess with instead of just accept.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Distro-Hopping</h3>
-        <p className="tech_prose">That experience kicked off a long period of distro-hopping. Over the years, I&apos;ve used and extensively customized Pop!_OS, Linux Mint, Fedora, Kali, and several others. Each distribution taught me something different — from stability and workflow to security, package management, and system structure. But more importantly, they all introduced me to ricing.</p>
+        <p className="tech_prose">That turned into years of distro-hopping. I&apos;ve used and heavily customized Pop!_OS, Linux Mint, Fedora, Kali, and plenty of others. Each one taught me something different about package management, workflow, security, stability, or just how much pain I was willing to tolerate in exchange for control. More importantly, they all pushed me toward ricing.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Ricing</h3>
-        <p className="tech_prose">Ricing quickly became one of my favorite hobbies. To me, ricing isn&apos;t just about aesthetics — it&apos;s about control. It&apos;s the process of shaping an operating system into something that feels personally engineered. Through ricing, I learned bash scripting, configuration management, window managers, keybinding systems, and Linux internals purely out of necessity. Every rice meant hours of tweaking icons, bars, sounds, animations, interactions, keybinds, and workflows. By the time a setup was &quot;done,&quot; it looked and felt like a completely different operating system.</p>
+        <p className="tech_prose">Ricing became one of my favorite hobbies almost immediately. For me, it&apos;s never been just about aesthetics. It&apos;s about ownership. I like shaping an OS until it feels deliberate, personal, and tuned to the way I actually work. Ricing is how I learned a lot of Bash, config management, window managers, keybindings, and Linux internals in the first place. Every setup meant hours of changing bars, icons, animations, sounds, workflows, and little quality-of-life details until the system felt like mine.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Arch Linux</h3>
-        <p className="tech_prose">Eventually, I found my way to Arch Linux — the OS that has stuck with me for the past two years. I&apos;m fully aware of the memes surrounding Arch, and honestly, they&apos;re not wrong. Installing and maintaining Arch was, by far, the most painful yet rewarding experience I&apos;ve had with an operating system. Display issues, graphics drivers, audio problems, keyboard layouts, Bluetooth failures — I&apos;ve fought all of them. I&apos;ve spent countless hours every day buried in the Arch Wiki and documentation, troubleshooting, breaking my system, fixing it, and breaking it again.</p>
-        <p className="tech_prose">Even now, with the Arch install script making setup significantly easier, I still believe the real Arch experience comes from understanding why everything works the way it does. That&apos;s what I loved most: the freedom. Absolute control over my system — nothing installed unless I wanted it, nothing running unless I allowed it. Every part of the OS felt intentional because I built it that way.</p>
+        <p className="tech_prose">Eventually I landed on Arch Linux, and that&apos;s the one that has stayed with me for the last two years. The memes about Arch exist for a reason. Getting it installed, configured, broken, repaired, and broken again was easily the most frustrating and most rewarding OS experience I&apos;ve had. Display issues, drivers, audio, keyboard layouts, Bluetooth, I&apos;ve fought with all of it. I spent a ridiculous amount of time buried in the Arch Wiki, troubleshooting one problem just in time to create another.</p>
+        <p className="tech_prose">That&apos;s also why I like it. Even with the install script making setup easier now, the real value of Arch is understanding why the system behaves the way it does. I like the fact that nothing is there unless I put it there. If something runs, it&apos;s because I allowed it. That level of control changed how I think about software in general.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Windows vs Linux</h3>
-        <p className="tech_prose">Windows has always been my main OS by necessity, not by choice. From Windows 95 to Windows 10 and 11, it&apos;s been unavoidable due to software support, drivers, and gaming. But over time, my frustration with Windows grew — limited customization, bloated systems, poor file search, forced ads, locked-down features, and heavy reliance on third-party tools just to achieve basic control. Features being locked behind Pro versions, aggressive telemetry, and invasive additions like Recall and Copilot only pushed me further away.</p>
-        <p className="tech_prose">Linux, in contrast, gives me freedom. If something bothers me, I can remove it. If something feels slow, I can reconfigure it. If I want my system to behave or look differently, I can change it — completely. That level of ownership fundamentally changed how I think about software. It made me value transparency, configurability, and user agency, and it directly influences how I design and build my own projects.</p>
+        <p className="tech_prose">Windows has always been the OS I keep because I need it, not because I love it. Between software support, gaming, drivers, and plain convenience, it has always been hard to avoid. Over time I got more annoyed with it: limited customization, bloated defaults, terrible search, locked-down features, forced upsells, and too much reliance on third-party tools just to get basic control back. Recall, Copilot, telemetry, and features locked behind higher tiers only made that worse.</p>
+        <p className="tech_prose">Linux gives me the opposite feeling. If something bothers me, I can remove it. If something feels slow, I can trace it. If I want the system to look or behave differently, I can change it completely. That level of ownership made me care a lot more about transparency, configurability, and user agency, and it definitely shows up in the way I build things now.</p>
       </div>
 
       <div className="tech_section">
-        <h3 className="tech_header">The</h3>
-        <p className="tech_prose">Today, I maintain multiple iterations of my dotfiles, each representing a different aesthetic, workflow, and mindset — all version-controlled and documented on my GitHub. Every setup is a distinct experience, shaped by experimentation, iteration, and obsession with detail. Ricing taught me patience, problem-solving, and an appreciation for systems at every level.</p>
-        <p className="tech_prose">Linux isn&apos;t just an operating system to me — it&apos;s a sandbox, a learning tool, and a creative medium. It&apos;s where my love for documentation, systems thinking, and customization truly came together, and it remains one of the strongest influences on how I approach technology as a whole.</p>
+        <h3 className="tech_header">What stuck with me</h3>
+        <p className="tech_prose">Now I maintain multiple versions of my dotfiles, each with a different look, workflow, and mood, all version-controlled on GitHub. Every setup is the result of experimenting, obsessing over details, and slowly refining the parts that matter. Ricing taught me patience, problem-solving, and how much small system decisions can change the experience of using a machine.</p>
+        <p className="tech_prose">Linux isn&apos;t just an operating system to me. It&apos;s a sandbox, a learning tool, and honestly a creative medium. It&apos;s where my love for documentation, systems thinking, and customization really came together.</p>
         <div className="tech_badges">
           <img src="https://img.shields.io/badge/Arch_Linux-1793D1?style=for-the-badge&logo=arch-linux&logoColor=white" alt="Arch Linux" />
           <img src="https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white" alt="Ubuntu" />
@@ -194,37 +194,32 @@ function MyBioFolder() {
     <div className="technology-content">
       <div className="tech_section">
         <h3 className="tech_header">Who I Am</h3>
-        <p className="tech_prose">I'm an AI and Design Thinking student in 11th grade, driven by a deep curiosity for how ideas become real, usable digital experiences. Technology has been part of my life for as long as I can remember — with both my father and grandfather working in tech, I grew up surrounded by computers, PCBs, and experiments instead of toys. My journey into programming started early. At just 8 years old, my dad introduced me to C and C++, and that moment sparked a long-term obsession with understanding how systems work from the ground up. Since then, I've explored everything from low-level programming to modern full-stack development, always aiming to build things that are both technically sound and thoughtfully designed. I care deeply about UI/UX. For me, good software isn't just functional — it's intuitive, expressive, and memorable. Alongside building projects, I actively sharpen my problem-solving and algorithmic thinking through competitive programming and LeetCode, treating consistency and growth as non-negotiables. Outside of coding, I'm a passionate gamer — from FPS titles to roguelikes and simulators — and I experiment with game development, PCB work, PC modding, and hardware tinkering. Beyond tech, I enjoy car modding, archery, music, and diving into anime, manhwa, and manga. All of these interests feed into how I think and create, helping me approach problems with fresh perspectives and unconventional ideas.</p>
+        <p className="tech_prose">I'm in 11th grade, studying AI and Design Thinking. Tech and electronics have been around me for as long as I can remember. My dad taught me C and C++ when I was eight, which mostly had the effect of making me even more curious about how things work. I care about software that is useful, but I also care about software that feels memorable. I like building things, solving hard problems, and thinking algorithmically through competitive programming and LeetCode. When I'm not coding, I'm usually messing with hardware, working with PCBs, or making small game projects.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">What Drives Me</h3>
-        <p className="tech_prose">I'm driven by a balance of building products, solving complex problems, and designing meaningful experiences. I don't see these as separate paths — to me, they're deeply interconnected. Building is how ideas become real, problem-solving is how systems become robust, and design is what makes everything human. I enjoy moving fluidly between all three, letting each inform the other.</p>
+        <p className="tech_prose">What keeps me interested is the overlap between building, problem-solving, and design. I don't really see them as separate lanes. Building turns ideas into something real. Problem-solving keeps the system solid. Design makes the whole thing feel human. I like moving between all three instead of staying in just one.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Why I Build</h3>
-        <p className="tech_prose">What really fuels me is the process of exploration. I love pushing limits — learning new technologies, experimenting with different approaches, and stretching boundaries just to see how far something can go. A big part of this is proving things to myself: that I can adapt, that I can learn fast, and that I can create things that are genuinely useful, thoughtful, and cool. Building isn't just output for me — it's validation, growth, and self-expression rolled into one.</p>
+        <p className="tech_prose">I build because I like exploration more than comfort. New tools, unfamiliar systems, weird ideas - I want to push into them and see what happens. Part of that is curiosity. Part of it is proving to myself that I can learn quickly and turn that into something real. Building is how I test myself, not just how I make things.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">How I Learn</h3>
-        <p className="tech_prose">I'm unapologetically docs-first. Documentation is where I feel most at home — I like understanding tools from their foundations rather than just copying patterns. I read docs deeply, cross-reference, experiment, break things, and rebuild them. Alongside that, I rely heavily on trial and error, because nothing teaches faster than seeing what fails and why. For me, learning sticks best when it's tied directly to something I'm building.</p>
+        <p className="tech_prose">I feel most at home in documentation. I like learning tools from the ground up instead of just copying the nearest pattern and hoping it holds. I read the docs carefully, cross-reference things, try them, break them, fix them, and try again. Trial and error teaches me faster than anything else because once I see why something fails, I usually remember it. The lesson sticks even better when it's tied to something I'm actually building.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">My Approach to Work</h3>
-        <p className="tech_prose">I'm a perfectionist, but in a constructive way. I care deeply about polish, clarity, and correctness — especially when it comes to UI/UX and system behavior. I don't like "good enough" if I know it can be better. That said, I balance this with iteration: I refine continuously rather than waiting for perfection to magically appear.</p>
+        <p className="tech_prose">I care a lot about polish, clarity, and correctness. If something feels off, I have a hard time leaving it alone. That probably is a kind of perfectionism, but I try to balance it with iteration. I'd rather ship something strong, then keep tightening it, than wait forever for some imaginary perfect version.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">How I Think</h3>
-        <p className="tech_prose">I'm naturally curious. If something works, I want to know why. If something breaks, I want to know how. That curiosity often pulls me deeper into systems than expected, but it's also how I uncover better solutions and cleaner designs.</p>
-      </div>
-
-      <div className="tech_section">
-        <h3 className="tech_header">My Mindset</h3>
-        <p className="tech_prose">I'm relentless when it comes to growth. Once I commit to learning something or solving a problem, I don't let go easily. I enjoy the grind — especially the quiet, focused kind where progress compounds over time. This persistence shows up in my coding practice, my projects, and my constant push to get better than I was yesterday.</p>
+        <p className="tech_prose">I'm curious in a way that can get a little out of hand. If something works, I want to know why. If it breaks, I want to know exactly where. That usually pulls me deeper into systems than I planned, but it's also how I end up finding cleaner designs and better solutions.</p>
       </div>
     </div>
   );
@@ -232,59 +227,59 @@ function MyBioFolder() {
   const hobbyText = (
     <div className="hobby-content">
       <div className="hobby_section">
-        <h3 className="hobby_header hobby_header_intro">Hobbies — A Lifetime of Obsession, Curiosity, and Overcommitment</h3>
-        <p className="hobby_prose">I&apos;ve never been someone who dabbles. When something captures my interest, it doesn&apos;t stay a hobby for long — it becomes something I fully immerse myself in. Over time, this has led me into an unusually wide range of interests. To some, it might look like I&apos;m spread too thin. To me, it&apos;s simply how I experience the world: through deep curiosity, obsession, and a constant desire to understand how things work at every level.</p>
+        <h3 className="hobby_header hobby_header_intro">Hobbies - curiosity, obsession, and too many rabbit holes</h3>
+        <p className="hobby_prose">I&apos;ve never really been good at casual hobbies. If something grabs me, I usually go all the way in. That has left me with a weirdly wide range of interests, and from the outside it probably looks like I spread myself too thin. Maybe I do. But this is just how I move through the world: I get curious, I chase the thing, and I keep going until I understand it better than I did yesterday.</p>
       </div>
 
       <div className="hobby_section hobby_section_accented">
-        <h3 className="hobby_header">Competitive FPS — Precision, Discipline, and Mastery</h3>
-        <p className="hobby_prose">First-person shooters were one of my earliest and most formative influences. I grew up playing Counter-Strike with my dad — starting from CS 1.6 and Source, long before ranked ladders and esports were mainstream. Those early sessions weren&apos;t just about playing a game; they taught me fundamentals like precision, patience, spatial awareness, and mechanical discipline.</p>
-        <p className="hobby_prose">As I grew older, that interest turned into long-term commitment. I spent thousands of hours mastering games that reward consistency and punishment equally. Reaching Global Elite in CS:GO and Champion in Rainbow Six Siege wasn&apos;t the result of natural talent — it came from relentless practice, reviewing mistakes, refining micro-decisions, and chasing marginal gains. I&apos;m drawn to mechanically demanding games even when I&apos;m bad at them — Valorant included — because I value the ceiling more than immediate success. I enjoy knowing that there&apos;s always more to learn.</p>
+        <h3 className="hobby_header">Competitive FPS - precision, discipline, and repetition</h3>
+        <p className="hobby_prose">FPS games were one of my earliest serious interests. I grew up playing Counter-Strike with my dad, starting with CS 1.6 and Source long before ranked culture and esports were everywhere. Those sessions taught me patience, precision, spacing, and the kind of mechanical discipline that only repetitive failure really teaches.</p>
+        <p className="hobby_prose">That interest only got deeper over time. I put thousands of hours into games that punish inconsistency and reward small improvements. Reaching Global Elite in CS:GO and Champion in Rainbow Six Siege wasn&apos;t talent carrying me. It was repetition, reviewing mistakes, tightening small decisions, and caring about marginal gains more than most people probably should. I still like mechanically hard games even when I&apos;m bad at them. Valorant is part of that. I care more about the ceiling than the short-term ego hit.</p>
       </div>
 
       <div className="hobby_section hobby_section_accented">
-        <h3 className="hobby_header">Roguelikes — Systems Thinking and Controlled Chaos</h3>
-        <p className="hobby_prose">Where FPS games sharpen reflexes, roguelikes and roguelites sharpen my thinking. I&apos;m obsessed with systems — how individual mechanics interact, compound, and occasionally break. I love the process of building the &quot;perfect&quot; run: optimizing builds, micromanaging resources, adapting to randomness, and making the most out of imperfect conditions.</p>
-        <p className="hobby_prose">This fascination spans genres — from traditional roguelikes and deck-builders to platformers like Hollow Knight, Celeste, and Dead Cells, and even chaotic, gambling-heavy roguelites where risk management becomes part of the strategy. The constant loop of experimentation, failure, and refinement feels incredibly natural to me — it&apos;s the same mindset I bring into coding, design, and problem-solving.</p>
+        <h3 className="hobby_header">Roguelikes - systems, improvisation, and controlled chaos</h3>
+        <p className="hobby_prose">Where FPS games sharpen reflexes, roguelikes sharpen how I think. I get completely locked into systems: how mechanics interact, stack, bend, and occasionally break in ways the designer probably didn&apos;t expect. I love trying to build the perfect run out of imperfect options, especially when randomness forces me to adapt instead of following a script.</p>
+        <p className="hobby_prose">That obsession covers a lot of ground. Traditional roguelikes, deck-builders, platformers like Hollow Knight, Celeste, and Dead Cells, even chaotic roguelites where risk management starts feeling like half the game. The loop of experiment, fail, adjust, repeat feels incredibly natural to me because it&apos;s basically the same loop I use when I&apos;m coding.</p>
       </div>
 
       <div className="hobby_section hobby_section_accented">
-        <h3 className="hobby_header">Modding & Tinkering — Curiosity Without Boundaries</h3>
-        <p className="hobby_prose">I&apos;ve always enjoyed modding, even if I haven&apos;t had the time to fully dive into it yet. Whether it&apos;s Roblox scripting, Minecraft modding, or tweaking systems to behave differently than intended, I&apos;m fascinated by how games and platforms expose their internals — and how far those boundaries can be pushed.</p>
+        <h3 className="hobby_header">Modding & Tinkering - pushing systems past the intended path</h3>
+        <p className="hobby_prose">I&apos;ve always liked modding, even when I haven&apos;t had enough time to go as deep as I want. Roblox scripting, Minecraft modding, weird tweaks that make a system behave differently than it was meant to - that stuff always pulls me in. I like seeing where the boundaries are, then seeing how far they can be bent before something gives way.</p>
       </div>
 
       <div className="hobby_section hobby_section_accented">
-        <h3 className="hobby_header">PC Hardware — Engineering Appreciation at Its Purest</h3>
-        <p className="hobby_prose">PC modding and hardware curiosity were etched into my life early on. My dad built PCs regularly, and I grew up watching components come together into functioning systems. That exposure turned into genuine fascination. I don&apos;t just like hardware — I like understanding it.</p>
-        <p className="hobby_prose">I enjoy learning about GPU architectures, CPU designs, thermals, power delivery, and performance tradeoffs. I&apos;ll gladly sit through long-form breakdowns explaining why one component is marginally better than another, just to grasp the engineering decisions behind it. That appreciation for human ingenuity — how we design complex systems under constraints — heavily influences how I approach software as well.</p>
+        <h3 className="hobby_header">PC Hardware - engineering I can actually touch</h3>
+        <p className="hobby_prose">Hardware curiosity got wired into me early. My dad built PCs regularly, and I grew up watching parts turn into functioning systems. That turned into real fascination pretty quickly. I don&apos;t just like hardware because it looks cool. I like understanding why it works the way it does.</p>
+        <p className="hobby_prose">I can spend way too long reading about GPU architecture, CPU design, thermals, power delivery, and tiny performance tradeoffs most people would never care about. I genuinely enjoy the engineering decisions behind all of it. That mindset carries over into software too. I like seeing the constraints, not just the final result.</p>
       </div>
 
       <div className="hobby_section hobby_section_accented">
-        <h3 className="hobby_header">Cars — Expression Through Engineering</h3>
-        <p className="hobby_prose">Car modding scratches the same itch as PC hardware, but with more emotion attached. I love both performance tuning and aesthetics — from engine mods to full-on ricing. Old JDM cars especially capture my imagination. My ideal combination would be the exterior of a 1996 Acura NSX-T paired with the interior of a 300ZX Turbo.</p>
-        <p className="hobby_prose">Cars represent the intersection of engineering, design, and personal identity — the same intersection I&apos;m constantly drawn to in technology.</p>
+        <h3 className="hobby_header">Cars - engineering with personality</h3>
+        <p className="hobby_prose">Cars scratch the same part of my brain as PC hardware, just with more emotion attached. I like both the performance side and the aesthetic side, from serious tuning to full-on ricing. Older JDM cars especially live rent-free in my head. If I could Frankenstein the perfect one together, it would probably have the exterior of a 1996 Acura NSX-T and the interior of a 300ZX Turbo.</p>
+        <p className="hobby_prose">What I like about cars is the same thing I like about tech: engineering, design, and identity all meeting in the same object.</p>
       </div>
 
       <div className="hobby_section hobby_section_accented">
-        <h3 className="hobby_header">Archery — Focus, Control, and Precision</h3>
-        <p className="hobby_prose">Archery is one of the few physical activities I&apos;ve truly stuck with. It doesn&apos;t rely on endurance or speed — things I don&apos;t naturally excel at — but instead demands control, awareness, and precision. Breathing, posture, grip, and muscle tension all matter. It&apos;s quiet, meditative, and intensely technical in its own way.</p>
+        <h3 className="hobby_header">Archery - focus, control, and precision</h3>
+        <p className="hobby_prose">Archery is one of the few physical hobbies I&apos;ve consistently stuck with. It doesn&apos;t reward raw speed or endurance, which is probably part of why it clicked for me. It rewards control. Breathing, posture, grip, tension, tiny adjustments - everything matters. It&apos;s quiet, technical, and weirdly calming.</p>
       </div>
 
       <div className="hobby_section hobby_section_accented">
-        <h3 className="hobby_header">Music — The Constant Companion</h3>
-        <p className="hobby_prose">Music is omnipresent in my life. I listen to it everywhere — in class (sometimes in secret), at home, while coding, studying, eating, and even sleeping. I gravitate toward pop, hip-hop, and rap, and music heavily influences my pacing, focus, and creative energy. It shapes the rhythm of how I work.</p>
+        <h3 className="hobby_header">Music - always on</h3>
+        <p className="hobby_prose">Music is basically always somewhere in the background of my life. I listen to it in class, at home, while coding, studying, eating, and sometimes even while falling asleep. I mostly gravitate toward pop, hip-hop, and rap. It affects my pace, my focus, and honestly the mood of how I work more than I probably notice in the moment.</p>
       </div>
 
       <div className="hobby_section hobby_section_accented">
-        <h3 className="hobby_header">Anime, Manga & Manhwa — Endless Worlds</h3>
-        <p className="hobby_prose">Anime is easily one of my deepest rabbit holes. I&apos;ve been watching since I was nine and have consumed hundreds of series, ranging from rom-coms to shounen to seinen. Manga and manhwa came later, but just as intensely — I&apos;ve read close to a thousand titles across every imaginable subgenre.</p>
-        <p className="hobby_prose">I&apos;m fully aware that I enjoy predictable tropes, regression stories, and generic slop — and I don&apos;t see that as a flaw. There&apos;s comfort in familiarity, joy in execution, and inspiration even in repetition. These stories fuel my imagination, visual taste, and narrative instincts.</p>
+        <h3 className="hobby_header">Anime, Manga & Manhwa - the never-ending rabbit hole</h3>
+        <p className="hobby_prose">Anime is easily one of my deepest rabbit holes. I&apos;ve been watching since I was nine and I&apos;ve gone through hundreds of series, from rom-coms to shounen to seinen. Manga and manhwa came later, but with the same level of commitment. At this point I&apos;ve read an absurd number of titles across basically every subgenre I could get my hands on.</p>
+        <p className="hobby_prose">I&apos;m also completely aware that I enjoy familiar tropes, regression stories, and occasionally some absolute generic slop. I don&apos;t really see that as a problem. Familiarity has its own appeal, and even repetitive stories can still have good pacing, style, or ideas. A lot of my visual taste and narrative instinct comes from spending way too much time in those worlds.</p>
       </div>
 
       <div className="hobby_section">
         <h3 className="hobby_header hobby_header_outro">Why So Many Things?</h3>
-        <p className="hobby_prose">I don&apos;t have a clean answer for why I&apos;m into so many things or why I immerse myself so deeply in each one. I spread myself thin, chase too many niches, and refuse to let go — but at this point, they&apos;re etched into my personality. Every interest feeds another. Every obsession sharpens a different part of how I think.</p>
-        <p className="hobby_prose">What looks like distraction from the outside is, for me, creative density — a constant cross-pollination of ideas that shapes how I design, build, and solve problems.</p>
+        <p className="hobby_prose">I don&apos;t have a clean explanation for why I get into so many things this deeply. I do spread myself thin. I do chase too many niches. I do have trouble letting interests go once they get their hooks in. But at this point that&apos;s just part of who I am. Each obsession sharpens a different part of how I think.</p>
+        <p className="hobby_prose">From the outside it can look like distraction. For me it feels more like creative overlap. Ideas from one thing keep leaking into another, and that changes how I design, build, and solve problems.</p>
       </div>
     </div>
   );
@@ -293,47 +288,47 @@ function MyBioFolder() {
     <div className="technology-content">
       <div className="tech_section">
         <h3 className="tech_header">Hardware Beginnings</h3>
-        <p className="tech_prose">My experience is rooted in building things from the ground up, often starting with hardware before moving deeper into software and systems. One of my earliest hands-on ventures was Game Boy modding, where I sourced components from suppliers like JayBoyModz and transformed aging handhelds into fully customized, functional devices. From shell swaps and screen upgrades to internal repairs and tuning, I handled the entire process end-to-end and sold custom units independently. That work taught me precision, patience, and how small technical decisions can dramatically affect user experience.</p>
+        <p className="tech_prose">A lot of my hands-on experience started with hardware before it moved deeper into software. One of the earliest things I took seriously was Game Boy modding. I sourced parts, rebuilt old handhelds, handled shell swaps, screen upgrades, internal repairs, and tuning, then sold custom units on my own. That work taught me precision, patience, and how much small technical choices can change the final user experience.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">PC Builds & Device Repair</h3>
-        <p className="tech_prose">Beyond retro hardware, I've spent significant time working on PC builds and general device repair. I've assembled custom desktops, troubleshot laptops, and handled repairs for phones and other consumer electronics. This exposure to real-world hardware failures sharpened my diagnostic thinking and gave me an intuitive understanding of how software performance, thermals, power delivery, and physical constraints all intersect in practical systems.</p>
+        <p className="tech_prose">Beyond retro hardware, I&apos;ve spent a lot of time building PCs and repairing devices. I&apos;ve assembled custom desktops, troubleshot laptops, and fixed phones and other consumer electronics. That kind of work sharpens your diagnostic thinking fast. It also gives you a very practical sense of how thermals, power delivery, physical constraints, and software behavior all collide in real systems.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Professional Software Experience</h3>
-        <p className="tech_prose">On the professional software side, I interned at Anthropic as a model tuner, where I worked closer to large-scale AI systems and gained insight into how modern models are evaluated, refined, and aligned. That experience exposed me to production-grade workflows, experimentation discipline, and the responsibility that comes with working on systems used by real people at scale.</p>
+        <p className="tech_prose">On the software side, I interned at Anthropic as a model tuner. That gave me a closer look at how large-scale AI systems are evaluated, refined, and aligned in practice. More than anything, it exposed me to production-grade workflows, careful experimentation, and the weight that comes with working on systems real people actually depend on.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Client Work & Web Development</h3>
-        <p className="tech_prose">I've also built and shipped numerous websites for real clients, ranging from product landing pages to internal tools and B2B SaaS-style applications. These projects pushed me to think beyond aesthetics and focus on performance, usability, and maintainability. All of this work is documented across my GitHub and projects portfolio, reflecting a consistent habit of shipping real, working products rather than isolated demos.</p>
+        <p className="tech_prose">I&apos;ve also built and shipped websites for real clients, from product landing pages to internal tools and SaaS-style apps. Those projects pushed me past surface-level design and forced me to care about performance, usability, and maintainability at the same time. A lot of that work is documented across my GitHub and portfolio because I care more about shipping real things than building pretty isolated demos.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Game Development</h3>
-        <p className="tech_prose">Game development has been another long-running thread in my work. I've explored amateur and experimental game development across Godot, Unity, Unreal Engine, and Roblox, learning how gameplay systems, rendering, scripting, and tooling come together. While not every project was commercial, each taught me how to iterate quickly, balance technical constraints, and design experiences that feel good to interact with.</p>
+        <p className="tech_prose">Game development has been another long-running thread through my work. I&apos;ve built amateur and experimental projects in Godot, Unity, Unreal, and Roblox, and every one of them taught me something about gameplay systems, tooling, rendering, or iteration. Not all of those projects were commercial, but they were all useful. They taught me how to move fast, work within constraints, and make something that actually feels good to interact with.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Open Source & System Configuration</h3>
-        <p className="tech_prose">Outside of client and professional work, I actively maintain several open-source Arch Linux rice configurations. These setups focus on usability, aesthetics, and performance, and are publicly available and maintained over time. This work reflects my deeper interest in operating systems, workflows, and how environment design can meaningfully impact productivity.</p>
+        <p className="tech_prose">Outside of client work and internships, I maintain several open-source Arch Linux rice setups. They focus on usability, performance, and aesthetics, and I keep them public because they reflect a part of my work that matters to me: operating systems, workflow design, and the idea that your environment can either help your thinking or get in the way of it.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Competitions & Team Experience</h3>
-        <p className="tech_prose">I've also participated in various competitions, hackathons, and game-focused events, collaborating under tight deadlines and learning how to work effectively in fast-paced team environments. On the competitive side, I've taken part in scrims for titles like CS2, CS:GO, and Rainbow Six Siege, experiences that reinforced communication, discipline, and strategic thinking under pressure.</p>
+        <p className="tech_prose">I&apos;ve also taken part in competitions, hackathons, and game-focused events where the pace is fast and the deadlines are not generous. That kind of environment teaches teamwork quickly. On the competitive side, I&apos;ve done scrims in games like CS2, CS:GO, and Rainbow Six Siege, which reinforced the same things from a different angle: communication, discipline, and staying calm when decisions have to happen fast.</p>
       </div>
 
       <div className="tech_section">
-        <h3 className="tech_header">Academic Tutoring — Mathematics & Physics</h3>
-        <p className="tech_prose">I have experience tutoring students in 8th and 9th grade mathematics and physics, helping them strengthen conceptual understanding and problem-solving skills. Through one-on-one guidance, I focus on breaking down complex topics into clear, manageable steps, reinforcing both theory and practical application. My approach emphasizes logical reasoning, stepwise problem-solving, and building confidence, ensuring students not only learn how to solve problems but also understand the underlying principles. Tutoring has refined my communication skills and reinforced my own mastery of foundational STEM concepts, making it a mutually enriching experience.</p>
+        <h3 className="tech_header">Academic Tutoring - Mathematics & Physics</h3>
+        <p className="tech_prose">I&apos;ve also tutored 8th and 9th grade students in math and physics. What I enjoy there is breaking complicated ideas into steps that actually make sense to the person in front of me. It forced me to communicate clearly, explain the reasoning instead of just the answer, and make sure the student understood the principle rather than memorizing the move. Teaching ended up sharpening my own foundations too.</p>
       </div>
 
       <div className="tech_section">
         <h3 className="tech_header">Overall Philosophy</h3>
-        <p className="tech_prose">Overall, my experience isn't confined to a single role or title — it's shaped by constant experimentation, real-world problem solving, and a habit of learning by building, breaking, and improving systems across both hardware and software.</p>
+        <p className="tech_prose">Overall, my experience doesn&apos;t fit neatly into one title. It&apos;s been shaped by experimenting, building real things, breaking systems, fixing them, and slowly getting better across both hardware and software.</p>
       </div>
     </div>
   );
@@ -452,7 +447,7 @@ function MyBioFolder() {
                     deleteTap('About')
                     handleBiotap('general')
                   }}
-                >×
+                >&times;
                 </p>
               </div>
             </div>
