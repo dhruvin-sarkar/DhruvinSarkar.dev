@@ -2321,7 +2321,7 @@ function App() {
         <BTC />
         <Dragdrop />
         <Footer />
-        {import.meta.env.PROD ? <Analytics /> : null}
+        <Analytics />
       </UserContext.Provider>
     );
   }
